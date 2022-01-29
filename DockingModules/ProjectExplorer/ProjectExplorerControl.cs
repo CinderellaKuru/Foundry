@@ -54,7 +54,7 @@ namespace SMHEditor.DockingModules.ProjectExplorer
         KryptonContextMenuItem add_folder;
         void add_folder_Click(object o, EventArgs e)
         {
-
+            treeView.SelectedNode = null;
         }
 
         public ProjectExplorerControl()
@@ -63,23 +63,11 @@ namespace SMHEditor.DockingModules.ProjectExplorer
 
             //Set up folder menu and add to root view.
             folderMenu = new KryptonContextMenu();
-
-
+            
             folderMenu.Items.Add(BuildFolderContextMenu());
             treeView.KryptonContextMenu = folderMenu;
-
-            //Temp root tree node. Replace later with project name.
-            //treeView.Nodes.Add("Project");
-            treeView.ImageList = ProjectExplorerControl.ImageList;
-
-            treeView.Click += new EventHandler(Test);
-        }
-
-        void Test(object o, EventArgs e)
-        {
-            treeView.SelectedNode = null;
-            treeView.Focus();
-            Console.WriteLine("A");
+            
+            treeView.ImageList = ImageList;
         }
     }
 }

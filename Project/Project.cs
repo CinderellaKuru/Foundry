@@ -23,19 +23,10 @@ namespace SMHEditor.Project
         public static Project OpenProject(string path, bool overWrite)
         {
             Project p = new Project();
-            if (!System.IO.File.Exists(path)) //doesnt exist
-            {
-                //create zip
-                var z = ZipFile.Open(path, ZipArchiveMode.Create);
-                z.Dispose();
-            }
-            else //exists
-            {
-
-            }
-
             p.vfs = new VirtualZipFileSystem("Project");
-            p.vfs.Root().AddNewChildFolder("folder 1").AddNewChildFolder("folder 2");
+
+            p.vfs.Open("C:/users/jaken/desktop/ok.test");
+            p.vfs.Save("C:/users/jaken/desktop/ok.test");
 
             return p;
         }
