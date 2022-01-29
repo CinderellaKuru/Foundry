@@ -22,7 +22,7 @@ namespace SMHEditor.DockingModules.ProjectExplorer
 
             Controls.Add(pec);
 
-            pec.treeView.Nodes.Add(MainWindow.project.vfs.Root().GetTreeView());
+            //pec.treeView.Nodes.Add(MainWindow.project.vfs.Root().GetTreeView());
         }
     }
 }

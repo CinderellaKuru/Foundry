@@ -99,7 +99,7 @@
     <Compile Include="MainWindow\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="VirtualFileSystem\VirtualZipFileSystem.cs" />
+    <Compile Include="ZipDirectoryManager\ZipDirectoryManager.cs" />
     <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
     </EmbeddedResource>
