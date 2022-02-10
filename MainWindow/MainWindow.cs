@@ -12,6 +12,7 @@ using ComponentFactory.Krypton.Navigator;
 using ComponentFactory.Krypton.Toolkit;
 using SMHEditor.DockingModules.ProjectExplorer;
 using SMHEditor.Project;
+using SMHEditor.Project.FileTypes;
 
 namespace SMHEditor
 {
@@ -20,21 +21,21 @@ namespace SMHEditor
         public MainWindow()
         {
             InitializeComponent();
-            project = Project.Project.OpenProject("C:/users/jaken/desktop/test.hwp", false);
-
+            project = new ModProject("C:/users/jaken/desktop/testproj/project.hwproj");
+            project.Save();
+            //project = ModProject.Open("C:/users/jaken/desktop/testproj/project.hwproj");
         }
 
 
         //Project stuff
-        public static Project.Project project;
-
+        public static ModProject project;
 
 
         //Docking stuff
         //Krypton name strings, global.
-        static string WORKSPACE_NAME = "Workspace";
-        static string DOCKINGCONTROLLER_NAME = "Control";
-        static string FLOATING_NAME = "Floating";
+        public static string WORKSPACE_NAME = "Workspace";
+        public static string DOCKINGCONTROLLER_NAME = "Control";
+        public static string FLOATING_NAME = "Floating";
 
         //Code to execute directly after the main window is loaded.
         private void MainWindow_Load(object sender, EventArgs e)
@@ -43,7 +44,14 @@ namespace SMHEditor
             dockingManager.ManageControl(DOCKINGCONTROLLER_NAME, kryptonPanel, w);
             dockingManager.ManageFloating(FLOATING_NAME, this);
 
-            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] { new ProjectExplorerPage() });
+            ObjectFile o = new ObjectFile();
+            o.Ability = "Ability1";
+            YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(ObjectFile), YAXLib.Enums.YAXSerializationOptions.DontSerializeNullObjects);
+            project.Create("c:/users/jaken/desktop/testproj/data/", "New", ModProject.FileType.FOLDER);
+            s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object2.obj");
+            s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object3.obj");
+
+            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] { new ProjectExplorerPage("\\data", "Data") });
         }
     }
 }

@@ -9,6 +9,8 @@ namespace SMHEditor
 {
     internal static class Program
     {
+        public static MainWindow window;
+
         [STAThread]
         static void Main()
         {
@@ -16,7 +18,7 @@ namespace SMHEditor
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            MainWindow window = new MainWindow();
+            window = new MainWindow();
             Application.Run(window);
         }
     }
