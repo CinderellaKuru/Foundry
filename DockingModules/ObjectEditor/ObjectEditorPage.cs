@@ -18,7 +18,9 @@ namespace SMHEditor.DockingModules.ObjectEditor
         {
             oec = new ObjectEditorControl();
             oec.Dock = System.Windows.Forms.DockStyle.Fill;
-            
+
+            oec.hardpoints.Controls.Add(new HardpointsControl(o));
+
             Name = fileName;
             Text = name;
             TextTitle = "Object Editor";
@@ -26,7 +28,6 @@ namespace SMHEditor.DockingModules.ObjectEditor
             Controls.Add(oec);
 
             openedFile = o;
-            oec.propertyGrid.SelectedObject = openedFile;
         }
     }
 }

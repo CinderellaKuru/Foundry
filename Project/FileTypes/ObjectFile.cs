@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SMHEditor.Project.FileTypes
 {
-    public class ObjectFile
+    public class ObjectFile : CustomTypeDescriptor
     {
         public string Visual { get; set; }
         public string Name { get; set; }
         public string Derived { get; set; }
-        public string Is { get; set; }
-        public string Dbid { get; set; }
         public string ObjectClass { get; set; }
         public List<string> Flag { get; set; }
         public List<Sound> Sound { get; set; }
-        public string Id { get; set; }
         public string Hitpoints { get; set; }
         public string MovementType { get; set; }
         public float FlightLevel { get; set; }
@@ -25,7 +23,7 @@ namespace SMHEditor.Project.FileTypes
         public string RolloverTextID { get; set; }
         public string SelectedRadiusX { get; set; }
         public string SelectedRadiusZ { get; set; }
-        public string PickRadius { get; set; }
+        public float PickRadius { get; set; }
         public string PickOffset { get; set; }
         public string PickPriority { get; set; }
         public int LOS { get; set; }
@@ -94,7 +92,7 @@ namespace SMHEditor.Project.FileTypes
         public string UIVisual { get; set; }
         public string RallyPoint { get; set; }
         public string PrereqTextID { get; set; }
-        public List<Hardpoint> Hardpoint { get; set; }
+        public List<Hardpoint> Hardpoint { get; set; } = new List<Hardpoint>();
         public string AttackGradeDPS { get; set; }
         public string DazeResist { get; set; }
         public string TrueLOSHeight { get; set; }

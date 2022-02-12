@@ -101,6 +101,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DockingModules\EditorPage.cs" />
+    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.Designer.cs">
+      <DependentUpon>HardpointControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.Designer.cs">
+      <DependentUpon>HardpointsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ObjectEditor\ObjectEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -108,6 +120,12 @@
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ObjectEditor\ObjectEditorPage.cs" />
+    <Compile Include="DockingModules\ObjectEditor\SettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\SettingsControl.Designer.cs">
+      <DependentUpon>SettingsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -126,8 +144,17 @@
     <Compile Include="MainWindow\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
+      <DependentUpon>HardpointControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.resx">
+      <DependentUpon>HardpointsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\ObjectEditorControl.resx">
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\SettingsControl.resx">
+      <DependentUpon>SettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>

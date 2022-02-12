@@ -21,9 +21,8 @@ namespace SMHEditor
         public MainWindow()
         {
             InitializeComponent();
-            project = new ModProject("C:/users/jaken/desktop/testproj/project.hwproj");
+            project = new ModProject("C:/project.hwproj"); //change this to somewhere on your desktop
             project.Save();
-            //project = ModProject.Open("C:/users/jaken/desktop/testproj/project.hwproj");
         }
 
 
@@ -48,8 +47,8 @@ namespace SMHEditor
             o.Ability = "Ability1";
             YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(ObjectFile), YAXLib.Enums.YAXSerializationOptions.DontSerializeNullObjects);
             project.Create("c:/users/jaken/desktop/testproj/data/", "New", ModProject.FileType.FOLDER);
-            s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object2.obj");
-            s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object3.obj");
+            //s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object2.obj");
+            //s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object3.obj");
 
             dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] { new ProjectExplorerPage("\\data", "Data") });
         }
