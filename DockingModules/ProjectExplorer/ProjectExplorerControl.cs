@@ -35,6 +35,7 @@ namespace SMHEditor.DockingModules.ProjectExplorer
             {"data_dir", 0},
             {"folder", 1},
             {"object", 3},
+            {"scenario", 2},
         };
 
         string rootDir;

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ComponentFactory.Krypton.Docking;
 using ComponentFactory.Krypton.Navigator;
 using ComponentFactory.Krypton.Toolkit;
+using SMHEditor.DockingModules.MapEditor;
 using SMHEditor.DockingModules.ProjectExplorer;
 using SMHEditor.Project;
 using SMHEditor.Project.FileTypes;
@@ -21,15 +22,15 @@ namespace SMHEditor
         public MainWindow()
         {
             InitializeComponent();
-            project = new ModProject("C:/project.hwproj"); //change this to somewhere on your desktop
+            project = new ModProject("C:/users/jaken/desktop/testproj/project.hwproj");
             project.Save();
         }
 
-
         //Project stuff
         public static ModProject project;
+        public static ViewportPage vp;
 
-
+        
         //Docking stuff
         //Krypton name strings, global.
         public static string WORKSPACE_NAME = "Workspace";
@@ -43,14 +44,22 @@ namespace SMHEditor
             dockingManager.ManageControl(DOCKINGCONTROLLER_NAME, kryptonPanel, w);
             dockingManager.ManageFloating(FLOATING_NAME, this);
 
-            ObjectFile o = new ObjectFile();
-            o.Ability = "Ability1";
-            YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(ObjectFile), YAXLib.Enums.YAXSerializationOptions.DontSerializeNullObjects);
-            project.Create("c:/users/jaken/desktop/testproj/data/", "New", ModProject.FileType.FOLDER);
-            //s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object2.obj");
-            //s.SerializeToFile(o, "c:/users/jaken/desktop/testproj/data/New/object3.obj");
+            // static map editor page.
+            vp = new ViewportPage();
+            dockingManager.AddToWorkspace(WORKSPACE_NAME, new KryptonPage[] { vp });
 
-            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] { new ProjectExplorerPage("\\data", "Data") });
+            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] {
+                new ProjectExplorerPage("\\data", "Data"),
+                /*new ProjectExplorerPage("\\art",  "Art")*/ });
+
+
+            TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Small512);
+            //YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(TerrainFile));
+            //s.SerializeToFile(t, "C:\\Users\\jaken\\Desktop\\testproj\\data\\MyMap\\map.trn");
+            //vp.sc
+            MapEditorScene scn = new MapEditorScene();
+            scn.LoadFile(t);
+            MainWindow.vp.SetScene(scn);
         }
     }
 }

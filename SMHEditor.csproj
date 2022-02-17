@@ -12,9 +12,10 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AnySerializer, Version=1.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
+    </Reference>
     <Reference Include="ComponentFactory.Krypton.Docking">
       <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Docking.dll</HintPath>
     </Reference>
@@ -51,11 +56,12 @@
     <Reference Include="ComponentFactory.Krypton.Workspace">
       <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Workspace.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
-    </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Jitter, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ext\SMH-Jitter\source\Jitter\out\Jitter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=3.1.6.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.DotNet.PlatformAbstractions.3.1.6\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
@@ -66,19 +72,35 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>ext\NewtonsoftJson\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpFileSystem, Version=1.0.0.37, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SharpFileSystem.1.0.0.37\lib\net45\SharpFileSystem.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Diagram.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Diagram.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -95,12 +117,20 @@
     <Reference Include="YAXLib, Version=3.0.0.0, Culture=neutral, PublicKeyToken=15c43682c986900f, processorArchitecture=MSIL">
       <HintPath>packages\YAXLib.3.0.1\lib\net461\YAXLib.dll</HintPath>
     </Reference>
-    <Reference Include="Zio, Version=0.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Zio.0.13.0\lib\net45\Zio.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DockingModules\EditorPage.cs" />
+    <Compile Include="DockingModules\MapEditor\Camera.cs" />
+    <Compile Include="DockingModules\MapEditor\HelperObjects.cs" />
+    <Compile Include="DockingModules\MapEditor\ViewportPage.cs" />
+    <Compile Include="DockingModules\MapEditor\ViewportControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\MapEditor\ViewportControl.Designer.cs">
+      <DependentUpon>ViewportControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\MapEditor\MapEditorScene.cs" />
+    <Compile Include="DockingModules\MapEditor\Transform.cs" />
     <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -135,6 +165,7 @@
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerPage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project\FileTypes\ObjectFile.cs" />
+    <Compile Include="Project\FileTypes\Maps\TerrainFile.cs" />
     <Compile Include="Project\FileTypes\SquadFile.cs" />
     <Compile Include="Project\ModProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,6 +175,10 @@
     <Compile Include="MainWindow\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="DockingModules\MapEditor\ViewportControl.resx">
+      <DependentUpon>ViewportControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
       <DependentUpon>HardpointControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -173,6 +208,7 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config" />
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -203,4 +239,7 @@
     <None Include="ext\Icons\page_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

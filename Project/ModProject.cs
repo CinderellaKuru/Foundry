@@ -14,6 +14,7 @@ using SMHEditor.Project.FileTypes;
 using SMHEditor.DockingModules;
 using YAXLib.Options;
 using ComponentFactory.Krypton.Workspace;
+using SMHEditor.DockingModules.MapEditor;
 
 namespace SMHEditor.Project
 {
@@ -53,26 +54,30 @@ namespace SMHEditor.Project
             FOLDER,
             OBJECT,
             SQUAD,
-            TACTICS
+            TACTICS,
+            TERRAIN
         };
         public static Dictionary<string, FileType> extToType = new Dictionary<string, FileType>()
         {
             {".obj", FileType.OBJECT },
             {".sqd", FileType.SQUAD },
-            {".tct", FileType.TACTICS }
+            {".tct", FileType.TACTICS },
+            {".trn", FileType.TERRAIN },
         };
         public static Dictionary<FileType, string> typeToExt = new Dictionary<FileType, string>()
         {
             {FileType.OBJECT, ".obj" },
             {FileType.SQUAD, ".sqd" },
-            {FileType.TACTICS, ".tct" }
+            {FileType.TACTICS, ".tct" },
+            {FileType.TERRAIN, ".trn" }
         };
         public static Dictionary<FileType, string> typeToImage = new Dictionary<FileType, string>()
         {
             {FileType.FOLDER, "folder" },
             {FileType.OBJECT, "object" },
             {FileType.SQUAD, "squad" },
-            {FileType.TACTICS, "tactics" }
+            {FileType.TACTICS, "tactics" },
+            {FileType.TERRAIN, "scenario" } //fix string name
         };
         public static string PROJ_EXT = ".hwproj";
         public static string DATA_DIR = "\\data";
@@ -213,7 +218,32 @@ namespace SMHEditor.Project
             if (!extToType.Keys.Contains(ext)) return; //is not a recognized file type.
 
             string name = Path.GetFileNameWithoutExtension(fileDir);
-            EditorPage page;
+
+            //special case -- TODO: make this not special
+            if (ext == typeToExt[FileType.TERRAIN])
+            {
+                try
+                {
+                    TerrainFile trn;
+                    var op = new SerializerOptions();
+                    op.SerializationOptions = YAXSerializationOptions.DontSerializeNullObjects;
+                    YAXSerializer ser = new YAXSerializer(typeof(TerrainFile), op);
+                    trn = (TerrainFile)ser.DeserializeFromFile(openedDir + fileDir);
+
+                    MapEditorScene scn = new MapEditorScene();
+                    scn.LoadFile(trn);
+                    MainWindow.vp.SetScene(scn);
+
+                    return;
+                }
+                catch
+                {
+                    Console.WriteLine("Could not deserialize " + fileDir + ".");
+                    return;
+                }
+            }
+
+                EditorPage page;
 
             // already open
             if (openPages.Keys.Contains(fileDir))

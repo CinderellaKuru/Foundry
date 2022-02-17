@@ -45,8 +45,9 @@ namespace SMHEditor.DockingModules.ProjectExplorer
             pec.treeView.LabelEdit = true;
 
             //Page options
-            Name = "Explorer";
+            Name = name;
             TextTitle = "Explorer";
+            Text = name;
 
             Controls.Add(pec);
 

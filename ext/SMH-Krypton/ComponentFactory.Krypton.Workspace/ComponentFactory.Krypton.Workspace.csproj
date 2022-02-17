@@ -41,7 +41,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Bin\</OutputPath>
+    <OutputPath>..\out\</OutputPath>
     <BaseIntermediateOutputPath>../../../build/obj/$(AssemblyName)</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)/$(Configuration)/</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
