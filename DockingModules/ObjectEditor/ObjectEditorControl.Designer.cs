@@ -66,7 +66,7 @@
             this.commands,
             this.objectTypes,
             this.flags});
-            this.kryptonNavigator.SelectedIndex = 7;
+            this.kryptonNavigator.SelectedIndex = 5;
             this.kryptonNavigator.Size = new System.Drawing.Size(358, 401);
             this.kryptonNavigator.TabIndex = 0;
             this.kryptonNavigator.Text = "kryptonNavigator1";
@@ -144,7 +144,7 @@
             this.commands.Margin = new System.Windows.Forms.Padding(2);
             this.commands.MinimumSize = new System.Drawing.Size(38, 41);
             this.commands.Name = "commands";
-            this.commands.Size = new System.Drawing.Size(280, 399);
+            this.commands.Size = new System.Drawing.Size(273, 399);
             this.commands.Text = "Commands";
             this.commands.ToolTipTitle = "Page ToolTip";
             this.commands.UniqueName = "01592CFD36E94ADA67856F8B3649C4CF";
@@ -157,7 +157,7 @@
             this.objectTypes.Margin = new System.Windows.Forms.Padding(2);
             this.objectTypes.MinimumSize = new System.Drawing.Size(38, 41);
             this.objectTypes.Name = "objectTypes";
-            this.objectTypes.Size = new System.Drawing.Size(277, 399);
+            this.objectTypes.Size = new System.Drawing.Size(268, 399);
             this.objectTypes.Text = "Object Types";
             this.objectTypes.ToolTipTitle = "Page ToolTip";
             this.objectTypes.UniqueName = "66FE122DE634463C7AAAF3A78E8E0542";
