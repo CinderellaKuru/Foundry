@@ -67,11 +67,12 @@
             this.kryptonPanel.Controls.Add(this.kryptonLabel1);
             this.kryptonPanel.Controls.Add(this.level);
             this.kryptonPanel.Controls.Add(this.kryptonLabel5);
+            this.kryptonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonPanel.Name = "kryptonPanel";
             this.kryptonPanel.PanelBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1;
-            this.kryptonPanel.Size = new System.Drawing.Size(922, 54);
+            this.kryptonPanel.Size = new System.Drawing.Size(922, 55);
             this.kryptonPanel.TabIndex = 1;
             // 
             // velocity
@@ -87,6 +88,11 @@
             this.velocity.Name = "velocity";
             this.velocity.Size = new System.Drawing.Size(52, 22);
             this.velocity.TabIndex = 37;
+            this.velocity.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel8
             // 
@@ -110,6 +116,11 @@
             this.damagetaken.Name = "damagetaken";
             this.damagetaken.Size = new System.Drawing.Size(52, 22);
             this.damagetaken.TabIndex = 35;
+            this.damagetaken.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel7
             // 
@@ -133,6 +144,11 @@
             this.weaponrange.Name = "weaponrange";
             this.weaponrange.Size = new System.Drawing.Size(52, 22);
             this.weaponrange.TabIndex = 33;
+            this.weaponrange.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel6
             // 
@@ -156,6 +172,11 @@
             this.workrate.Name = "workrate";
             this.workrate.Size = new System.Drawing.Size(52, 22);
             this.workrate.TabIndex = 31;
+            this.workrate.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel4
             // 
@@ -179,6 +200,11 @@
             this.accuracy.Name = "accuracy";
             this.accuracy.Size = new System.Drawing.Size(52, 22);
             this.accuracy.TabIndex = 29;
+            this.accuracy.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel3
             // 
@@ -202,6 +228,11 @@
             this.damage.Name = "damage";
             this.damage.Size = new System.Drawing.Size(52, 22);
             this.damage.TabIndex = 27;
+            this.damage.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // kryptonLabel2
             // 

@@ -18,9 +18,22 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
 
         private void Add(object o, EventArgs e)
         {
-            Project.FileTypes.Veterancy vt = new Project.FileTypes.Veterancy();
+            Project.FileTypes.Veterancy vt = new Project.FileTypes.Veterancy
+            {
+                Level = $"{obj.Veterancy.Count + 1}"
+            };
             obj.Veterancy.Add(vt);
-            flowLayoutPanel.Controls.Add(new VeterancyControl(obj, vt, this));
+            VeterancyControl vc = new VeterancyControl(obj, vt, this)
+            {
+                Tag = obj.Veterancy.Count
+            };
+            flowLayoutPanel.Controls.Add(vc);
+
+            if (obj.Veterancy.Count > 4)
+            {
+                add.Enabled = false;
+                add.Visible = false;
+            }
         }
 
         private void automatic_Click(object sender, EventArgs e)
@@ -47,7 +60,7 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
                     Accuracy = $"{0.9 + 0.1 * i}",
                     WorkRate = $"{0.75 + 0.25 * i}",
                     WeaponRange = $"{1}",
-                    DamageTaken = $"{1 - 0.05 * i}",
+                    DamageTaken = $"{1.05 - 0.05 * i}",
                 };
 
                 obj.Veterancy.Add(vt);
@@ -62,6 +75,9 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
                 vc.damagetaken.Value = (decimal)float.Parse(vt.DamageTaken);
                 vc.Tag = obj.Veterancy.Count;
                 flowLayoutPanel.Controls.Add(vc);
+
+                add.Enabled = false;
+                add.Visible = false;
             }
 
         }
@@ -70,9 +86,15 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
         {
             ControlCollection controls = flowLayoutPanel.Controls;
             Control latestVeterancy = controls.Cast<Control>().FirstOrDefault(control => string.Equals(control.Tag, obj.Veterancy.Count));
-            if(latestVeterancy.Tag.ToString() == "1") { return; }
+            if (latestVeterancy.Tag.ToString() == "1") { return; }
             flowLayoutPanel.Controls.Remove(latestVeterancy);
             obj.Veterancy.Remove(obj.Veterancy.Last());
+
+            if (obj.Veterancy.Count < 5)
+            {
+                add.Enabled = true;
+                add.Visible = true;
+            }
         }
     }
 }

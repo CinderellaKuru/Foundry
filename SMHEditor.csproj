@@ -125,6 +125,18 @@
     </Compile>
     <Compile Include="DockingModules\MapEditor\MapEditorScene.cs" />
     <Compile Include="DockingModules\MapEditor\Transform.cs" />
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.Designer.cs">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.Designer.cs">
+      <DependentUpon>FlagsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -189,6 +201,12 @@
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="DockingModules\MapEditor\ViewportControl.resx">
       <DependentUpon>ViewportControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagControl.resx">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagsControl.resx">
+      <DependentUpon>FlagsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
       <DependentUpon>HardpointControl.cs</DependentUpon>

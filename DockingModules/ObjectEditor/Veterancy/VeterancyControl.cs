@@ -1,5 +1,4 @@
 ﻿using SMHEditor.Project.FileTypes;
-using System;
 using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
@@ -16,6 +15,7 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
             parent = owner;
             obj = o;
             Dock = DockStyle.Right;
+            level.Value = (decimal)float.Parse(vt.Level);
         }
     }
 }
