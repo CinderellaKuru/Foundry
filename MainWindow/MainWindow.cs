@@ -22,7 +22,7 @@ namespace SMHEditor
         public MainWindow()
         {
             InitializeComponent();
-            project = new ModProject("C:/users/jaken/desktop/testproj/project.hwproj");
+            project = new ModProject("C:/Users/halfd/Downloads/testproj/testproj/project.hwproj");
             project.Save();
         }
 

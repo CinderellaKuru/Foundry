@@ -42,19 +42,19 @@
       <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Docking">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Docking.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Docking.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Navigator">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Navigator.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Navigator.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Ribbon">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Ribbon.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Ribbon.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Toolkit">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Workspace">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Workspace.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Workspace.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -150,6 +150,18 @@
     <Compile Include="DockingModules\ObjectEditor\SettingsControl.Designer.cs">
       <DependentUpon>SettingsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.Designer.cs">
+      <DependentUpon>VeterancyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.Designer.cs">
+      <DependentUpon>VeterancysControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -189,6 +201,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\SettingsControl.resx">
       <DependentUpon>SettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.resx">
+      <DependentUpon>VeterancyControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.resx">
+      <DependentUpon>VeterancysControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
@@ -243,6 +261,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ext\SMH-Icons\cog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

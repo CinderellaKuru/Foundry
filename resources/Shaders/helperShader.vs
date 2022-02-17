@@ -1,4 +1,4 @@
-#version 330 core
+#version 420
 in vec3 POSITION;
 
 layout(binding = 0, std140) uniform mvp

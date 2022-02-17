@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 
 in vec3 POSITION;
 in vec3 NORMALS;
 out vec3 NORMALS_OUT;
