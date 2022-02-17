@@ -66,7 +66,7 @@
             this.commands,
             this.objectTypes,
             this.flags});
-            this.kryptonNavigator.SelectedIndex = 3;
+            this.kryptonNavigator.SelectedIndex = 7;
             this.kryptonNavigator.Size = new System.Drawing.Size(358, 401);
             this.kryptonNavigator.TabIndex = 0;
             this.kryptonNavigator.Text = "kryptonNavigator1";
@@ -79,7 +79,7 @@
             this.settings.Margin = new System.Windows.Forms.Padding(2);
             this.settings.MinimumSize = new System.Drawing.Size(38, 41);
             this.settings.Name = "settings";
-            this.settings.Size = new System.Drawing.Size(280, 399);
+            this.settings.Size = new System.Drawing.Size(273, 399);
             this.settings.Text = "Settings";
             this.settings.ToolTipTitle = "Page ToolTip";
             this.settings.UniqueName = "645F1B3D322345949AB78CB67882184A";
@@ -131,7 +131,7 @@
             this.sounds.Margin = new System.Windows.Forms.Padding(2);
             this.sounds.MinimumSize = new System.Drawing.Size(38, 41);
             this.sounds.Name = "sounds";
-            this.sounds.Size = new System.Drawing.Size(280, 399);
+            this.sounds.Size = new System.Drawing.Size(273, 399);
             this.sounds.Text = "Sounds";
             this.sounds.ToolTipTitle = "Page ToolTip";
             this.sounds.UniqueName = "415443E6F4A44ABA6584CB1E4BCB3642";

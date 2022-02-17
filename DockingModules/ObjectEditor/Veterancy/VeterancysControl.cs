@@ -1,5 +1,6 @@
 ﻿using SMHEditor.Project.FileTypes;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
@@ -59,9 +60,19 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
                 vc.workrate.Value = (decimal)float.Parse(vt.WorkRate);
                 vc.weaponrange.Value = (decimal)float.Parse(vt.WeaponRange);
                 vc.damagetaken.Value = (decimal)float.Parse(vt.DamageTaken);
+                vc.Tag = obj.Veterancy.Count;
                 flowLayoutPanel.Controls.Add(vc);
             }
 
+        }
+
+        private void remove_Click(object sender, EventArgs e)
+        {
+            ControlCollection controls = flowLayoutPanel.Controls;
+            Control latestVeterancy = controls.Cast<Control>().FirstOrDefault(control => string.Equals(control.Tag, obj.Veterancy.Count));
+            if(latestVeterancy.Tag.ToString() == "1") { return; }
+            flowLayoutPanel.Controls.Remove(latestVeterancy);
+            obj.Veterancy.Remove(obj.Veterancy.Last());
         }
     }
 }

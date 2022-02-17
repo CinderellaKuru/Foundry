@@ -16,17 +16,6 @@ namespace SMHEditor.DockingModules.ObjectEditor.Veterancy
             parent = owner;
             obj = o;
             Dock = DockStyle.Right;
-
-            if (obj.Veterancy.Count == 1)
-            {
-                deleteButton.Visible = false;
-            }
-        }
-
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-            parent.flowLayoutPanel.Controls.Remove(this);
-            obj.Veterancy.Remove(veterancy);
         }
     }
 }

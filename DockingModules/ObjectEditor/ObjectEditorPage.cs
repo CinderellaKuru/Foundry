@@ -17,6 +17,7 @@ namespace SMHEditor.DockingModules.ObjectEditor
 
             oec.hardpoints.Controls.Add(new HardpointsControl(o));
             oec.veterancy.Controls.Add(new VeterancysControl(o));
+            oec.settings.Controls.Add(new SettingsControl(o));
 
             Name = fileName;
             Text = name;

@@ -44,81 +44,91 @@
             // 
             // object_name
             // 
-            this.object_name.Location = new System.Drawing.Point(3, 3);
+            this.object_name.Location = new System.Drawing.Point(2, 2);
+            this.object_name.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.object_name.Name = "object_name";
-            this.object_name.Size = new System.Drawing.Size(494, 27);
+            this.object_name.Size = new System.Drawing.Size(370, 23);
             this.object_name.TabIndex = 0;
             this.object_name.Text = "object_name";
             // 
             // object_derrived
             // 
             this.object_derrived.DropDownWidth = 494;
-            this.object_derrived.Location = new System.Drawing.Point(503, 3);
+            this.object_derrived.Location = new System.Drawing.Point(377, 2);
+            this.object_derrived.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.object_derrived.Name = "object_derrived";
-            this.object_derrived.Size = new System.Drawing.Size(494, 25);
+            this.object_derrived.Size = new System.Drawing.Size(370, 21);
             this.object_derrived.TabIndex = 1;
             this.object_derrived.Text = "Base Object";
             // 
             // visual
             // 
             this.visual.DropDownWidth = 494;
-            this.visual.Location = new System.Drawing.Point(3, 36);
+            this.visual.Location = new System.Drawing.Point(2, 29);
+            this.visual.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.visual.Name = "visual";
-            this.visual.Size = new System.Drawing.Size(494, 25);
+            this.visual.Size = new System.Drawing.Size(370, 21);
             this.visual.TabIndex = 2;
             this.visual.Text = "Tactics";
             // 
             // tactics
             // 
             this.tactics.DropDownWidth = 400;
-            this.tactics.Location = new System.Drawing.Point(3, 67);
+            this.tactics.Location = new System.Drawing.Point(2, 54);
+            this.tactics.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tactics.Name = "tactics";
-            this.tactics.Size = new System.Drawing.Size(494, 25);
+            this.tactics.Size = new System.Drawing.Size(370, 21);
             this.tactics.TabIndex = 3;
             this.tactics.Text = "Visual";
             // 
             // objectClass
             // 
-            this.objectClass.Location = new System.Drawing.Point(503, 34);
+            this.objectClass.Location = new System.Drawing.Point(377, 28);
+            this.objectClass.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.objectClass.Name = "objectClass";
-            this.objectClass.Size = new System.Drawing.Size(494, 25);
+            this.objectClass.Size = new System.Drawing.Size(370, 20);
             this.objectClass.TabIndex = 4;
             // 
             // kryptonNumericUpDown1
             // 
-            this.kryptonNumericUpDown1.Location = new System.Drawing.Point(83, 97);
+            this.kryptonNumericUpDown1.Location = new System.Drawing.Point(62, 79);
+            this.kryptonNumericUpDown1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.kryptonNumericUpDown1.Name = "kryptonNumericUpDown1";
-            this.kryptonNumericUpDown1.Size = new System.Drawing.Size(96, 26);
+            this.kryptonNumericUpDown1.Size = new System.Drawing.Size(72, 22);
             this.kryptonNumericUpDown1.TabIndex = 5;
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(3, 98);
+            this.kryptonLabel1.Location = new System.Drawing.Point(2, 80);
+            this.kryptonLabel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(74, 24);
+            this.kryptonLabel1.Size = new System.Drawing.Size(60, 20);
             this.kryptonLabel1.TabIndex = 6;
             this.kryptonLabel1.Values.Text = "Hitpoints";
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(330, 99);
+            this.comboBox1.Location = new System.Drawing.Point(248, 80);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(167, 24);
+            this.comboBox1.Size = new System.Drawing.Size(126, 21);
             this.comboBox1.TabIndex = 7;
             // 
             // kryptonLabel2
             // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(202, 99);
+            this.kryptonLabel2.Location = new System.Drawing.Point(152, 80);
+            this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(122, 24);
+            this.kryptonLabel2.Size = new System.Drawing.Size(99, 20);
             this.kryptonLabel2.TabIndex = 8;
             this.kryptonLabel2.Values.Text = "Movement Type";
             // 
             // SettingsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.Controls.Add(this.kryptonLabel2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.kryptonLabel1);
@@ -128,8 +138,9 @@
             this.Controls.Add(this.visual);
             this.Controls.Add(this.object_derrived);
             this.Controls.Add(this.object_name);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "SettingsControl";
-            this.Size = new System.Drawing.Size(1000, 836);
+            this.Size = new System.Drawing.Size(750, 679);
             ((System.ComponentModel.ISupportInitialize)(this.object_derrived)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.visual)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tactics)).EndInit();

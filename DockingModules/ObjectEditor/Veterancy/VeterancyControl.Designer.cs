@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.deleteButton = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.velocity = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.damagetaken = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.weaponrange = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
@@ -44,21 +45,9 @@
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.level = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.velocity = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
-            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
             this.kryptonPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // deleteButton
-            // 
-            this.deleteButton.Location = new System.Drawing.Point(897, 0);
-            this.deleteButton.Margin = new System.Windows.Forms.Padding(2);
-            this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(23, 24);
-            this.deleteButton.TabIndex = 21;
-            this.deleteButton.Values.Text = "X";
-            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // kryptonPanel
             // 
@@ -78,13 +67,35 @@
             this.kryptonPanel.Controls.Add(this.kryptonLabel1);
             this.kryptonPanel.Controls.Add(this.level);
             this.kryptonPanel.Controls.Add(this.kryptonLabel5);
-            this.kryptonPanel.Controls.Add(this.deleteButton);
             this.kryptonPanel.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonPanel.Name = "kryptonPanel";
             this.kryptonPanel.PanelBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1;
             this.kryptonPanel.Size = new System.Drawing.Size(922, 54);
             this.kryptonPanel.TabIndex = 1;
+            // 
+            // velocity
+            // 
+            this.velocity.DecimalPlaces = 2;
+            this.velocity.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.velocity.Location = new System.Drawing.Point(313, 28);
+            this.velocity.Margin = new System.Windows.Forms.Padding(2);
+            this.velocity.Name = "velocity";
+            this.velocity.Size = new System.Drawing.Size(52, 22);
+            this.velocity.TabIndex = 37;
+            // 
+            // kryptonLabel8
+            // 
+            this.kryptonLabel8.Location = new System.Drawing.Point(264, 29);
+            this.kryptonLabel8.Margin = new System.Windows.Forms.Padding(2);
+            this.kryptonLabel8.Name = "kryptonLabel8";
+            this.kryptonLabel8.Size = new System.Drawing.Size(54, 20);
+            this.kryptonLabel8.TabIndex = 36;
+            this.kryptonLabel8.Values.Text = "Velocity";
             // 
             // damagetaken
             // 
@@ -102,7 +113,7 @@
             // 
             // kryptonLabel7
             // 
-            this.kryptonLabel7.Location = new System.Drawing.Point(773, 30);
+            this.kryptonLabel7.Location = new System.Drawing.Point(771, 28);
             this.kryptonLabel7.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel7.Name = "kryptonLabel7";
             this.kryptonLabel7.Size = new System.Drawing.Size(88, 20);
@@ -125,7 +136,7 @@
             // 
             // kryptonLabel6
             // 
-            this.kryptonLabel6.Location = new System.Drawing.Point(622, 32);
+            this.kryptonLabel6.Location = new System.Drawing.Point(621, 28);
             this.kryptonLabel6.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel6.Name = "kryptonLabel6";
             this.kryptonLabel6.Size = new System.Drawing.Size(91, 20);
@@ -148,7 +159,7 @@
             // 
             // kryptonLabel4
             // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(498, 32);
+            this.kryptonLabel4.Location = new System.Drawing.Point(498, 29);
             this.kryptonLabel4.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel4.Name = "kryptonLabel4";
             this.kryptonLabel4.Size = new System.Drawing.Size(64, 20);
@@ -171,7 +182,7 @@
             // 
             // kryptonLabel3
             // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(379, 32);
+            this.kryptonLabel3.Location = new System.Drawing.Point(378, 28);
             this.kryptonLabel3.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel3.Name = "kryptonLabel3";
             this.kryptonLabel3.Size = new System.Drawing.Size(59, 20);
@@ -186,7 +197,7 @@
             0,
             0,
             65536});
-            this.damage.Location = new System.Drawing.Point(182, 28);
+            this.damage.Location = new System.Drawing.Point(189, 28);
             this.damage.Margin = new System.Windows.Forms.Padding(2);
             this.damage.Name = "damage";
             this.damage.Size = new System.Drawing.Size(52, 22);
@@ -194,7 +205,7 @@
             // 
             // kryptonLabel2
             // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(133, 32);
+            this.kryptonLabel2.Location = new System.Drawing.Point(140, 28);
             this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel2.Name = "kryptonLabel2";
             this.kryptonLabel2.Size = new System.Drawing.Size(56, 20);
@@ -203,7 +214,7 @@
             // 
             // xp
             // 
-            this.xp.Location = new System.Drawing.Point(66, 28);
+            this.xp.Location = new System.Drawing.Point(75, 28);
             this.xp.Margin = new System.Windows.Forms.Padding(2);
             this.xp.Name = "xp";
             this.xp.Size = new System.Drawing.Size(52, 22);
@@ -211,7 +222,7 @@
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(2, 32);
+            this.kryptonLabel1.Location = new System.Drawing.Point(11, 29);
             this.kryptonLabel1.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(69, 20);
@@ -250,29 +261,6 @@
             this.kryptonLabel5.TabIndex = 22;
             this.kryptonLabel5.Values.Text = "Level";
             // 
-            // velocity
-            // 
-            this.velocity.DecimalPlaces = 2;
-            this.velocity.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.velocity.Location = new System.Drawing.Point(313, 28);
-            this.velocity.Margin = new System.Windows.Forms.Padding(2);
-            this.velocity.Name = "velocity";
-            this.velocity.Size = new System.Drawing.Size(52, 22);
-            this.velocity.TabIndex = 37;
-            // 
-            // kryptonLabel8
-            // 
-            this.kryptonLabel8.Location = new System.Drawing.Point(259, 32);
-            this.kryptonLabel8.Margin = new System.Windows.Forms.Padding(2);
-            this.kryptonLabel8.Name = "kryptonLabel8";
-            this.kryptonLabel8.Size = new System.Drawing.Size(54, 20);
-            this.kryptonLabel8.TabIndex = 36;
-            this.kryptonLabel8.Values.Text = "Velocity";
-            // 
             // VeterancyControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,8 +276,6 @@
         }
 
         #endregion
-
-        private ComponentFactory.Krypton.Toolkit.KryptonButton deleteButton;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;

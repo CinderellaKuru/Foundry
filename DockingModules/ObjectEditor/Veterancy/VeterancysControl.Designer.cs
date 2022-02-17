@@ -32,6 +32,7 @@
             this.add = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.automatic = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.remove = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
             this.kryptonPanel.SuspendLayout();
             this.SuspendLayout();
@@ -63,6 +64,7 @@
             // kryptonPanel
             // 
             this.kryptonPanel.Controls.Add(this.automatic);
+            this.kryptonPanel.Controls.Add(this.remove);
             this.kryptonPanel.Controls.Add(this.flowLayoutPanel);
             this.kryptonPanel.Controls.Add(this.add);
             this.kryptonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -74,13 +76,23 @@
             // 
             // automatic
             // 
-            this.automatic.Location = new System.Drawing.Point(118, 2);
+            this.automatic.Location = new System.Drawing.Point(234, 2);
             this.automatic.Margin = new System.Windows.Forms.Padding(2);
             this.automatic.Name = "automatic";
             this.automatic.Size = new System.Drawing.Size(112, 26);
             this.automatic.TabIndex = 3;
             this.automatic.Values.Text = "Automatic";
             this.automatic.Click += new System.EventHandler(this.automatic_Click);
+            // 
+            // remove
+            // 
+            this.remove.Location = new System.Drawing.Point(118, 2);
+            this.remove.Margin = new System.Windows.Forms.Padding(2);
+            this.remove.Name = "remove";
+            this.remove.Size = new System.Drawing.Size(112, 26);
+            this.remove.TabIndex = 4;
+            this.remove.Values.Text = "Remove Veterancy";
+            this.remove.Click += new System.EventHandler(this.remove_Click);
             // 
             // VeterancysControl
             // 
@@ -101,5 +113,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton add;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
         private ComponentFactory.Krypton.Toolkit.KryptonButton automatic;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton remove;
     }
 }
