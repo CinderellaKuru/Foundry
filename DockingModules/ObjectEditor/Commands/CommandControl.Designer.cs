@@ -36,9 +36,11 @@
             this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.type = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.placementBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
             this.kryptonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.type)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.placementBox)).BeginInit();
             this.SuspendLayout();
             // 
             // deleteButton
@@ -56,13 +58,14 @@
             this.position.Location = new System.Drawing.Point(55, 58);
             this.position.Margin = new System.Windows.Forms.Padding(2);
             this.position.Maximum = new decimal(new int[] {
-            8,
+            7,
             0,
             0,
             0});
             this.position.Name = "position";
             this.position.Size = new System.Drawing.Size(52, 22);
             this.position.TabIndex = 3;
+            this.position.ValueChanged += new System.EventHandler(this.position_ValueChanged);
             // 
             // kryptonLabel1
             // 
@@ -93,6 +96,7 @@
             // 
             // kryptonPanel
             // 
+            this.kryptonPanel.Controls.Add(this.placementBox);
             this.kryptonPanel.Controls.Add(this.kryptonLabel2);
             this.kryptonPanel.Controls.Add(this.type);
             this.kryptonPanel.Controls.Add(this.deleteButton);
@@ -105,7 +109,7 @@
             this.kryptonPanel.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonPanel.Name = "kryptonPanel";
             this.kryptonPanel.PanelBackStyle = ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1;
-            this.kryptonPanel.Size = new System.Drawing.Size(200, 112);
+            this.kryptonPanel.Size = new System.Drawing.Size(207, 131);
             this.kryptonPanel.TabIndex = 1;
             // 
             // kryptonLabel2
@@ -127,17 +131,27 @@
             this.type.Size = new System.Drawing.Size(146, 21);
             this.type.TabIndex = 23;
             // 
+            // placementBox
+            // 
+            this.placementBox.Image = global::SMHEditor.Properties.Resources.Placement0;
+            this.placementBox.Location = new System.Drawing.Point(126, 59);
+            this.placementBox.Name = "placementBox";
+            this.placementBox.Size = new System.Drawing.Size(64, 64);
+            this.placementBox.TabIndex = 3;
+            this.placementBox.TabStop = false;
+            // 
             // CommandControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel);
             this.Name = "CommandControl";
-            this.Size = new System.Drawing.Size(200, 112);
+            this.Size = new System.Drawing.Size(207, 131);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).EndInit();
             this.kryptonPanel.ResumeLayout(false);
             this.kryptonPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.type)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.placementBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -152,5 +166,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox type;
+        private System.Windows.Forms.PictureBox placementBox;
     }
 }

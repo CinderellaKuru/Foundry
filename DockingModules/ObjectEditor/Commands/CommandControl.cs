@@ -1,5 +1,6 @@
 ﻿using SMHEditor.Project.FileTypes;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.ObjectEditor.Commands
@@ -22,6 +23,47 @@ namespace SMHEditor.DockingModules.ObjectEditor.Commands
         {
             parent.flowLayoutPanel.Controls.Remove(this);
             obj.Command.Remove(command);
+        }
+
+        private void position_ValueChanged(object sender, EventArgs e)
+        {
+            Image img;
+            switch (position.Value)
+            {
+                case 0:
+                    img = Properties.Resources.Placement0;
+                    placementBox.Image = img;
+                    break;
+                case 1:
+                    img = Properties.Resources.Placement1;
+                    placementBox.Image = img;
+                    break;
+                case 2:
+                    img = Properties.Resources.Placement2;
+                    placementBox.Image = img;
+                    break;
+                case 3:
+                    img = Properties.Resources.Placement3;
+                    placementBox.Image = img;
+                    break;
+                case 4:
+                    img = Properties.Resources.Placement4;
+                    placementBox.Image = img;
+                    break;
+                case 5:
+                    img = Properties.Resources.Placement5;
+                    placementBox.Image = img;
+                    break;
+                case 6:
+                    img = Properties.Resources.Placement6;
+                    placementBox.Image = img;
+                    break;
+                case 7:
+                    img = Properties.Resources.Placement7;
+                    placementBox.Image = img;
+                    break;
+            }
+
         }
     }
 }

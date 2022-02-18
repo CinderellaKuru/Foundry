@@ -346,6 +346,30 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
