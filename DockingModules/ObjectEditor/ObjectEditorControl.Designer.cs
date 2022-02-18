@@ -29,24 +29,28 @@
         private void InitializeComponent()
         {
             this.kryptonNavigator = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
-            this.settings = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.general = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.hardpoints = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ui = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.veterancy = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.sounds = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.commands = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.objectTypes = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.objectChilds = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.flags = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.options = new ComponentFactory.Krypton.Navigator.KryptonPage();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator)).BeginInit();
             this.kryptonNavigator.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.settings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.general)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.hardpoints)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ui)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.veterancy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sounds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.commands)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectTypes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectChilds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.flags)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.options)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonNavigator
@@ -58,31 +62,33 @@
             this.kryptonNavigator.Margin = new System.Windows.Forms.Padding(2);
             this.kryptonNavigator.Name = "kryptonNavigator";
             this.kryptonNavigator.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
-            this.settings,
+            this.general,
             this.hardpoints,
             this.ui,
             this.veterancy,
             this.sounds,
             this.commands,
             this.objectTypes,
-            this.flags});
-            this.kryptonNavigator.SelectedIndex = 5;
+            this.objectChilds,
+            this.flags,
+            this.options});
+            this.kryptonNavigator.SelectedIndex = 0;
             this.kryptonNavigator.Size = new System.Drawing.Size(358, 401);
             this.kryptonNavigator.TabIndex = 0;
             this.kryptonNavigator.Text = "kryptonNavigator1";
             // 
-            // settings
+            // general
             // 
-            this.settings.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.settings.Flags = 65534;
-            this.settings.LastVisibleSet = true;
-            this.settings.Margin = new System.Windows.Forms.Padding(2);
-            this.settings.MinimumSize = new System.Drawing.Size(38, 41);
-            this.settings.Name = "settings";
-            this.settings.Size = new System.Drawing.Size(273, 399);
-            this.settings.Text = "Settings";
-            this.settings.ToolTipTitle = "Page ToolTip";
-            this.settings.UniqueName = "645F1B3D322345949AB78CB67882184A";
+            this.general.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.general.Flags = 65534;
+            this.general.LastVisibleSet = true;
+            this.general.Margin = new System.Windows.Forms.Padding(2);
+            this.general.MinimumSize = new System.Drawing.Size(38, 41);
+            this.general.Name = "general";
+            this.general.Size = new System.Drawing.Size(271, 399);
+            this.general.Text = "General";
+            this.general.ToolTipTitle = "Page ToolTip";
+            this.general.UniqueName = "645F1B3D322345949AB78CB67882184A";
             // 
             // hardpoints
             // 
@@ -162,6 +168,18 @@
             this.objectTypes.ToolTipTitle = "Page ToolTip";
             this.objectTypes.UniqueName = "66FE122DE634463C7AAAF3A78E8E0542";
             // 
+            // objectChilds
+            // 
+            this.objectChilds.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.objectChilds.Flags = 65534;
+            this.objectChilds.LastVisibleSet = true;
+            this.objectChilds.MinimumSize = new System.Drawing.Size(50, 50);
+            this.objectChilds.Name = "objectChilds";
+            this.objectChilds.Size = new System.Drawing.Size(267, 399);
+            this.objectChilds.Text = "Object Childs";
+            this.objectChilds.ToolTipTitle = "Page ToolTip";
+            this.objectChilds.UniqueName = "86E9BE5107294B9403A097355035987A";
+            // 
             // flags
             // 
             this.flags.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
@@ -171,10 +189,22 @@
             this.flags.MinimumSize = new System.Drawing.Size(38, 41);
             this.flags.Name = "flags";
             this.flags.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.flags.Size = new System.Drawing.Size(273, 399);
+            this.flags.Size = new System.Drawing.Size(271, 399);
             this.flags.Text = "Flags";
             this.flags.ToolTipTitle = "Page ToolTip";
             this.flags.UniqueName = "37148650FC0845113EB3B7CCBCC2B841";
+            // 
+            // options
+            // 
+            this.options.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.options.Flags = 65534;
+            this.options.LastVisibleSet = true;
+            this.options.MinimumSize = new System.Drawing.Size(50, 50);
+            this.options.Name = "options";
+            this.options.Size = new System.Drawing.Size(271, 399);
+            this.options.Text = "Options";
+            this.options.ToolTipTitle = "Page ToolTip";
+            this.options.UniqueName = "A973F7D547A54205AEBB8B3BD02CDC32";
             // 
             // ObjectEditorControl
             // 
@@ -186,14 +216,16 @@
             this.Size = new System.Drawing.Size(358, 401);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator)).EndInit();
             this.kryptonNavigator.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.settings)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.general)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.hardpoints)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ui)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.veterancy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sounds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.commands)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectTypes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectChilds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.flags)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.options)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -201,7 +233,7 @@
         #endregion
 
         private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator;
-        public ComponentFactory.Krypton.Navigator.KryptonPage settings;
+        public ComponentFactory.Krypton.Navigator.KryptonPage general;
         public ComponentFactory.Krypton.Navigator.KryptonPage hardpoints;
         public ComponentFactory.Krypton.Navigator.KryptonPage ui;
         public ComponentFactory.Krypton.Navigator.KryptonPage veterancy;
@@ -209,5 +241,7 @@
         public ComponentFactory.Krypton.Navigator.KryptonPage commands;
         public ComponentFactory.Krypton.Navigator.KryptonPage objectTypes;
         public ComponentFactory.Krypton.Navigator.KryptonPage flags;
+        public ComponentFactory.Krypton.Navigator.KryptonPage objectChilds;
+        public ComponentFactory.Krypton.Navigator.KryptonPage options;
     }
 }

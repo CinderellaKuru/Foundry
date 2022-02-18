@@ -161,6 +161,18 @@
     <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.Designer.cs">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.Designer.cs">
+      <DependentUpon>ObjectChildControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.Designer.cs">
+      <DependentUpon>ObjectChildsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -180,11 +192,17 @@
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ObjectEditor\ObjectEditorPage.cs" />
-    <Compile Include="DockingModules\ObjectEditor\SettingsControl.cs">
+    <Compile Include="DockingModules\ObjectEditor\GeneralControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\SettingsControl.Designer.cs">
-      <DependentUpon>SettingsControl.cs</DependentUpon>
+    <Compile Include="DockingModules\ObjectEditor\GeneralControl.Designer.cs">
+      <DependentUpon>GeneralControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\UIControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\UIControl.Designer.cs">
+      <DependentUpon>UIControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.cs">
       <SubType>UserControl</SubType>
@@ -244,6 +262,12 @@
     <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.resx">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.resx">
+      <DependentUpon>ObjectChildControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.resx">
+      <DependentUpon>ObjectChildsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.resx">
       <DependentUpon>ObjectTypeControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -253,8 +277,11 @@
     <EmbeddedResource Include="DockingModules\ObjectEditor\ObjectEditorControl.resx">
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\SettingsControl.resx">
-      <DependentUpon>SettingsControl.cs</DependentUpon>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\GeneralControl.resx">
+      <DependentUpon>GeneralControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\UIControl.resx">
+      <DependentUpon>UIControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.resx">
       <DependentUpon>VeterancyControl.cs</DependentUpon>

@@ -34,8 +34,8 @@
             this.autoclose = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.name = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.type = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.type = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
             this.kryptonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.type)).BeginInit();
@@ -89,7 +89,7 @@
             this.name.Name = "name";
             this.name.Size = new System.Drawing.Size(161, 23);
             this.name.TabIndex = 0;
-            this.name.Text = "name";
+            this.name.Text = "Name";
             // 
             // kryptonPanel
             // 
@@ -108,6 +108,15 @@
             this.kryptonPanel.Size = new System.Drawing.Size(200, 112);
             this.kryptonPanel.TabIndex = 1;
             // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(2, 33);
+            this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(2);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(37, 20);
+            this.kryptonLabel2.TabIndex = 24;
+            this.kryptonLabel2.Values.Text = "Type";
+            // 
             // type
             // 
             this.type.DropDownWidth = 146;
@@ -117,15 +126,6 @@
             this.type.Name = "type";
             this.type.Size = new System.Drawing.Size(146, 21);
             this.type.TabIndex = 23;
-            // 
-            // kryptonLabel2
-            // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(2, 33);
-            this.kryptonLabel2.Margin = new System.Windows.Forms.Padding(2);
-            this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(37, 20);
-            this.kryptonLabel2.TabIndex = 24;
-            this.kryptonLabel2.Values.Text = "Type";
             // 
             // CommandControl
             // 

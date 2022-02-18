@@ -3,10 +3,10 @@ using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.ObjectEditor
 {
-    public partial class SettingsControl : UserControl
+    public partial class GeneralControl : UserControl
     {
         private readonly ObjectFile obj;
-        public SettingsControl(ObjectFile o)
+        public GeneralControl(ObjectFile o)
         {
             InitializeComponent();
             Dock = DockStyle.Fill;

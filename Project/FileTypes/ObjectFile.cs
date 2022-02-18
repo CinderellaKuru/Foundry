@@ -15,6 +15,7 @@ namespace SMHEditor.Project.FileTypes
         public string MovementType { get; set; }
         public float FlightLevel { get; set; }
         public List<string> ObjectType { get; set; }
+        public List<string> ObjectChild { get; set; }
         public string DisplayNameID { get; set; }
         public string RolloverTextID { get; set; }
         public string SelectedRadiusX { get; set; }
