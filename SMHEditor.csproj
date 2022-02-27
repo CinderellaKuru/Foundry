@@ -48,19 +48,19 @@
       <HintPath>packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Docking">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Docking.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Docking.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Navigator">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Navigator.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Navigator.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Ribbon">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Ribbon.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Ribbon.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Toolkit">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Workspace">
-      <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Workspace.dll</HintPath>
+      <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Workspace.dll</HintPath>
     </Reference>
     <Reference Include="DirectXTexNet">
       <HintPath>ext\DXTexNet\DirectXTexNet.dll</HintPath>
@@ -138,6 +138,30 @@
     </Compile>
     <Compile Include="DockingModules\MapEditor\MapEditorScene.cs" />
     <Compile Include="DockingModules\MapEditor\Transform.cs" />
+    <Compile Include="DockingModules\ObjectEditor\Commands\CommandControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Commands\CommandControl.Designer.cs">
+      <DependentUpon>CommandControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Commands\CommandsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Commands\CommandsControl.Designer.cs">
+      <DependentUpon>CommandsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.Designer.cs">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.Designer.cs">
+      <DependentUpon>FlagsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -150,6 +174,30 @@
     <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.Designer.cs">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.Designer.cs">
+      <DependentUpon>ObjectChildControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.Designer.cs">
+      <DependentUpon>ObjectChildsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.Designer.cs">
+      <DependentUpon>ObjectTypeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.Designer.cs">
+      <DependentUpon>ObjectTypesControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockingModules\ObjectEditor\ObjectEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -157,11 +205,29 @@
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ObjectEditor\ObjectEditorPage.cs" />
-    <Compile Include="DockingModules\ObjectEditor\SettingsControl.cs">
+    <Compile Include="DockingModules\ObjectEditor\GeneralControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\SettingsControl.Designer.cs">
-      <DependentUpon>SettingsControl.cs</DependentUpon>
+    <Compile Include="DockingModules\ObjectEditor\GeneralControl.Designer.cs">
+      <DependentUpon>GeneralControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\UIControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\UIControl.Designer.cs">
+      <DependentUpon>UIControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.Designer.cs">
+      <DependentUpon>VeterancyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.Designer.cs">
+      <DependentUpon>VeterancysControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerControl.cs">
       <SubType>UserControl</SubType>
@@ -192,17 +258,50 @@
     <EmbeddedResource Include="DockingModules\MapEditor\ViewportControl.resx">
       <DependentUpon>ViewportControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Commands\CommandControl.resx">
+      <DependentUpon>CommandControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Commands\CommandsControl.resx">
+      <DependentUpon>CommandsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagControl.resx">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagsControl.resx">
+      <DependentUpon>FlagsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
       <DependentUpon>HardpointControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.resx">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.resx">
+      <DependentUpon>ObjectChildControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.resx">
+      <DependentUpon>ObjectChildsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.resx">
+      <DependentUpon>ObjectTypeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.resx">
+      <DependentUpon>ObjectTypesControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ObjectEditor\ObjectEditorControl.resx">
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\SettingsControl.resx">
-      <DependentUpon>SettingsControl.cs</DependentUpon>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\GeneralControl.resx">
+      <DependentUpon>GeneralControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\UIControl.resx">
+      <DependentUpon>UIControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.resx">
+      <DependentUpon>VeterancyControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.resx">
+      <DependentUpon>VeterancysControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
@@ -239,6 +338,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ext\SMH-Icons\cog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\CommandPositions\7.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

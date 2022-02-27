@@ -2,12 +2,12 @@
 using System;
 using System.Windows.Forms;
 
-namespace SMHEditor.DockingModules.ObjectEditor
+namespace SMHEditor.DockingModules.ObjectEditor.Commands
 {
-    public partial class HardpointsControl : UserControl
+    public partial class CommandsControl : UserControl
     {
         private readonly ObjectFile obj;
-        public HardpointsControl(ObjectFile o)
+        public CommandsControl(ObjectFile o)
         {
             InitializeComponent();
             add.MouseClick += new MouseEventHandler(Add);
@@ -17,9 +17,9 @@ namespace SMHEditor.DockingModules.ObjectEditor
 
         private void Add(object o, EventArgs e)
         {
-            Hardpoint hp = new Hardpoint();
-            obj.Hardpoint.Add(hp);
-            flowLayoutPanel.Controls.Add(new HardpointControl(obj, hp, this));
+            Command cm = new Command();
+            obj.Command.Add(cm);
+            flowLayoutPanel.Controls.Add(new CommandControl(obj, cm, this));
         }
     }
 }

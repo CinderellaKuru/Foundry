@@ -2,17 +2,16 @@
 using System;
 using System.Windows.Forms;
 
-namespace SMHEditor.DockingModules.ObjectEditor
+namespace SMHEditor.DockingModules.ObjectEditor.Flags
 {
-    public partial class HardpointControl : UserControl
+    public partial class FlagControl : UserControl
     {
-        public static int HEIGHT = 35;
-        private readonly Hardpoint hardpoint;
-        private readonly HardpointsControl parent;
+        private readonly FlagsControl parent;
+        private readonly string fg;
         private readonly ObjectFile obj;
-        public HardpointControl(ObjectFile o, Hardpoint hp, HardpointsControl owner)
+        public FlagControl(ObjectFile o, string flag, FlagsControl owner)
         {
-            hardpoint = hp;
+            flag = fg;
             InitializeComponent();
             parent = owner;
             obj = o;
@@ -22,7 +21,7 @@ namespace SMHEditor.DockingModules.ObjectEditor
         private void deleteButton_Click(object sender, EventArgs e)
         {
             parent.flowLayoutPanel.Controls.Remove(this);
-            obj.Hardpoint.Remove(hardpoint);
+            obj.Flag.Remove(fg);
         }
     }
 }

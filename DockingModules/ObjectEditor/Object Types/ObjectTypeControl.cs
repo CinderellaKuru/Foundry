@@ -2,17 +2,16 @@
 using System;
 using System.Windows.Forms;
 
-namespace SMHEditor.DockingModules.ObjectEditor
+namespace SMHEditor.DockingModules.ObjectEditor.Object_Types
 {
-    public partial class HardpointControl : UserControl
+    public partial class ObjectTypeControl : UserControl
     {
-        public static int HEIGHT = 35;
-        private readonly Hardpoint hardpoint;
-        private readonly HardpointsControl parent;
+        private readonly ObjectTypesControl parent;
+        private readonly string ot;
         private readonly ObjectFile obj;
-        public HardpointControl(ObjectFile o, Hardpoint hp, HardpointsControl owner)
+        public ObjectTypeControl(ObjectFile o, string objectType, ObjectTypesControl owner)
         {
-            hardpoint = hp;
+            objectType = ot;
             InitializeComponent();
             parent = owner;
             obj = o;
@@ -22,7 +21,7 @@ namespace SMHEditor.DockingModules.ObjectEditor
         private void deleteButton_Click(object sender, EventArgs e)
         {
             parent.flowLayoutPanel.Controls.Remove(this);
-            obj.Hardpoint.Remove(hardpoint);
+            obj.ObjectType.Remove(ot);
         }
     }
 }
