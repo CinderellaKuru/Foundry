@@ -32,7 +32,8 @@ namespace SMHEditor.DockingModules.ProjectExplorer
         public static Dictionary<string, int> ImageIndex = new Dictionary<string, int>()
         {
             {"", 3}, //fallback
-            {"data_dir", 0},
+            {"\\data", 0},
+            {"\\art", 0},
             {"folder", 1},
             {"object", 3},
             {"scenario", 2},

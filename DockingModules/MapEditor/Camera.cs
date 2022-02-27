@@ -14,8 +14,10 @@ namespace SMHEditor.DockingModules.MapEditor
     {
         public Transform t = new Transform();
         public Matrix4[] mData = new Matrix4[3]; // 0=proj, 1=view, 2=model
-        public int mDataBuff;
+        float[] colorData = new float[4] { 1, 1, 1, 1 }; //rgba
+        public int mDataBuff, colorBuff;
         public float MoveSpeed = .1f;
+        public int pickFBO;
 
         public Camera()
         {
@@ -32,11 +34,17 @@ namespace SMHEditor.DockingModules.MapEditor
             GL.BufferData(BufferTarget.UniformBuffer, Marshal.SizeOf(new Matrix4()) * 3, mData, BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
 
+            colorBuff = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.UniformBuffer, colorBuff);
+            GL.BufferData(BufferTarget.UniformBuffer, 16, colorData, BufferUsageHint.DynamicDraw);
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+
             UpdateViewMatrix();
             UpdateProjMatrix();
             UpdateCameraBuffer();
-        }
 
+
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// Move fucntions.
@@ -152,20 +160,26 @@ namespace SMHEditor.DockingModules.MapEditor
         {
             mData[0] = Matrix4.CreatePerspectiveFieldOfView(1.22173f,
                 dimX / dimY, 
-                0.01F, 1000F);
+                0.01F, 10000f);
         }
         public void UpdateViewMatrix()
         {
             mData[1] = Matrix4.LookAt(
-                Convert.ToTKVec3(t.position), 
-                Convert.ToTKVec3(cameraTarget), 
+                Convert.ToTKVec3(t.position),
+                Convert.ToTKVec3(cameraTarget),
                 new Vector3(0, 1, 0));
         }
         public void UpdateCameraBuffer()
         {
-            Matrix4 mvp = mData[2] * mData[1] * mData[0];
             GL.BindBuffer(BufferTarget.UniformBuffer, mDataBuff);
             GL.BufferSubData(BufferTarget.UniformBuffer, (IntPtr)0, Marshal.SizeOf(new Matrix4()) * 3, mData);
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+        }
+        public void UpdateColorBuffer(float r, float g, float b, float a)
+        {
+            colorData[0] = r; colorData[1] = g; colorData[2] = b; colorData[3] = a;
+            GL.BindBuffer(BufferTarget.UniformBuffer, colorBuff);
+            GL.BufferSubData(BufferTarget.UniformBuffer, (IntPtr)0, 16, colorData);
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

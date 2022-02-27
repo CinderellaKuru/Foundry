@@ -26,7 +26,6 @@ namespace SMHEditor
                 tkVector.Y,
                 tkVector.Z );
         }
-
         public static List<float> GetFloats(this List<Vector3> v)
         {
             List<float> f = new List<float>(v.Count);
@@ -46,7 +45,6 @@ namespace SMHEditor
         {
             return Vector3.Distance(Convert.ToTKVec3(a), Convert.ToTKVec3(b));
         }
-
         public static bool DrawingPointIsInsideControl(System.Drawing.Point p, System.Windows.Forms.Control c)
         {
             if (p.X < c.PointToScreen(new Point(0, 0)).X ||
@@ -54,6 +52,18 @@ namespace SMHEditor
                 p.Y < c.PointToScreen(new Point(0, 0)).Y ||
                 p.Y > c.PointToScreen(new Point(0, 0)).Y + c.Height) return false;
             else return true;
+        }
+        public static uint CalcAdler32(byte[] barr, int offs, int len)
+        {
+            const int mod = 65521;
+            uint a = 1, b = 0;
+            for (int i = offs; i < len + offs; i++)
+            {
+                byte c = barr[i];
+                a = (a + c) % mod;
+                b = (b + a) % mod;
+            }
+            return (b << 16) | a;
         }
     }
 }

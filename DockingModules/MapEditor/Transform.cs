@@ -14,20 +14,25 @@ namespace SMHEditor.DockingModules.MapEditor
         {
             position = new JVector(0, 0, 0);
             eulerAngles = new JVector(0, 0, 0);
+            scale = new JVector(1, 1, 1);
         }
         public JVector position;
         public JVector eulerAngles;
+        public JVector scale;
         public Matrix4 GetModelMatrix()
         {
-            Matrix4 mt, mr;
+            Matrix4 mt, mr, ms;
 
-            Vector3 pos = Convert.ToTKVec3(position);
-            Matrix4.CreateTranslation(ref pos, out mt);
+            Vector3 scl = Convert.ToTKVec3(scale);
+            Matrix4.CreateScale(ref scl, out ms);
 
             Quaternion rot = Quaternion.FromEulerAngles(eulerAngles.X, eulerAngles.Y, eulerAngles.Z);
             Matrix4.CreateFromQuaternion(ref rot, out mr);
 
-            return mt * mr;
+            Vector3 pos = Convert.ToTKVec3(position);
+            Matrix4.CreateTranslation(ref pos, out mt);
+
+            return ms * mr * mt;
         }
 
         public void Translate(float x, float y, float z)

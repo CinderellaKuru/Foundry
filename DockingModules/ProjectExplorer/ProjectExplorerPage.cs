@@ -51,9 +51,7 @@ namespace SMHEditor.DockingModules.ProjectExplorer
 
             Controls.Add(pec);
 
-            pec.treeView.Nodes.Add(MainWindow.project.GetTreeView(ModProject.DATA_DIR, "Data"));
-           // pec.treeView.TreeViewNodeSorter = new NodeComparer();
-           // pec.treeView.Sort();
+            pec.treeView.Nodes.Add(MainWindow.project.GetTreeView(rootDir, name));
         }
     }
 }

@@ -10,9 +10,11 @@
     <AssemblyName>SMHEditor</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -24,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,6 +44,9 @@
     <Reference Include="AnySerializer, Version=1.1.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
     </Reference>
+    <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="ComponentFactory.Krypton.Docking">
       <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Docking.dll</HintPath>
     </Reference>
@@ -56,8 +62,14 @@
     <Reference Include="ComponentFactory.Krypton.Workspace">
       <HintPath>ext\SMH-Krypton\Bin\ComponentFactory.Krypton.Workspace.dll</HintPath>
     </Reference>
+    <Reference Include="DirectXTexNet">
+      <HintPath>ext\DXTexNet\DirectXTexNet.dll</HintPath>
+    </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="geometry3Sharp, Version=1.0.324.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\geometry3Sharp.1.0.324\lib\net45\geometry3Sharp.dll</HintPath>
     </Reference>
     <Reference Include="Jitter, Version=0.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -116,6 +128,7 @@
     <Compile Include="DockingModules\EditorPage.cs" />
     <Compile Include="DockingModules\MapEditor\Camera.cs" />
     <Compile Include="DockingModules\MapEditor\HelperObjects.cs" />
+    <Compile Include="DockingModules\MapEditor\TerrainModifier.cs" />
     <Compile Include="DockingModules\MapEditor\ViewportPage.cs" />
     <Compile Include="DockingModules\MapEditor\ViewportControl.cs">
       <SubType>UserControl</SubType>
@@ -157,6 +170,7 @@
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerPage.cs" />
+    <Compile Include="ECF\ECF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project\FileTypes\ObjectFile.cs" />
     <Compile Include="Project\FileTypes\Maps\TerrainFile.cs" />
@@ -215,24 +229,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ext\Icons\folder_page_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\Icons\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\Icons\box.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\Icons\cog.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\Icons\page.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\Icons\page_white.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ext\SMH-Icons\box.png" />
   </ItemGroup>
   <ItemGroup>
@@ -248,4 +244,11 @@
   <PropertyGroup>
     <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
   </PropertyGroup>
+  <Import Project="packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets" Condition="Exists('packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets'))" />
+  </Target>
 </Project>

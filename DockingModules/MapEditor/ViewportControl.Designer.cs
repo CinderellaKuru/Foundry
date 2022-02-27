@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.glControl = new OpenTK.GLControl();
+            this.glControl = new OpenTK.GLControl(new OpenTK.Graphics.GraphicsMode(new OpenTK.Graphics.ColorFormat(8), 32));
             this.SuspendLayout();
             // 
             // glControl1

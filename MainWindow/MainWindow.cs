@@ -50,16 +50,16 @@ namespace SMHEditor
 
             dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] {
                 new ProjectExplorerPage("\\data", "Data"),
-                /*new ProjectExplorerPage("\\art",  "Art")*/ });
+                new ProjectExplorerPage("\\art",  "Art") });
 
 
-            TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Small512);
+            TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Medium1024);
             //YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(TerrainFile));
             //s.SerializeToFile(t, "C:\\Users\\jaken\\Desktop\\testproj\\data\\MyMap\\map.trn");
-            //vp.sc
             MapEditorScene scn = new MapEditorScene();
             scn.LoadFile(t);
-            MainWindow.vp.SetScene(scn);
+            vp.SetScene(scn);
+            //scn.ExportXTD("C:\\Users\\jaken\\Desktop\\out.xtd");
         }
     }
 }

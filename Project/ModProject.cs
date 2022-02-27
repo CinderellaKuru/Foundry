@@ -131,8 +131,8 @@ namespace SMHEditor.Project
             KryptonTreeNode root = new KryptonTreeNode();
             root.Text = name;
             root.Name = fromDir;
-            root.ImageIndex = ProjectExplorerControl.ImageIndex["data_dir"];
-            root.SelectedImageIndex = ProjectExplorerControl.ImageIndex["data_dir"];
+            root.ImageIndex = ProjectExplorerControl.ImageIndex[fromDir];
+            root.SelectedImageIndex = ProjectExplorerControl.ImageIndex[fromDir];
             root.Tag = FileType.ROOT;
 
             Dictionary<string, KryptonTreeNode> nodes = new Dictionary<string, KryptonTreeNode>();
