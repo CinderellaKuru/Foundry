@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vector3 = BEPUutilities.Vector3;
 
 namespace SMHEditor.DockingModules.MapEditor
 {
@@ -12,24 +13,24 @@ namespace SMHEditor.DockingModules.MapEditor
     {
         public Transform()
         {
-            position = new JVector(0, 0, 0);
-            eulerAngles = new JVector(0, 0, 0);
-            scale = new JVector(1, 1, 1);
+            position = new Vector3(0, 0, 0);
+            eulerAngles = new Vector3(0, 0, 0);
+            scale = new Vector3(1, 1, 1);
         }
-        public JVector position;
-        public JVector eulerAngles;
-        public JVector scale;
+        public Vector3 position;
+        public Vector3 eulerAngles;
+        public Vector3 scale;
         public Matrix4 GetModelMatrix()
         {
             Matrix4 mt, mr, ms;
 
-            Vector3 scl = Convert.ToTKVec3(scale);
+            OpenTK.Vector3 scl = new OpenTK.Vector3(scale.X, scale.Y, scale.Z);
             Matrix4.CreateScale(ref scl, out ms);
 
             Quaternion rot = Quaternion.FromEulerAngles(eulerAngles.X, eulerAngles.Y, eulerAngles.Z);
             Matrix4.CreateFromQuaternion(ref rot, out mr);
 
-            Vector3 pos = Convert.ToTKVec3(position);
+            OpenTK.Vector3 pos = new OpenTK.Vector3(position.X, position.Y, position.Z);
             Matrix4.CreateTranslation(ref pos, out mt);
 
             return ms * mr * mt;
@@ -37,11 +38,11 @@ namespace SMHEditor.DockingModules.MapEditor
 
         public void Translate(float x, float y, float z)
         {
-            position += new JVector(x, y, z);
+            position += new Vector3(x, y, z);
         }
         public void Rotate(float x, float y, float z)
         {
-            eulerAngles += new JVector(x, y, z);
+            eulerAngles += new Vector3(x, y, z);
         }
     }
 }

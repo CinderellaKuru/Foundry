@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Jitter.LinearMath;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using Vector3 = BEPUutilities.Vector3;
 
 namespace SMHEditor.DockingModules.MapEditor
 {
@@ -25,7 +26,7 @@ namespace SMHEditor.DockingModules.MapEditor
             mData[1] = Matrix4.Identity;
             mData[2] = Matrix4.Identity;
 
-            t.position = new JVector(0, 0, -1); //must come before any rotate/addradius calls.
+            t.position = new Vector3(0, 0, -1); //must come before any rotate/addradius calls.
             Rotate(0, .5f);
             AddRadius(25f);
 
@@ -49,43 +50,44 @@ namespace SMHEditor.DockingModules.MapEditor
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// Move fucntions.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public JVector cameraTarget = new JVector(0, 0, 0);
+        public Vector3 cameraTarget = new Vector3(0, 0, 0);
         public float cameraRadius = 0f;
         public void Rotate(float yaw, float pitch)
         {
             pitch = -pitch;
 
-            JVector worldUp = new JVector(0, 1, 0);
+            Vector3 worldUp = new Vector3(0, 1, 0);
 
-            JVector cameraDirection = JVector.Normalize(t.position - cameraTarget);
-            JVector cameraRight = JVector.Normalize(JVector.Cross(worldUp, cameraDirection));
-            JVector cameraUp = JVector.Cross(cameraDirection, cameraRight);
+            Vector3 cameraDirection = Vector3.Normalize(t.position - cameraTarget);
+            Vector3 cameraRight = Vector3.Normalize(Vector3.Cross(worldUp, cameraDirection));
+            Vector3 cameraUp = Vector3.Cross(cameraDirection, cameraRight);
 
-            JVector cameraFocusVector = t.position - cameraTarget;
+            OpenTK.Vector3 cameraFocusVector = Convert.ToTKVec3(t.position - cameraTarget);
 
             if (cameraDirection.Y < -.9900f && pitch > 0) pitch = 0;
             if (cameraDirection.Y > .9900f && pitch < 0) pitch = 0;
 
-            JMatrix pitchMat = JMatrix.CreateFromAxisAngle(cameraRight, pitch);
-            JMatrix yawMat = JMatrix.CreateFromAxisAngle(worldUp, yaw);
+            Matrix3 pitchMat = Matrix3.CreateFromAxisAngle(Convert.ToTKVec3(cameraRight), pitch);
+            Matrix3 yawMat = Matrix3.CreateFromAxisAngle(Convert.ToTKVec3(worldUp), yaw);
 
-            JVector vecOut;
-            JVector.Transform(ref cameraFocusVector, ref yawMat, out vecOut);
-            JVector.Transform(ref vecOut, ref pitchMat, out vecOut);
+            OpenTK.Vector3 vecOut;
+            OpenTK.Vector3.Transform(ref cameraFocusVector, ref yawMat, out vecOut);
+            OpenTK.Vector3.Transform(ref vecOut, ref pitchMat, out vecOut);
 
-            t.position = vecOut + cameraTarget;
+            OpenTK.Vector3 v = vecOut + Convert.ToTKVec3(cameraTarget);
+            t.position = new Vector3(v.X,v.Y,v.Z);
             UpdateViewMatrix();
         }
         public void AddRadius(float f)
         {
-            float v = Vector3.Distance(Convert.ToTKVec3(t.position), Convert.ToTKVec3(cameraTarget));
+            float v = Vector3.Distance(t.position, cameraTarget);
             if (v + f < .25f && f < 0) return;
 
             cameraRadius += f;
-            t.position = (JVector.Normalize(t.position - cameraTarget) * cameraRadius) + cameraTarget;
+            t.position = (Vector3.Normalize(t.position - cameraTarget) * cameraRadius) + cameraTarget;
             UpdateViewMatrix();
         }
-        public void MoveAbsolute(JVector v)
+        public void MoveAbsolute(Vector3 v)
         {
             cameraTarget += v;
             t.position += v;
@@ -94,17 +96,17 @@ namespace SMHEditor.DockingModules.MapEditor
         public void MoveRelativeToScreen(float lr, float ud)
         {
             //get roation
-            JVector rot = JVector.Normalize((t.position - cameraTarget));
-            Matrix4 la = Matrix4.LookAt(Convert.ToTKVec3(t.position), Convert.ToTKVec3(cameraTarget), Vector3.UnitY);
+            Vector3 rot = Vector3.Normalize((t.position - cameraTarget));
+            Matrix4 la = Matrix4.LookAt(Convert.ToTKVec3(t.position), Convert.ToTKVec3(cameraTarget), new OpenTK.Vector3(0, 1, 0));
 
-            JVector right = new JVector(la.M11, 0, la.M31);
-            JVector up = new JVector(la.M12, la.M22, la.M32);
+            Vector3 right = new Vector3(la.M11, 0, la.M31);
+            Vector3 up = new Vector3(la.M12, la.M22, la.M32);
             right.Normalize();
             up.Normalize();
 
-            JVector moveLR = JVector.Normalize(new JVector(right.X, 0, right.Z)) * lr;
-            JVector moveUD = JVector.Normalize(new JVector(up.X, 0, up.Z)) * ud;
-            JVector move = moveLR + moveUD;
+            Vector3 moveLR = Vector3.Normalize(new Vector3(right.X, 0, right.Z)) * lr;
+            Vector3 moveUD = Vector3.Normalize(new Vector3(up.X, 0, up.Z)) * ud;
+            Vector3 move = moveLR + moveUD;
 
             cameraTarget += move * MoveSpeed;
             t.position += move * MoveSpeed;
@@ -167,7 +169,7 @@ namespace SMHEditor.DockingModules.MapEditor
             mData[1] = Matrix4.LookAt(
                 Convert.ToTKVec3(t.position),
                 Convert.ToTKVec3(cameraTarget),
-                new Vector3(0, 1, 0));
+                new OpenTK.Vector3(0, 1, 0));
         }
         public void UpdateCameraBuffer()
         {

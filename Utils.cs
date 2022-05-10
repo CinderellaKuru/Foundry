@@ -19,6 +19,17 @@ namespace SMHEditor
                 jVector.Y,
                 jVector.Z );
         }
+        public static Vector3 ToTKVec3(BEPUutilities.Vector3 vector)
+        {
+            return new Vector3(
+                vector.X,
+                vector.Y,
+                vector.Z);
+        }
+        public static BEPUutilities.Vector3 ToBepuVec3(OpenTK.Vector3 v)
+        {
+            return new BEPUutilities.Vector3(v.X, v.Y, v.Z);
+        }
         public static JVector ToJVec3(Vector3 tkVector)
         {
             return new JVector(

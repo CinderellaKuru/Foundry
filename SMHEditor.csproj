@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;STUMPY</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -44,8 +44,14 @@
     <Reference Include="AnySerializer, Version=1.1.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
     </Reference>
-    <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
+    <Reference Include="BEPUphysics, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\BEPUphysics.1.5.2\lib\netstandard2.0\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\BEPUutilities.1.5.1\lib\netstandard2.0\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="BulletSharp">
+      <HintPath>ext\BulletOpenTK\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Docking">
       <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Docking.dll</HintPath>
@@ -370,11 +376,4 @@
   <PropertyGroup>
     <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
   </PropertyGroup>
-  <Import Project="packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets" Condition="Exists('packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets'))" />
-  </Target>
 </Project>

@@ -8,43 +8,52 @@ using OpenTK.Graphics.OpenGL4;
 using System.IO;
 using OpenTK;
 using System.Drawing;
+using Jitter;
+using Jitter.Collision;
+using Jitter.Collision.Shapes;
+using Jitter.Dynamics;
+using Jitter.LinearMath;
+using BEPUphysics;
+using BEPUphysics.Entities.Prefabs;
+using Vector3 = BEPUutilities.Vector3;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using SMHEditor.ECF;
 using DirectXTexNet;
-using BulletSharp;
 using static SMHEditor.Project.FileTypes.TerrainFile;
 using Image = DirectXTexNet.Image;
+using BEPUphysics.BroadPhaseEntries;
 
 namespace SMHEditor.DockingModules.MapEditor
 {
     public class TerrainChunk : ViewportScene.SceneObject
     {
         public int X, Y;
-        public Vector3[] positions = new Vector3[64 * 64];
-        public Vector3[] normals = new Vector3[64 * 64];
+        public JVector[] positions = new JVector[64 * 64];
+        public JVector[] normals = new JVector[64 * 64];
         public float[] ao = new float[64 * 64];
         public byte[] alpha = new byte[64 * 64 * 2];
-        int[] indices = new int[64 * 64 * 6];
-        
-        public TriangleMesh shape;
+        TriangleVertexIndices[] indices = new TriangleVertexIndices[64 * 64 * 2];
+
+        public Octree octree;
+        public TriangleMeshShape shape;
         public RigidBody body;
 
         public TerrainChunk(TerrainFileChunk tfc, int x, int y)
         {
             X = x;
             Y = y;
-            //positions = tfc.positionData;
+            positions = tfc.positionData;
 
             // Gen indices
-            for (int j = 0; j < TerrainFile.maxVStride - 1; j++)
+            for (int j = 0; j < maxVStride - 1; j++)
             {
-                for (int i = 0; i < TerrainFile.maxVStride - 1; i++)
+                for (int i = 0; i < maxVStride - 1; i++)
                 {
                     int i1, i2, i3, i4, i5, i6;
 
-                    int row1 = i * TerrainFile.maxVStride;
-                    int row2 = (i + 1) * TerrainFile.maxVStride;
+                    int row1 = i * maxVStride;
+                    int row2 = (i + 1) * maxVStride;
 
                     i1 = row1 + j;
                     i2 = row1 + j + 1;
@@ -54,9 +63,11 @@ namespace SMHEditor.DockingModules.MapEditor
                     i5 = row2 + j;
                     i6 = row1 + j + 1;
 
+                    TriangleVertexIndices t0 = new TriangleVertexIndices(i1, i2, i3);
+                    TriangleVertexIndices t1 = new TriangleVertexIndices(i4, i5, i6);
 
-                    indices[(j * TerrainFile.maxVStride + i) * 2 + 0] = t0;
-                    indices[(j * TerrainFile.maxVStride + i) * 2 + 1] = t1;
+                    indices[(j * maxVStride + i) * 2 + 0] = t0;
+                    indices[(j * maxVStride + i) * 2 + 1] = t1;
                 }
             }
             
@@ -75,18 +86,18 @@ namespace SMHEditor.DockingModules.MapEditor
 
             indexBuffer = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Count() * 4, indices, BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Count() * 12, indices, BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             #endregion
 
-
+            octree = new Octree(positions.ToList(), indices.ToList());
             shape = new TriangleMeshShape(octree);
             body = new RigidBody(shape);
             body.Tag = "TerrainChunk";
             body.AffectedByGravity = false;
             body.IsStatic = true;
             body.Position = new JVector((maxVStride-1) * X, 0, (maxVStride-1) * Y);
-            transform.position = body.Position;
+            //transform.position = body.Position;
         }
 
         public void UpdateBuffers()
@@ -137,7 +148,244 @@ namespace SMHEditor.DockingModules.MapEditor
             octree.BuildOctree();
         }
     }
-    
+
+    public interface XYZGrabberTranslatable
+    {
+        void Move(float x, float y, float z);
+        Vector3 GetGrabberPos();
+    }
+    public class XYZGrabber
+    {
+        float[] verts = new float[24] {
+    -0.2f, 0f, 0.2f,
+    -0.2f, 3f, 0.2f,
+    -0.2f, 0f, -0.2f,
+    -0.2f, 3f, -0.2f,
+    0.2f, 0f, 0.2f,
+    0.2f, 3f, 0.2f,
+    0.2f, 0f, -0.2f,
+    0.2f, 3f, -0.2f,
+};
+        int[] inds = new int[36] {
+    1, 2, 0,
+    3, 6, 2,
+    7, 4, 6,
+    5, 0, 4,
+    6, 0, 2,
+    3, 5, 7,
+    1, 3, 2,
+    3, 7, 6,
+    7, 5, 4,
+    5, 1, 0,
+    6, 4, 0,
+    3, 1, 5,
+};
+        int vb, ib;
+        Space grabberSpace;
+        public Box planeX;
+        public Box planeY;
+        public Box planeZ;
+
+        ViewportScene owner;
+        Vector3 position;
+        public XYZGrabber(ViewportScene parent, Vector3 pos)
+        {
+            owner = parent;
+            position = pos;
+
+            vb = GL.GenBuffer();
+            ib = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vb);
+            GL.BufferData(BufferTarget.ArrayBuffer, 24 * 4, verts, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ib);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, 36 * 4, inds, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+
+            grabberSpace = new Space();
+
+            planeX = new Box(new BEPUutilities.Vector3(0, 0, 0), 10000f, .1f, 10000f);
+            planeX.Mass = 0;
+            planeX.CollisionInformation.Tag = "X";
+            grabberSpace.Add(planeX);
+
+            planeY = new Box(new BEPUutilities.Vector3(0, 0, 0), 10000f, 10000f, .1f);
+            planeY.Mass = 0;
+            planeY.CollisionInformation.Tag = "Y";
+            grabberSpace.Add(planeY);
+
+            planeZ = new Box(new BEPUutilities.Vector3(0, 0, 0), 10000f, .1f, 10000f);
+            planeZ.Mass = 0;
+            planeZ.CollisionInformation.Tag = "Z";
+            grabberSpace.Add(planeZ);
+        }
+        public void Draw(int shader)
+        {
+            if (selected != null) position = selected.GetGrabberPos();
+            else return;
+
+            GL.UseProgram(shader);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vb);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ib);
+            int pos = GL.GetAttribLocation(shader, "POSITION");
+            GL.VertexAttribPointer(pos, 3, VertexAttribPointerType.Float, false, 12, 0);
+            GL.EnableVertexAttribArray(pos);
+
+            Transform t = new Transform();
+            float dist = Vector3.Distance(position, owner.camera.t.position) / 20f;
+            Matrix4 scl = Matrix4.CreateScale(dist);
+
+            #region Transforms
+            //X
+            t.position = new Vector3(1, 0, 0) + position;
+            t.eulerAngles = new Vector3(0, 0, -1.57f);
+            owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
+            owner.camera.UpdateCameraBuffer();
+            owner.camera.UpdateColorBuffer(1f, 0, 0, 1f);
+            GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
+
+            //Y
+            t.position = new Vector3(0, 1, 0) + position;
+            t.eulerAngles = new Vector3(0, 0, 0);
+            owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
+            owner.camera.UpdateCameraBuffer();
+            owner.camera.UpdateColorBuffer(0, 1f, 0, 1f);
+            GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
+
+            //Z
+            t.position = new Vector3(0, 0, 1) + position;
+            t.eulerAngles = new Vector3(1.57f, 0, 0);
+            owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
+            owner.camera.UpdateCameraBuffer();
+            owner.camera.UpdateColorBuffer(0, 0, 1f, 1f);
+            GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
+            #endregion
+
+            planeX.Position = position;
+            planeY.Position = position;
+            planeZ.Position = position;
+        }
+
+        float lastX = 0f;
+        public void BeginClickX(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Y, v3.Z);
+            //planeX.Orientation = JMatrix.CreateRotationX(dir);
+            planeX.Orientation = BEPUutilities.Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), dir);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolX, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                lastX = hit.X;
+            }
+        }
+        public void ProbeX(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Y, v3.Z);
+            //planeX.Orientation = JMatrix.CreateRotationX(dir);
+            planeX.Orientation = BEPUutilities.Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), 90);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolX, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                float dist = hit.X - lastX;
+                if (selected != null)
+                {
+                    selected.Move(dist, 0, 0);
+                }
+                lastX = hit.X;
+            }
+        }
+        private bool BoolX(BroadPhaseEntry arg)
+        {
+            return ((string)arg.Tag == "X");
+        }
+
+        float lastY = 0f;
+        public void BeginClickY(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Z, v3.X);
+            //planeX.Orientation = JMatrix.CreateRotationY(-dir + 1.5707f);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolY, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                lastY = hit.Y;
+
+            }
+        }
+        public void ProbeY(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Z, v3.X);
+            //planeY.Orientation = JMatrix.CreateRotationY(-dir + 1.5707f);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolY, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                float dist = hit.Y - lastY;
+                if (selected != null)
+                {
+                    selected.Move(0, dist, 0);
+                }
+                lastY = hit.Y;
+
+            }
+        }
+        private bool BoolY(BroadPhaseEntry arg)
+        {
+            return ((string)arg.Tag == "Y");
+        }
+
+        float lastZ = 0f;
+        public void BeginClickZ(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Y, v3.X);
+            //planeX.Orientation = JMatrix.CreateRotationZ(dir);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolZ, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                lastZ = hit.Z;
+            }
+        }
+        public void ProbeZ(Camera camera, Vector3 rayPos, Vector3 rayDir)
+        {
+            var v3 = camera.t.position - camera.cameraTarget;
+            float dir = (float)Math.Atan2(v3.Y, v3.X);
+            //planeZ.Orientation = JMatrix.CreateRotationZ(-dir);
+
+            RayCastResult rcr;
+            if (grabberSpace.RayCast(new BEPUutilities.Ray(rayPos, rayDir), BoolZ, out rcr))
+            {
+                Vector3 hit = rcr.HitData.Location;
+                float dist = hit.Z - lastZ;
+                if (selected != null)
+                {
+                    selected.Move(0, 0, dist);
+                }
+                lastZ = hit.Z;
+            }
+        }
+        private bool BoolZ(BroadPhaseEntry arg)
+        {
+            return ((string)arg.Tag == "Z");
+        }
+
+        public XYZGrabberTranslatable selected;
+    }
+
     public class MapEditorScene : ViewportScene
     {
         class CursorObject
@@ -254,230 +502,13 @@ namespace SMHEditor.DockingModules.MapEditor
                 radius = rad;
             }
         }
-        class XYZGrabber
-        {
-            float[] verts = new float[24] {
-    -0.2f, 0f, 0.2f,
-    -0.2f, 3f, 0.2f,
-    -0.2f, 0f, -0.2f,
-    -0.2f, 3f, -0.2f,
-    0.2f, 0f, 0.2f,
-    0.2f, 3f, 0.2f,
-    0.2f, 0f, -0.2f,
-    0.2f, 3f, -0.2f,
-};
-            int[] inds = new int[36] {
-    1, 2, 0,
-    3, 6, 2,
-    7, 4, 6,
-    5, 0, 4,
-    6, 0, 2,
-    3, 5, 7,
-    1, 3, 2,
-    3, 7, 6,
-    7, 5, 4,
-    5, 1, 0,
-    6, 4, 0,
-    3, 1, 5,
-};
-            int vb, ib;
-            World grabberSpace;
-            public RigidBody planeX;
-            public RigidBody planeY;
-            public RigidBody planeZ;
 
-            ViewportScene owner;
-            JVector position;
-            public XYZGrabber(ViewportScene parent, JVector pos)
-            {
-                owner = parent;
-                position = pos;
+        //public List<TerrainModifierMesh> modifierMeshes = new List<TerrainModifierMesh>();
 
-                vb = GL.GenBuffer();
-                ib = GL.GenBuffer();
-
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vb);
-                GL.BufferData(BufferTarget.ArrayBuffer, 24 * 4, verts, BufferUsageHint.StaticDraw);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, ib);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, 36 * 4, inds, BufferUsageHint.StaticDraw);
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-                
-                grabberSpace = new World(new CollisionSystemSAP());
-
-                planeX = new RigidBody(new BoxShape(10000f, .1f, 10000f));
-                planeX.Tag = "XYZGrabberX";
-                grabberSpace.AddBody(planeX);
-
-                planeY = new RigidBody(new BoxShape(10000f, 10000f, .1f));
-                planeY.Tag = "XYZGrabberY";
-                grabberSpace.AddBody(planeY);
-
-                planeZ = new RigidBody(new BoxShape(10000f, .1f, 10000f));
-                planeZ.Tag = "XYZGrabberZ";
-                grabberSpace.AddBody(planeZ);
-            }
-            public void Draw(int shader)
-            {
-                GL.UseProgram(shader);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vb);
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, ib);
-                int pos = GL.GetAttribLocation(shader, "POSITION");
-                GL.VertexAttribPointer(pos, 3, VertexAttribPointerType.Float, false, 12, 0);
-                GL.EnableVertexAttribArray(pos);
-
-                Transform t = new Transform();
-                float dist = Vector3.Distance(Convert.ToTKVec3(position), Convert.ToTKVec3(owner.camera.t.position)) / 20f;
-                Matrix4 scl = Matrix4.CreateScale(dist);
-
-                #region Transforms
-                //X
-                t.position = new JVector(1, 0, 0) + position;
-                t.eulerAngles = new JVector(0, 0, -1.57f);
-                owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
-                owner.camera.UpdateCameraBuffer();
-                owner.camera.UpdateColorBuffer(1f, 0, 0, 1f);
-                GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
-
-                //Y
-                t.position = new JVector(0, 1, 0) + position;
-                t.eulerAngles = new JVector(0, 0, 0);
-                owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
-                owner.camera.UpdateCameraBuffer();
-                owner.camera.UpdateColorBuffer(0, 1f, 0, 1f);
-                GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
-
-                //Z
-                t.position = new JVector(0, 0, 1) + position;
-                t.eulerAngles = new JVector(1.57f, 0, 0);
-                owner.camera.SetModelMatrix(scl * t.GetModelMatrix());
-                owner.camera.UpdateCameraBuffer();
-                owner.camera.UpdateColorBuffer(0, 0, 1f, 1f);
-                GL.DrawElements(BeginMode.Triangles, 36, DrawElementsType.UnsignedInt, 0);
-                #endregion
-
-            }
-
-            float lastX = 0f;
-            public void BeginClickX(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Y, v3.Z);
-                planeX.Orientation = JMatrix.CreateRotationX(dir);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayX, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                lastX = hit.X;
-            }
-            public void ProbeX(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Y, v3.Z);
-                planeX.Orientation = JMatrix.CreateRotationX(dir);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayX, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                float dist = hit.X - lastX;
-                if (linkedTransform != null)
-                {
-                    linkedTransform.position.X += dist;
-                    position = linkedTransform.position;
-                }
-                lastX = hit.X;
-            }
-            private bool RayX(RigidBody body, JVector normal, float fraction)
-            {
-                if ((string)body.Tag == "XYZGrabberX") return true;
-                else return false;
-            }
-
-            float lastY = 0f;
-            public void BeginClickY(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Z, v3.X);
-                planeX.Orientation = JMatrix.CreateRotationY(-dir + 1.5707f);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayY, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                lastY = hit.Y;
-            }
-            public void ProbeY(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Z, v3.X);
-                planeX.Orientation = JMatrix.CreateRotationY(-dir + 1.5707f);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayY, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                float dist = hit.Y - lastY;
-                if (linkedTransform != null)
-                {
-                    linkedTransform.position.Y += dist;
-                    position = linkedTransform.position;
-                }
-                lastY = hit.Y;
-            }
-            private bool RayY(RigidBody body, JVector normal, float fraction)
-            {
-                if ((string)body.Tag == "XYZGrabberY") return true;
-                else return false;
-            }
-
-            float lastZ = 0f;
-            public void BeginClickZ(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Y ,v3.X);
-                planeX.Orientation = JMatrix.CreateRotationZ(dir);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayZ, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                lastZ = hit.Z;
-                Console.WriteLine(lastZ);
-            }
-            public void ProbeZ(Camera camera, JVector rayPos, JVector rayDir)
-            {
-                var v3 = camera.t.position - camera.cameraTarget;
-                float dir = (float)Math.Atan2(v3.Y, v3.X);
-                planeX.Orientation = JMatrix.CreateRotationZ(dir);
-
-                RigidBody rb; JVector nrm; float frac;
-                grabberSpace.CollisionSystem.Raycast(rayPos, rayDir, RayZ, out rb, out nrm, out frac);
-                JVector hit = rayPos + (rayDir * frac);
-                Console.WriteLine(hit);
-                float dist = hit.Z - lastZ;
-                if (linkedTransform != null)
-                {
-                    linkedTransform.position.Z += dist;
-                    position = linkedTransform.position;
-                }
-                lastZ = hit.Z;
-            }
-            private bool RayZ(RigidBody body, JVector normal, float fraction)
-            {
-                if ((string)body.Tag == "XYZGrabberZ") return true;
-                else return false;
-            }
-
-            public Transform linkedTransform;
-        }
-
-        public List<TerrainModifierMesh> modifierMeshes = new List<TerrainModifierMesh>();
-
-        private CollisionConfiguration cfg;
-        private CollisionDispatcher dispatcher;
-        private BroadphaseInterface bpI;
-        private ConstraintSolver cs;
-        public DiscreteDynamicsWorld physScene;
+        public World physScene;
         private TerrainSize size;
         private XYZGrabber grabber;
+        Temp temp;
 
         public class ChunkIndexMap
         {
@@ -490,10 +521,7 @@ namespace SMHEditor.DockingModules.MapEditor
         public int lineShader;
         public MapEditorScene() : base(false)
         {
-            cfg = new DefaultCollisionConfiguration();
-            dispatcher = new CollisionDispatcher(cfg);
-            bpI = new DbvtBroadphase();
-            physScene = new DiscreteDynamicsWorld(dispatcher, bpI, cs, cfg);
+            physScene = new World(new CollisionSystemSAP());
 
             #region Terrain Shader
             terrainShader = GL.CreateProgram();
@@ -552,12 +580,12 @@ namespace SMHEditor.DockingModules.MapEditor
             #endregion
 
             cursor = new CursorObject(this);
-            temp = new CursorObject(this);
+            temp = new Temp();
+            temp.t.position = new Vector3(4, 0, 4);
 
-            grabber = new XYZGrabber(this, new JVector(0,0,0));
+            grabber = new XYZGrabber(this, new Vector3(0,0,0));
 
-            PlaneTerrainModifier m = new PlaneTerrainModifier(this, 3f, 3f);
-            m.transform.position = new JVector(10f, 1f, 14f);
+            //PlaneTerrainModifier m = new PlaneTerrainModifier(this, new JVector(10, 1, 10), 3f, 3f);
         }
 
         public TerrainChunk[,] chunks;
@@ -894,12 +922,17 @@ namespace SMHEditor.DockingModules.MapEditor
             }
 
             cursor.Draw(helperShader);
+
+            camera.UpdateColorBuffer(1, 1, 0, 1);
+            grabber.selected = temp;
+            camera.SetModelMatrix(temp.t.GetModelMatrix());
+            camera.UpdateCameraBuffer();
             temp.Draw(helperShader);
 
-            foreach(var m in modifierMeshes)
-            {
-                m.Draw(lineShader);
-            }
+            //foreach(var m in modifierMeshes)
+            //{
+            //    m.Draw(lineShader);
+            //}
 
             host.SetDepthTest(false);
             grabber.Draw(helperShader);
@@ -909,7 +942,6 @@ namespace SMHEditor.DockingModules.MapEditor
         // Cursor
         private static float CURSOR_RAY_LENGTH = 10000f;
         CursorObject cursor;
-        CursorObject temp;
         enum MouseState
         {
             Up = 0,
@@ -927,7 +959,7 @@ namespace SMHEditor.DockingModules.MapEditor
             var mouse = OpenTK.Input.Mouse.GetCursorState();
             Point clientPos = host.viewport.glControl.PointToClient(new Point(mouse.X, mouse.Y));
             
-            cursor.lastTransform.position = new JVector(cursor.transform.position.X, cursor.transform.position.Y, cursor.transform.position.Z);
+            cursor.lastTransform.position = cursor.transform.position;
 
             #region State
             float normX = (clientPos.X - (host.viewport.glControl.Width / 2f)) / (float)host.viewport.glControl.Width;
@@ -937,8 +969,8 @@ namespace SMHEditor.DockingModules.MapEditor
 
             var invM = camera.mData[1].Inverted();
 
-            JVector rayPos = Convert.ToJVec3(Vector3.TransformPosition(new Vector3(0, 0, 0), invM));
-            JVector rayDir = Convert.ToJVec3(Vector3.TransformNormal(new Vector3(vx, vy, -1.0F), invM));
+            Vector3 rayPos = Convert.ToBepuVec3(OpenTK.Vector3.TransformPosition(new OpenTK.Vector3(0, 0, 0), invM));
+            Vector3 rayDir = Convert.ToBepuVec3(OpenTK.Vector3.TransformNormal(new OpenTK.Vector3(vx, vy, -1.0F), invM));
 
             if (mouse.IsButtonUp(OpenTK.Input.MouseButton.Left)
                 && mouseState != MouseState.Terraforming)
@@ -965,20 +997,16 @@ namespace SMHEditor.DockingModules.MapEditor
                         break;
                     default:
                         {
-                            mouseState = MouseState.Up;
-                            float frac;
-                            JVector nrm;
-                            RigidBody rb;
-                            if (physScene.CollisionSystem.Raycast(rayPos, rayDir * CURSOR_RAY_LENGTH, ModifierRay, out rb, out nrm, out frac))
-                            {
-                                cursor.transform.position = rayPos + (rayDir * CURSOR_RAY_LENGTH * frac);
-                                if(rb.Shape.Tag is Octree)
-                                {
-                                    Octree o = rb.Shape.Tag as Octree;
-                                    List<int> tris = new List<int>();
-                                    Console.WriteLine(o.GetTrianglesIntersectingRay(tris, rayPos, rayDir));
-                                }
-                            }
+                            //float frac;
+                            //JVector nrm;
+                            //RigidBody rb;
+                            //if (physScene.CollisionSystem.Raycast(rayPos, rayDir * CURSOR_RAY_LENGTH, ModifierRay, out rb, out nrm, out frac))
+                            //{
+                            //    cursor.transform.position = rayPos + (rayDir * CURSOR_RAY_LENGTH * frac);
+                            //    grabber.selected = (TerrainModifierMesh)rb.Tag;
+                            //    ((TerrainModifierMesh)rb.Tag).SelectNearestPoint(cursor.transform.position);
+                            //    mouseState = MouseState.Down;
+                            //}
                             break;
                         }
                 }
@@ -994,17 +1022,14 @@ namespace SMHEditor.DockingModules.MapEditor
             }
             if (mouseState == MouseState.ClickedX)
             {
-                grabber.linkedTransform = temp.transform;
                 grabber.ProbeX(camera, rayPos, rayDir);
             }
             if (mouseState == MouseState.ClickedY)
             {
-                grabber.linkedTransform = temp.transform;
                 grabber.ProbeY(camera, rayPos, rayDir);
             }
             if (mouseState == MouseState.ClickedZ)
             {
-                grabber.linkedTransform = temp.transform;
                 grabber.ProbeZ(camera, rayPos, rayDir);
             }
 
@@ -1013,8 +1038,9 @@ namespace SMHEditor.DockingModules.MapEditor
 
         private bool ModifierRay(RigidBody body, JVector normal, float fraction)
         {
-            if ((string)body.Tag == "TerrainModifierMesh") return true;
-            else return false;
+            //if (body.Tag is TerrainModifierMesh) return true;
+            //else return false;
+            return false;
         }
         
         // Editing
