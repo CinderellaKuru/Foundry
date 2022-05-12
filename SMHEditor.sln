@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Packer", "Packer\Packer.vcx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjDoodad", "ObjParse\ObjDoodad.csproj", "{94D8E7D7-385D-4F37-BFD3-0FCC89634EBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptComb", "ScriptComb\ScriptComb.csproj", "{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,18 @@ Global
 		{94D8E7D7-385D-4F37-BFD3-0FCC89634EBE}.Release|x64.Build.0 = Release|Any CPU
 		{94D8E7D7-385D-4F37-BFD3-0FCC89634EBE}.Release|x86.ActiveCfg = Release|Any CPU
 		{94D8E7D7-385D-4F37-BFD3-0FCC89634EBE}.Release|x86.Build.0 = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|x64.Build.0 = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Debug|x86.Build.0 = Debug|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|x64.ActiveCfg = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|x64.Build.0 = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|x86.ActiveCfg = Release|Any CPU
+		{05FB0B77-FFCF-4CEE-9A78-0920C4443F56}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

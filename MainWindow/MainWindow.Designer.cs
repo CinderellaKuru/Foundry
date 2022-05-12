@@ -153,6 +153,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonManager kryptonManager;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
         private ComponentFactory.Krypton.Docking.KryptonDockableWorkspace dockableWorkspace;
-        private ComponentFactory.Krypton.Toolkit.KryptonPalette darkmode;
+        public ComponentFactory.Krypton.Toolkit.KryptonPalette darkmode;
     }
 }

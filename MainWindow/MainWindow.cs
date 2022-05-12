@@ -12,6 +12,7 @@ using ComponentFactory.Krypton.Navigator;
 using ComponentFactory.Krypton.Toolkit;
 using SMHEditor.DockingModules.MapEditor;
 using SMHEditor.DockingModules.ProjectExplorer;
+using SMHEditor.DockingModules.Triggerscripter;
 using SMHEditor.Project;
 using SMHEditor.Project.FileTypes;
 
@@ -26,7 +27,7 @@ namespace SMHEditor
             project = new ModProject("C:/Users/halfd/Downloads/testproj/testproj/project.hwproj");
 #endif
 #if STUMPY
-            project = new ModProject("C:/Users/jaken/Desktop/testproj/project.hwproj");
+            project = new ModProject("C:/Users/jake/Desktop/testproj/project.hwproj");
 #endif
             project.Save();
         }
@@ -34,8 +35,9 @@ namespace SMHEditor
         //Project stuff
         public static ModProject project;
         public static ViewportPage vp;
+        public static TriggerscripterPage ts;
 
-        
+
         //Docking stuff
         //Krypton name strings, global.
         public static string WORKSPACE_NAME = "Workspace";
@@ -49,21 +51,23 @@ namespace SMHEditor
             dockingManager.ManageControl(DOCKINGCONTROLLER_NAME, kryptonPanel, w);
             dockingManager.ManageFloating(FLOATING_NAME, this);
 
+            // static triggerscripter page.
+            ts = new TriggerscripterPage();
             // static map editor page.
             vp = new ViewportPage();
-            dockingManager.AddToWorkspace(WORKSPACE_NAME, new KryptonPage[] { vp });
+            dockingManager.AddToWorkspace(WORKSPACE_NAME, new KryptonPage[] { ts });
 
             dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] {
                 new ProjectExplorerPage("\\data", "Data"),
                 new ProjectExplorerPage("\\art",  "Art") });
 
 
-            TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Medium1024);
+            //TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Medium1024);
             //YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(TerrainFile));
             //s.SerializeToFile(t, "C:\\Users\\jaken\\Desktop\\testproj\\data\\MyMap\\map.trn");
-            MapEditorScene scn = new MapEditorScene();
-            scn.LoadFile(t);
-            vp.SetScene(scn);
+            //MapEditorScene scn = new MapEditorScene();
+            //scn.LoadFile(t);
+            //vp.SetScene(scn);
             //scn.ExportXTD("C:\\Users\\jaken\\Desktop\\out.xtd");
         }
     }
