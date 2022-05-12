@@ -17,20 +17,23 @@ namespace SMHEditor.DockingModules.Triggerscripter
     {
         Timer t = new Timer();
         List<TriggerScripterNode> nodes = new List<TriggerScripterNode>();
+        List<TriggerScripterConnection> connections = new List<TriggerScripterConnection>();
 
         public TriggerscripterControl()
         {
             InitializeComponent();
-            Tick(null, null);
-            Paint += new PaintEventHandler(DrawControl);
             DoubleBuffered = true;
+            Tick(null, null);
+
+            Paint += new PaintEventHandler(DrawControl);
+
             t.Interval = 1;
             t.Tick += Tick;
             t.Start();
 
             TriggerScripterNode n = new TriggerScripterNode(0, 0);
-            n.inputSockets.Add(new TriggerScripterSocket("socket", Color.Black));
-            n.inputSockets.Add(new TriggerScripterSocket("socket", Color.White));
+            n.AddSocket(true, "node1", Color.Black);
+            n.AddSocket(true, "node2", Color.Black);
             nodes.Add(n);
         }
         void Tick(object o, EventArgs e)
@@ -48,7 +51,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     PollMouse(mouse);
                 }
             }
-
+            
             lastX = mouse.X;
             lastY = mouse.Y;
             lastM = mouse.Scroll.Y;
@@ -56,8 +59,15 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
 
-        public int majorGridSpace = 75;
+        Pen connectionPen = new Pen(Color.BlanchedAlmond, 3.0f);
         Pen gridPen = new Pen(Color.DimGray);
+        public int majorGridSpace = 75;
+        int x = 0, y = 0;
+        float zoom = 1.0f;
+        float zoomMax = 2.5f, zoomMin = .5f;
+        private Matrix transform = new Matrix();
+        private Matrix transformInv = new Matrix();
+
         void DrawControl(object o, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -95,13 +105,25 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {
                 n.Draw(e);
             }
-        }
+            
+            foreach(TriggerScripterConnection c in connections)
+            {
+                e.Graphics.DrawLine(connectionPen,
+                    c.inSocket.rect.X + c.inSocket.rect.Width / 2,
+                    c.inSocket.rect.Y + c.inSocket.rect.Height / 2,
+                    c.outSocket.rect.X + c.outSocket.rect.Width / 2,
+                    c.outSocket.rect.Y + c.outSocket.rect.Height / 2);
+            }
 
-        int x = 0, y = 0;
-        float zoom = 1.0f;
-        float zoomMax = 2.5f, zoomMin = .25f;
-        private Matrix transform = new Matrix();
-        private Matrix transformInv = new Matrix();
+            Point[] pos = new Point[] { PointToClient(new Point((int)lastX, (int)lastY)) };
+            transformInv.TransformPoints(pos);
+            if (selectedSocket != null)
+                e.Graphics.DrawLine(connectionPen, new Point(
+                    selectedSocket.rect.X + selectedSocket.rect.Width / 2,
+                    selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
+                    pos[0]);
+
+        }
         void UpdateMatrices()
         {
             transform.Reset();
@@ -114,16 +136,50 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
         
+
+        TriggerScripterSocket selectedSocket = null;
+        bool lastClicked = false;
         float lastX = 0, lastY = 0, lastM = 0;
         void PollMouse(MouseState m)
         {
-            if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
+            //translated mouse pos
+            Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
+            transformInv.TransformPoints(p);
+
+            
+            if (!lastClicked)
             {
-                Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
-                transformInv.TransformPoints(p);
-
-
+                if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
+                {
+                    OnClick(p[0].X, p[0].Y);
+                    lastClicked = true;
+                }
+                else lastClicked = false;
             }
+            if (m.LeftButton == OpenTK.Input.ButtonState.Released)
+            {
+                lastClicked = false;
+                if(selectedSocket != null)
+                {
+                    foreach(TriggerScripterNode n in nodes)
+                    {
+                        foreach(TriggerScripterSocket s in n.inputSockets.Values)
+                        {
+                            if (s.MouseIsIn(p[0].X, p[0].Y))
+                            {
+                                TriggerScripterConnection tsc = new TriggerScripterConnection(selectedSocket, s);
+                                if (!connections.Contains(tsc))
+                                {
+                                    connections.Add(tsc);
+                                    Console.Write("A");
+                                }
+                            }
+                        }
+                    }
+                }
+                selectedSocket = null;
+            }
+
 
             if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
             {
@@ -134,6 +190,30 @@ namespace SMHEditor.DockingModules.Triggerscripter
             zoom += (m.Scroll.Y - lastM) / 20;
             zoom = zoom < zoomMin ? zoomMin : zoom;
             zoom = zoom > zoomMax ? zoomMax : zoom;
+        }
+        void OnClick(int x, int y)
+        {
+
+            foreach (TriggerScripterNode n in nodes)
+            {
+                if (x >= n.x && x <= n.x + n.width && y >= n.y && y <= n.y + n.height)
+                {
+                    selectedSocket = null;
+                    n.selected = true;
+                }
+                else
+                {
+                    n.selected = false;
+                }
+
+                foreach (var s in n.inputSockets)
+                {
+                    if(s.Value.MouseIsIn(x, y))
+                    {
+                        selectedSocket = s.Value;
+                    }
+                }
+            }
         }
     }
 }
