@@ -27,7 +27,7 @@ namespace SMHEditor
             project = new ModProject("C:/Users/halfd/Downloads/testproj/testproj/project.hwproj");
 #endif
 #if STUMPY
-            project = new ModProject("C:/Users/jaken/Desktop/testproj/project.hwproj");
+            project = new ModProject("C:/Users/jake/Desktop/testproj/project.hwproj");
 #endif
             project.Save();
         }
