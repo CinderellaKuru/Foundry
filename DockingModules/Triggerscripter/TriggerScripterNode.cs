@@ -39,6 +39,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public static int socketSize = 10;
         public Rectangle rect;
         public TriggerScripterNode node;
+        public string valueType = "null";
         public TriggerScripterSocket(string name, Color socketColor, TriggerScripterNode n, Rectangle r)
         {
             color = socketColor;
@@ -63,11 +64,15 @@ namespace SMHEditor.DockingModules.Triggerscripter
     }
     class TriggerScripterSocketInput : TriggerScripterSocket
     {
-        List<TriggerScripterSocket> connectedSockets = new List<TriggerScripterSocket>();
+        List<TriggerScripterSocketOutput> connectedSockets = new List<TriggerScripterSocketOutput>();
         public TriggerScripterSocketInput(string name, Color socketCoolor, TriggerScripterNode n, Rectangle r)
             : base(name, socketCoolor, n, r)
         {
 
+        }
+        public void FinalizeConnection(TriggerScripterSocketOutput s)
+        {
+            connectedSockets.Add(s);
         }
     }
     class TriggerScripterSocketOutput : TriggerScripterSocket
@@ -77,24 +82,28 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
 
         }
-        List<TriggerScripterSocket> connectedSockets = new List<TriggerScripterSocket>();
+        List<TriggerScripterSocketInput> connectedSockets = new List<TriggerScripterSocketInput>();
 
-        Pen connectionPen = new Pen(Color.DarkGray, 3.0f);
-        public override void Draw(PaintEventArgs e)
+        public static Pen connectionPen = new Pen(Color.DarkGray, 3.0f);
+        public void DrawConnections(PaintEventArgs e)
         {
-            base.Draw(e);
-            foreach(TriggerScripterSocket s in connectedSockets)
+            foreach (TriggerScripterSocket s in connectedSockets)
             {
                 e.Graphics.DrawLine(connectionPen,
                     node.x + rect.X + (socketSize / 2),
-                    node.y + rect.Y + (socketSize / 2), 
-                    s.node.x + s.rect.X + (socketSize / 2), 
+                    node.y + rect.Y + (socketSize / 2),
+                    s.node.x + s.rect.X + (socketSize / 2),
                     s.node.y + s.rect.Y + (socketSize / 2));
             }
         }
-        public void Connect(TriggerScripterSocket s)
+
+        public void Connect(TriggerScripterSocketInput s)
         {
-            connectedSockets.Add(s);
+            if (valueType == s.valueType)
+            {
+                connectedSockets.Add(s);
+                s.FinalizeConnection(this);
+            }
         }
     }
 
@@ -103,10 +112,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public int width = 210, height;
         public int x, y;
         public int layer = 0;
-        public bool selected = false;
         public Color headerColor = Color.DarkOrange;
         public string nodeTitle = "node";
         public string typeTitle = "type";
+        public string handleAs = "null";
+
+        public int selectedX = 0, selectedY = 0;
+        public bool selected = false;
 
         public Dictionary<Rectangle, TriggerScripterSocket> sockets = new Dictionary<Rectangle, TriggerScripterSocket>();
         int inSockets = 0, outSockets = 0;
@@ -153,6 +165,36 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             int greater = inSockets > outSockets ? inSockets : outSockets;
             height = 50 + (socketSpacing * greater);
+        }
+        public bool MouseIsIn(int mx, int my, out int offsX, out int offsY)
+        {
+            if (mx >= x && mx <= x + width && my >= y && my <= y + height)
+            {
+                offsX = mx - x;
+                offsY = my - y;
+                return true;
+            }
+            else
+            {
+                offsX = 0;
+                offsY = 0;
+                return false;
+            }
+        }
+        public bool MouseIsInHeader(int mx, int my, out int offsX, out int offsY)
+        {
+            if (mx >= x && mx <= x + width && my >= y && my <= y + headerHeight)
+            {
+                offsX = mx - x;
+                offsY = my - y;
+                return true;
+            }
+            else
+            {
+                offsX = 0;
+                offsY = 0;
+                return false;
+            }
         }
 
         static int socketSpacing = 35;
