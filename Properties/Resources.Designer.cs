@@ -19,10 +19,10 @@ namespace SMHEditor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace SMHEditor.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SMHEditor.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace SMHEditor.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap box {
+        public static System.Drawing.Bitmap box {
             get {
                 object obj = ResourceManager.GetObject("box", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -71,9 +71,41 @@ namespace SMHEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  {
+        ///    &quot;name&quot;: &quot;CanGetUnits&quot;,
+        ///    &quot;inputs&quot;: [
+        ///      {
+        ///        &quot;name&quot;: &quot;FilterPlayer&quot;,
+        ///        &quot;valueType&quot;: &quot;Player&quot;,
+        ///        &quot;optional&quot;: true,
+        ///        &quot;sigId&quot;: &quot;3&quot;
+        ///      },
+        ///      {
+        ///        &quot;name&quot;: &quot;FilterPlayerList&quot;,
+        ///        &quot;valueType&quot;: &quot;PlayerList&quot;,
+        ///        &quot;optional&quot;: true,
+        ///        &quot;sigId&quot;: &quot;10&quot;
+        ///      },
+        ///      {
+        ///        &quot;name&quot;: &quot;FilterObjectType&quot;,
+        ///        &quot;valueType&quot;: &quot;ObjectType&quot;,
+        ///        &quot;optional&quot;: true,
+        ///        &quot;sigId&quot;: &quot;4&quot;
+        ///      },
+        ///      {
+        ///        &quot;name&quot;: &quot;FilterLocation&quot;,        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string cnd {
+            get {
+                return ResourceManager.GetString("cnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog {
+        public static System.Drawing.Bitmap cog {
             get {
                 object obj = ResourceManager.GetObject("cog", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -81,9 +113,47 @@ namespace SMHEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  {
+        ///    &quot;name&quot;: &quot;TriggerActivate&quot;,
+        ///    &quot;inputs&quot;: [
+        ///      {
+        ///        &quot;name&quot;: &quot;Trigger&quot;,
+        ///        &quot;valueType&quot;: &quot;Trigger&quot;,
+        ///        &quot;optional&quot;: false,
+        ///        &quot;sigId&quot;: &quot;1&quot;
+        ///      }
+        ///    ],
+        ///    &quot;outputs&quot;: [],
+        ///    &quot;sources&quot;: [
+        ///      &quot;1.txt&quot;,
+        ///      &quot;10.txt&quot;,
+        ///      &quot;11.txt&quot;,
+        ///      &quot;12.txt&quot;,
+        ///      &quot;13.txt&quot;,
+        ///      &quot;14.txt&quot;,
+        ///      &quot;15.txt&quot;,
+        ///      &quot;2.txt&quot;,
+        ///      &quot;3.txt&quot;,
+        ///      &quot;4.txt&quot;,
+        ///      &quot;5.txt&quot;,
+        ///      &quot;6.txt&quot;,
+        ///      &quot;7.txt&quot;,
+        ///      &quot;8.txt&quot;,
+        ///      &quot;9.txt&quot;,
+        ///      &quot;abilitylockdown.ability&quot;,
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string eff {
+            get {
+                return ResourceManager.GetString("eff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder {
+        public static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +163,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_white {
+        public static System.Drawing.Bitmap page_white {
             get {
                 object obj = ResourceManager.GetObject("page_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +173,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement0 {
+        public static System.Drawing.Bitmap Placement0 {
             get {
                 object obj = ResourceManager.GetObject("Placement0", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +183,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement1 {
+        public static System.Drawing.Bitmap Placement1 {
             get {
                 object obj = ResourceManager.GetObject("Placement1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +193,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement2 {
+        public static System.Drawing.Bitmap Placement2 {
             get {
                 object obj = ResourceManager.GetObject("Placement2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +203,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement3 {
+        public static System.Drawing.Bitmap Placement3 {
             get {
                 object obj = ResourceManager.GetObject("Placement3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +213,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement4 {
+        public static System.Drawing.Bitmap Placement4 {
             get {
                 object obj = ResourceManager.GetObject("Placement4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +223,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement5 {
+        public static System.Drawing.Bitmap Placement5 {
             get {
                 object obj = ResourceManager.GetObject("Placement5", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +233,7 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement6 {
+        public static System.Drawing.Bitmap Placement6 {
             get {
                 object obj = ResourceManager.GetObject("Placement6", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,10 +243,53 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Placement7 {
+        public static System.Drawing.Bitmap Placement7 {
             get {
                 object obj = ResourceManager.GetObject("Placement7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///  &quot;Trigger&quot;,
+        ///  &quot;Bool&quot;,
+        ///  &quot;Float&quot;,
+        ///  &quot;Squad&quot;,
+        ///  &quot;Integer&quot;,
+        ///  &quot;Player&quot;,
+        ///  &quot;PlayerList&quot;,
+        ///  &quot;Power&quot;,
+        ///  &quot;Tech&quot;,
+        ///  &quot;ObjectType&quot;,
+        ///  &quot;Vector&quot;,
+        ///  &quot;UnitList&quot;,
+        ///  &quot;Unit&quot;,
+        ///  &quot;SquadList&quot;,
+        ///  &quot;Objective&quot;,
+        ///  &quot;Sound&quot;,
+        ///  &quot;ProtoSquad&quot;,
+        ///  &quot;LocStringID&quot;,
+        ///  &quot;ChatSpeaker&quot;,
+        ///  &quot;Time&quot;,
+        ///  &quot;TalkingHead&quot;,
+        ///  &quot;Operator&quot;,
+        ///  &quot;PlayerState&quot;,
+        ///  &quot;Cost&quot;,
+        ///  &quot;String&quot;,
+        ///  &quot;ObjectDataType&quot;,
+        ///  &quot;ObjectDataRelative&quot;,
+        ///  &quot;CommandType&quot;,
+        ///  &quot;EntityFilterSet&quot;,
+        ///  &quot;Color&quot;,
+        ///  &quot;DataScalar&quot;,
+        ///  &quot;Object&quot;,
+        ///  &quot;ObjectList&quot;,
+        ///  &quot;Vector [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string var {
+            get {
+                return ResourceManager.GetString("var", resourceCulture);
             }
         }
     }

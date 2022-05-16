@@ -245,9 +245,7 @@
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerPage.cs" />
-    <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.cs" />
     <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.Designer.cs">
       <DependentUpon>TriggerscripterControl.cs</DependentUpon>
     </Compile>
@@ -327,7 +325,7 @@
       <DependentUpon>TriggerscripterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -346,6 +344,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="ScriptComb\bin\Debug\out\cnd.json" />
+    <None Include="ScriptComb\bin\Debug\out\eff.json" />
+    <None Include="ScriptComb\bin\Debug\out\var.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ext\SMH-Icons\box.png" />
@@ -388,6 +389,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DockingModules\Triggerscripter\Nodes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\bin\Debug\out\out.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\bin\Debug\out\cnd.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\bin\Debug\out\eff.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\bin\Debug\out\var.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

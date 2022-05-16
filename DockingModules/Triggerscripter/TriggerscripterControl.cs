@@ -10,18 +10,52 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using OpenTK;
 using OpenTK.Input;
+using Newtonsoft.Json;
+using ComponentFactory.Krypton.Toolkit;
+using ComponentFactory.Krypton.Docking;
+using ComponentFactory.Krypton.Navigator;
+using ComponentFactory.Krypton.Ribbon;
+using ComponentFactory.Krypton.Workspace;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
+    class Input
+    {
+        public string name;
+        public string valueType;
+        public bool optional;
+        public string sigId;
+    }
+    class Output
+    {
+        public string name;
+        public string valueType;
+        public bool optional;
+        public string sigId;
+    }
+    class Effect
+    {
+        public string name;
+        public List<Input> inputs = new List<Input>();
+        public List<Output> outputs = new List<Output>();
+        public List<string> sources = new List<string>();
+        public string dbid;
+        public string version;
+    }
+    class Condition
+    {
+        public string name;
+        public List<Input> inputs = new List<Input>();
+        public List<Output> outputs = new List<Output>();
+        public string dbid;
+        public string version;
+    }
+
     public partial class TriggerscripterControl : UserControl
     {
         Timer t = new Timer();
         List<TriggerScripterNode> nodes = new List<TriggerScripterNode>();
-
-        PaintEventHandler nodeDraw;
-        PaintEventHandler socketDraw;
-        PaintEventHandler connectionDraw;
-
+        KryptonContextMenu cm;
 
         public TriggerscripterControl()
         {
@@ -34,19 +68,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             t.Interval = 1;
             t.Tick += Tick;
             t.Start();
-
-            TriggerScripterNode n = new TriggerScripterNode(0, 0);
-            n.AddSocket(true, "node1", Color.Black);
-            n.AddSocket(true, "node2", Color.Black);
-            n.AddSocket(false, "node3", Color.Black);
-            nodes.Add(n);
-
-            TriggerScripterNode n2 = new TriggerScripterNode(300, 0);
-            n2.AddSocket(true, "node1", Color.Black);
-            n2.AddSocket(true, "node2", Color.Black);
-            n2.AddSocket(false, "node3", Color.Black);
-            nodes.Add(n2);
-
         }
         void Tick(object o, EventArgs e)
         {
@@ -70,15 +91,19 @@ namespace SMHEditor.DockingModules.Triggerscripter
             Invalidate();
         }
 
+        public void AddNode(TriggerScripterNode n)
+        {
+            nodes.Add(n);
+        }
+
 
         Pen gridPen = new Pen(Color.DimGray);
         public int majorGridSpace = 150;
-        int x = 0, y = 0;
-        float zoom = 1.0f;
-        float zoomMax = 1.5f, zoomMin = .1f;
-        private Matrix transform = new Matrix();
-        private Matrix transformInv = new Matrix();
-
+        public float zoom = .25f;
+        float x = 0, y = 0;
+        float zoomMax = 1.5f, zoomMin = .025f;
+        public Matrix transform = new Matrix();
+        public Matrix transformInv = new Matrix();
         void DrawControl(object o, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -120,7 +145,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             //draw sockets
             foreach (TriggerScripterNode n in nodes)
             {
-                foreach(TriggerScripterSocket s in n.sockets.Values)
+                foreach (TriggerScripterSocket s in n.sockets.Values)
                 {
                     s.Draw(e);
                 }
@@ -128,9 +153,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
             //draw connections
             foreach (TriggerScripterNode n in nodes)
             {
-                foreach(TriggerScripterSocket s in n.sockets.Values)
+                foreach (TriggerScripterSocket s in n.sockets.Values)
                 {
-                    if(s is TriggerScripterSocketOutput)
+                    if (s is TriggerScripterSocketOutput)
                     {
                         ((TriggerScripterSocketOutput)s).DrawConnections(e);
                     }
@@ -141,7 +166,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             transformInv.TransformPoints(pos);
             if (selectedSocket != null)
             {
-                e.Graphics.DrawLine(TriggerScripterSocketOutput.connectionPen, new Point(
+                e.Graphics.DrawLine(new Pen(selectedSocket.color, 5.0f), new Point(
+                    selectedSocket.node.x + selectedSocket.rect.X + selectedSocket.rect.Width / 2,
+                    selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
+                    pos[0]);
+                e.Graphics.DrawLine(new Pen(selectedSocket.color, 2.0f), new Point(
                     selectedSocket.node.x + selectedSocket.rect.X + selectedSocket.rect.Width / 2,
                     selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
                     pos[0]);
@@ -150,15 +179,17 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void UpdateMatrices()
         {
             transform.Reset();
-            transform.Translate(x, y);
+            transform.Translate(Width / 2, Height / 2);
             transform.Scale(zoom, zoom);
+            transform.Translate(x, y);
 
             transformInv.Reset();
-            transformInv.Scale(1.0f / zoom, 1.0f / zoom);
             transformInv.Translate(-x, -y);
+            transformInv.Scale(1 / zoom, 1 / zoom);
+            transformInv.Translate(-Width / 2, -Height / 2);
         }
 
-        
+
         TriggerScripterSocket selectedSocket = null;
         bool lastClicked = false;
         float lastX = 0, lastY = 0, lastM = 0;
@@ -167,7 +198,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             //translated mouse pos
             Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
             transformInv.TransformPoints(p);
-
             
             if (!lastClicked)
             {
@@ -192,7 +222,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     {
                         foreach(TriggerScripterSocket s in n.sockets.Values)
                         {
-                            if (s.MouseIsIn(p[0].X, p[0].Y))
+                            if (s.PointIsIn(p[0].X, p[0].Y))
                             {
                                 if (selectedSocket.node != s.node && (
                                      (selectedSocket is TriggerScripterSocketInput  && s is TriggerScripterSocketOutput) ||
@@ -203,12 +233,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
                                     if (selectedSocket is TriggerScripterSocketOutput)
                                     {
                                         outSocket = selectedSocket as TriggerScripterSocketOutput;
-                                        outSocket.Connect(s);
+                                        outSocket.Connect(s as TriggerScripterSocketInput);
                                     }
                                     if (s is TriggerScripterSocketOutput)
                                     {
                                         outSocket = s as TriggerScripterSocketOutput;
-                                        outSocket.Connect(selectedSocket);
+                                        outSocket.Connect(selectedSocket as TriggerScripterSocketInput);
                                     }
 
                                 }
@@ -222,11 +252,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
             {
-                x += m.X - (int)lastX;
-                y += m.Y - (int)lastY;
+                x += (m.X - (int)lastX) * 1 / zoom;
+                y += (m.Y - (int)lastY) * 1 / zoom;
             }
             
-            zoom += (m.Scroll.Y - lastM) / 20;
+            zoom += (m.Scroll.Y - lastM) / 100;
             zoom = zoom < zoomMin ? zoomMin : zoom;
             zoom = zoom > zoomMax ? zoomMax : zoom;
         }
@@ -235,7 +265,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             foreach (TriggerScripterNode n in nodes)
             {
                 int ox, oy;
-                if (n.MouseIsInHeader(x, y, out ox, out oy))
+                if (n.PointIsInHeader(x, y, out ox, out oy))
                 {
                     n.selectedX = ox;
                     n.selectedY = oy;
@@ -249,7 +279,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 foreach (var s in n.sockets)
                 {
-                    if(s.Value.MouseIsIn(x, y))
+                    if(s.Value.PointIsIn(x, y))
                     {
                         selectedSocket = s.Value;
                     }

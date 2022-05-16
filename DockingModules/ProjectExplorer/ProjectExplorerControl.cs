@@ -124,7 +124,7 @@ namespace SMHEditor.DockingModules.ProjectExplorer
                 KryptonContextMenu kcm = new KryptonContextMenu();
                 if ((FileType)a.Node.Tag == FileType.FOLDER) //is not a file, show "add" context menu.
                 {
-                    KryptonContextMenuItem add =  new KryptonContextMenuItem("Add");
+                    KryptonContextMenuItem add = new KryptonContextMenuItem("Add");
                     add.Items.Add(ctx_addfolder);
 
                     kcm.Items.Add(add);
