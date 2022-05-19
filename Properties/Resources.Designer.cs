@@ -115,34 +115,33 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///  {
-        ///    &quot;name&quot;: &quot;TriggerActivate&quot;,
+        ///    &quot;name&quot;: &quot;CopyBool&quot;,
         ///    &quot;inputs&quot;: [
         ///      {
-        ///        &quot;name&quot;: &quot;Trigger&quot;,
-        ///        &quot;valueType&quot;: &quot;Trigger&quot;,
+        ///        &quot;name&quot;: &quot;BoolSource&quot;,
+        ///        &quot;valueType&quot;: &quot;Bool&quot;,
         ///        &quot;optional&quot;: false,
         ///        &quot;sigId&quot;: &quot;1&quot;
         ///      }
         ///    ],
-        ///    &quot;outputs&quot;: [],
-        ///    &quot;sources&quot;: [
-        ///      &quot;1.txt&quot;,
-        ///      &quot;10.txt&quot;,
-        ///      &quot;11.txt&quot;,
-        ///      &quot;12.txt&quot;,
-        ///      &quot;13.txt&quot;,
-        ///      &quot;14.txt&quot;,
-        ///      &quot;15.txt&quot;,
-        ///      &quot;2.txt&quot;,
-        ///      &quot;3.txt&quot;,
-        ///      &quot;4.txt&quot;,
-        ///      &quot;5.txt&quot;,
-        ///      &quot;6.txt&quot;,
-        ///      &quot;7.txt&quot;,
-        ///      &quot;8.txt&quot;,
-        ///      &quot;9.txt&quot;,
-        ///      &quot;abilitylockdown.ability&quot;,
-        /// [rest of string was truncated]&quot;;.
+        ///    &quot;outputs&quot;: [
+        ///      {
+        ///        &quot;name&quot;: &quot;BoolCopy&quot;,
+        ///        &quot;valueType&quot;: &quot;Bool&quot;,
+        ///        &quot;optional&quot;: false,
+        ///        &quot;sigId&quot;: &quot;2&quot;
+        ///      }
+        ///    ],
+        ///    &quot;sources&quot;: [],
+        ///    &quot;dbid&quot;: &quot;102&quot;,
+        ///    &quot;version&quot;: &quot;1&quot;
+        ///  },
+        ///  {
+        ///    &quot;name&quot;: &quot;CopyFloat&quot;,
+        ///    &quot;inputs&quot;: [
+        ///      {
+        ///        &quot;name&quot;: &quot;FloatSource&quot;,
+        ///        &quot;valueTyp [rest of string was truncated]&quot;;.
         /// </summary>
         public static string eff {
             get {

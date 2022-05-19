@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using ComponentFactory.Krypton.Docking;
 using ComponentFactory.Krypton.Navigator;
 using ComponentFactory.Krypton.Toolkit;
 using SMHEditor.DockingModules.MapEditor;
+using SMHEditor.DockingModules.PropertyEditor;
 using SMHEditor.DockingModules.ProjectExplorer;
 using SMHEditor.DockingModules.Triggerscripter;
 using SMHEditor.Project;
@@ -27,7 +29,7 @@ namespace SMHEditor
             project = new ModProject("C:/Users/halfd/Downloads/testproj/testproj/project.hwproj");
 #endif
 #if STUMPY
-            project = new ModProject("C:/Users/jake/Desktop/testproj/project.hwproj");
+            project = new ModProject(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\testproj/project.hwproj");
 #endif
             project.Save();
         }
@@ -36,6 +38,7 @@ namespace SMHEditor
         public static ModProject project;
         public static ViewportPage vp;
         public static TriggerscripterPage ts;
+        public static PropertyEditorPage propertyEditor;
 
 
         //Docking stuff
@@ -55,12 +58,16 @@ namespace SMHEditor
             ts = new TriggerscripterPage();
             // static map editor page.
             vp = new ViewportPage();
+            // static property editor
+            propertyEditor = new PropertyEditorPage();
+
             dockingManager.AddToWorkspace(WORKSPACE_NAME, new KryptonPage[] { ts });
 
             dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] {
                 new ProjectExplorerPage("\\data", "Data"),
                 new ProjectExplorerPage("\\art",  "Art") });
 
+            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Right, new KryptonPage[] { propertyEditor });
 
             //TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Medium1024);
             //YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(TerrainFile));

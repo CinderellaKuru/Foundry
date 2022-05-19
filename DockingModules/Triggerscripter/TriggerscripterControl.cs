@@ -55,7 +55,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
     {
         Timer t = new Timer();
         List<TriggerScripterNode> nodes = new List<TriggerScripterNode>();
-        KryptonContextMenu cm;
 
         public TriggerscripterControl()
         {
@@ -75,16 +74,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             UpdateMatrices();
 
-            Point min = PointToScreen(new Point(0, 0));
-            Point max = PointToScreen(new Point(Width, Height));
-            if (mouse.X > min.X && mouse.X < max.X)
-            {
-                if(mouse.Y > min.Y && mouse.Y < max.Y)
-                {
-                    PollMouse(mouse);
-                }
-            }
-            
+            PollMouse(mouse);
+
             lastX = mouse.X;
             lastY = mouse.Y;
             lastM = mouse.Scroll.Y;
@@ -191,74 +182,91 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
 
         TriggerScripterSocket selectedSocket = null;
-        bool lastClicked = false;
+        bool lastClicked = false, suspendInput = false;
         float lastX = 0, lastY = 0, lastM = 0;
         void PollMouse(MouseState m)
         {
-            //translated mouse pos
-            Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
-            transformInv.TransformPoints(p);
-            
-            if (!lastClicked)
+            Point min = PointToScreen(new Point(0, 0));
+            Point max = PointToScreen(new Point(Width, Height));
+            if (m.X >= min.X && m.X <= max.X &&
+                m.Y >= min.Y && m.Y <= max.Y &&
+                !suspendInput)
             {
+                //translated mouse pos
+                Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
+                transformInv.TransformPoints(p);
+
+                Console.WriteLine(lastClicked);
+
+                if (!lastClicked)
+                {
+                    if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
+                    {
+                        OnClick(p[0].X, p[0].Y);
+                        lastClicked = true;
+                    }
+                    else lastClicked = false;
+                }
                 if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
                 {
-                    OnClick(p[0].X, p[0].Y);
-                    lastClicked = true;
+                    OnMouseHeld(p[0].X, p[0].Y);
                 }
-                else lastClicked = false;
-            }
-            if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
-            {
-                OnMouseHeld(p[0].X, p[0].Y);
-            }
-            else
-            {
-                lastClicked = false;
-
-                if(selectedSocket != null)
+                else
                 {
-                    foreach(TriggerScripterNode n in nodes)
-                    {
-                        foreach(TriggerScripterSocket s in n.sockets.Values)
-                        {
-                            if (s.PointIsIn(p[0].X, p[0].Y))
-                            {
-                                if (selectedSocket.node != s.node && (
-                                     (selectedSocket is TriggerScripterSocketInput  && s is TriggerScripterSocketOutput) ||
-                                     (selectedSocket is TriggerScripterSocketOutput && s is TriggerScripterSocketInput))
-                                    )
-                                {
-                                    TriggerScripterSocketOutput outSocket;
-                                    if (selectedSocket is TriggerScripterSocketOutput)
-                                    {
-                                        outSocket = selectedSocket as TriggerScripterSocketOutput;
-                                        outSocket.Connect(s as TriggerScripterSocketInput);
-                                    }
-                                    if (s is TriggerScripterSocketOutput)
-                                    {
-                                        outSocket = s as TriggerScripterSocketOutput;
-                                        outSocket.Connect(selectedSocket as TriggerScripterSocketInput);
-                                    }
+                    lastClicked = false;
 
+                    if (selectedSocket != null)
+                    {
+                        foreach (TriggerScripterNode n in nodes)
+                        {
+                            foreach (TriggerScripterSocket s in n.sockets.Values)
+                            {
+                                if (s.PointIsIn(p[0].X, p[0].Y))
+                                {
+                                    if (selectedSocket.node != s.node && (
+                                         (selectedSocket is TriggerScripterSocketInput && s is TriggerScripterSocketOutput) ||
+                                         (selectedSocket is TriggerScripterSocketOutput && s is TriggerScripterSocketInput))
+                                        )
+                                    {
+                                        TriggerScripterSocketOutput outSocket;
+                                        if (selectedSocket is TriggerScripterSocketOutput)
+                                        {
+                                            outSocket = selectedSocket as TriggerScripterSocketOutput;
+                                            outSocket.Connect(s as TriggerScripterSocketInput);
+                                        }
+                                        if (s is TriggerScripterSocketOutput)
+                                        {
+                                            outSocket = s as TriggerScripterSocketOutput;
+                                            outSocket.Connect(selectedSocket as TriggerScripterSocketInput);
+                                        }
+
+                                    }
                                 }
                             }
                         }
                     }
+                    selectedSocket = null;
                 }
-                selectedSocket = null;
+
+                if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
+                {
+                    x += (m.X - (int)lastX) * 1 / zoom;
+                    y += (m.Y - (int)lastY) * 1 / zoom;
+                }
+
+                zoom += (m.Scroll.Y - lastM) / 100;
+                zoom = zoom < zoomMin ? zoomMin : zoom;
+                zoom = zoom > zoomMax ? zoomMax : zoom;
             }
-
-
-            if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
+            else
             {
-                x += (m.X - (int)lastX) * 1 / zoom;
-                y += (m.Y - (int)lastY) * 1 / zoom;
+                if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
+                {
+                    suspendInput = true;
+                }
+                else
+                    suspendInput = false;
             }
-            
-            zoom += (m.Scroll.Y - lastM) / 100;
-            zoom = zoom < zoomMin ? zoomMin : zoom;
-            zoom = zoom > zoomMax ? zoomMax : zoom;
         }
         void OnClick(int x, int y)
         {
@@ -271,15 +279,17 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     n.selectedY = oy;
                     selectedSocket = null;
                     n.selected = true;
+                    n.Selected();
                 }
                 else
                 {
                     n.selected = false;
+                    n.Deselected();
                 }
 
                 foreach (var s in n.sockets)
                 {
-                    if(s.Value.PointIsIn(x, y))
+                    if (s.Value.PointIsIn(x, y))
                     {
                         selectedSocket = s.Value;
                     }
@@ -288,9 +298,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnMouseHeld(int mx, int my)
         {
-            foreach(TriggerScripterNode n in nodes)
+            foreach (TriggerScripterNode n in nodes)
             {
-                if(n.selected)
+                if (n.selected)
                 {
                     n.SetPos(mx - n.selectedX, my - n.selectedY);
                 }

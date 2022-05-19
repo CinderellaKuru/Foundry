@@ -10,7 +10,7 @@ class Program
     static void Main(string[] args)
     {
         int i = 0;
-        //ScriptComb.Comb();
-        ClassConstructor.Stitch();
+        ScriptComb.Comb();
+        //ClassConstructor.Stitch();
     }
 }

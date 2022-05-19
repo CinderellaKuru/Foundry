@@ -698,11 +698,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"UnitLocationDistanceCnd", "Game|World"},
             {"UnitUnitDistanceCnd", "Game|World"}
         };
-
-
-        Color requiredVarColor = Color.DarkGreen;
+        
+        Color requiredVarColor = Color.ForestGreen;
         Color optionalVarColor = Color.Green;
         Color cndColor = Color.Maroon;
+        Color trgColor = Color.Blue;
+        Color effColor = Color.DeepPink;
         TriggerscripterControl c;
 
         public TriggerscripterPage()
@@ -712,27 +713,111 @@ namespace SMHEditor.DockingModules.Triggerscripter
             c.Dock = System.Windows.Forms.DockStyle.Fill;
             Controls.Add(c);
 
-            KryptonContextMenu cm = new KryptonContextMenu();
-            KryptonContextMenu = cm;
-            cm.Opened += CaptureMousePos;
-            KryptonContextMenuItem eff = new KryptonContextMenuItem("Effects");
-            KryptonContextMenuItem cnd = new KryptonContextMenuItem("Conditionals");
-            cm.Items.Add(eff);
-            cm.Items.Add(cnd);
+            ContextMenu cm = new ContextMenu();
+            ContextMenu = cm;
+            cm.Popup += CaptureMousePos;
+            MenuItem trg = new MenuItem("New Trigger");
+            trg.Click += CreateTriggerNode;
+            cm.MenuItems.Add(trg);
 
+            MenuItem eff = new MenuItem("Effects");
+            MenuItem cnd = new MenuItem("Conditionals");
+            MenuItem var = new MenuItem("Variables");
+            cm.MenuItems.Add(eff);
+            cm.MenuItems.Add(cnd);
+            cm.MenuItems.Add(var);
+
+            Dictionary<string, MenuItem> hierarchy = new Dictionary<string, MenuItem>() {
+                { "eff|", eff },
+                { "cnd|", cnd },
+                { "var|", var }
+            };
+            
             foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(SMHEditor.Properties.Resources.eff))
             {
-                KryptonContextMenuItem item = new KryptonContextMenuItem(e.name);
-                item.Tag = e;
-                item.Click += CreateEffectNode;
-                eff.Items.Add(item);
+                string s = nodeSubCategories[e.name + "Eff"];
+                string[] h = s.Split('|');
+                MenuItem last = eff;
+                string concat = "eff|";
+                foreach (string n in h)
+                {
+                    concat += n + "|";
+                    if (hierarchy.Keys.Contains(concat))
+                    {
+                        last = hierarchy[concat];
+                    }
+                    else
+                    {
+                        MenuItem i = new MenuItem(n);
+                        hierarchy.Add(concat, i);
+                        last.MenuItems.Add(i);
+                        last = i;
+                    }
+                }
+
+                MenuItem effectItem = new MenuItem(e.name);
+                effectItem.Tag = e;
+                effectItem.Click += CreateEffectNode;
+                last.MenuItems.Add(effectItem);
             }
-            foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd))
+
+            List<Condition> cs = JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd);
+            foreach (Condition c in cs)
             {
-                KryptonContextMenuItem item = new KryptonContextMenuItem(c.name);
-                item.Tag = c;
-                item.Click += CreateConditionNode;
-                cnd.Items.Add(item);
+                string s = nodeSubCategories[c.name + "Cnd"];
+                string[] h = s.Split('|');
+                MenuItem last = cnd;
+                string concat = "cnd|";
+                foreach (string n in h)
+                {
+                    concat += n + "|";
+                    if (hierarchy.Keys.Contains(concat))
+                    {
+                        last = hierarchy[concat];
+                    }
+                    else
+                    {
+                        MenuItem i = new MenuItem(n);
+                        hierarchy.Add(concat, i);
+                        last.MenuItems.Add(i);
+                        last = i;
+                    }
+                }
+
+                MenuItem cndItem = new MenuItem(c.name);
+                cndItem.Tag = c;
+                cndItem.Click += CreateConditionNode;
+                last.MenuItems.Add(cndItem);
+
+            }
+
+            List<string> vs = JsonConvert.DeserializeObject<List<string>>(SMHEditor.Properties.Resources.var);
+            vs.Sort();
+            foreach (string v in vs)
+            {
+                string vStr = nodeSubCategories[v + "Var"];
+                string concat = "var|";
+                MenuItem last = var;
+                foreach(string s in vStr.Split('|'))
+                {
+                    concat += s + "|";
+                    if (hierarchy.Keys.Contains(concat))
+                    {
+                        last = hierarchy[concat];
+                    }
+                    else
+                    {
+                        MenuItem i = new MenuItem(s);
+                        hierarchy.Add(concat, i);
+                        last.MenuItems.Add(i);
+                        last = i;
+                    }
+                }
+
+                MenuItem varItem = new MenuItem(v);
+                varItem.Tag = v;
+                varItem.Click += CreateVarNode;
+                last.MenuItems.Add(varItem);
             }
         }
         Point[] mCap = new Point[] { new Point() };
@@ -746,16 +831,48 @@ namespace SMHEditor.DockingModules.Triggerscripter
             Console.WriteLine(mCap[0]);
         }
 
-        //void CreateTriggerNode
-        void CreateEffectNode(object o, EventArgs e)
+        int trgID = 0; int varID = 0;
+        int cndID = 0; int effID = 0;
+        void CreateTriggerNode(object o, EventArgs e)
         {
-            Effect eff = (o as KryptonContextMenuItem).Tag as Effect;
+            TriggerScripterNode_Trigger n = new TriggerScripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
+
+            n.id = trgID;
+            n.nodeTitle = "NewTrigger" + trgID.ToString();
+            n.typeTitle = "Trigger";
+            n.AddSocket(true, "Caller", "TRG", trgColor);
+            n.AddSocket(true, "Conditions", "CND", cndColor);
+            n.AddSocket(false, "Call On True", "EFF", effColor);
+            n.AddSocket(false, "Call On False", "EFF",  effColor);
+            n.nameProperty.tb.Text = n.nodeTitle;
+
+            c.AddNode(n);
+            trgID++;
+        }
+        void CreateVarNode(object o, EventArgs e)
+        {
+            string var = (o as MenuItem).Tag as string;
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
+            n.id = varID;
+            n.nodeTitle = "New" + var + varID.ToString();
+            n.typeTitle = var;
+            n.AddSocket(true, "Set", var, requiredVarColor);
+            n.AddSocket(false, "Use", var, requiredVarColor);
+
+            c.AddNode(n);
+            varID++;
+        }
+        void CreateEffectNode(object o, EventArgs e)
+        {
+            Effect eff = (o as MenuItem).Tag as Effect;
+            TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
+
+            n.id = effID;
             n.nodeTitle = eff.name;
             n.typeTitle = "Effect";
-            n.AddSocket(true, "Caller", "CALL", Color.DarkBlue);
-            n.AddSocket(false, "Call", "CALL", Color.DarkBlue);
+            n.AddSocket(true, "Caller", "EFF", effColor);
+            n.AddSocket(false, "Call", "EFF", effColor);
 
             foreach (Input i in eff.inputs)
             {
@@ -769,12 +886,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
 
             c.AddNode(n);
+            effID++;
         }
         void CreateConditionNode(object o, EventArgs e)
         {
-            Condition cnd = (o as KryptonContextMenuItem).Tag as Condition;
+            Condition cnd = (o as MenuItem).Tag as Condition;
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
+            n.id = cndID;
             n.nodeTitle = cnd.name;
             n.typeTitle = "Condition";
 
@@ -792,6 +911,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
 
             c.AddNode(n);
+            cndID++;
         }
     }
 }

@@ -113,14 +113,17 @@ class ScriptComb
                                     varTypes.Add(vars[int.Parse(effect.ChildNodes[j].InnerText)]);
                                 }
 
-                                if (!effects.ContainsKey(e.name))
+                                if (!effects.ContainsKey(e.name) &&
+                                    !e.name.Contains("(") &&
+                                    !e.name.Contains("Trigger") &&
+                                    e.name != "")
                                 {
                                     effects.Add(e.name, e);
                                 }
-                                if (!effects[e.name].sources.Contains(s.Substring(4)))
-                                {
-                                    effects[e.name].sources.Add(s.Substring(4));
-                                }
+                                //if (!effects[e.name].sources.Contains(s.Substring(4)))
+                                //{
+                                //    effects[e.name].sources.Add(s.Substring(4));
+                                //}
                             }
                         }
                     }
@@ -162,7 +165,8 @@ class ScriptComb
                                 c.outputs.Add(output);
                             }
                         }
-                        if (!conditions.ContainsKey(c.name)) conditions.Add(c.name, c);
+                        if (!conditions.ContainsKey(c.name) &&
+                            c.name != "") conditions.Add(c.name, c);
                     }
 
                     #endregion
@@ -176,7 +180,7 @@ class ScriptComb
 
         string jsonvar = JsonConvert.SerializeObject(varTypes, Newtonsoft.Json.Formatting.Indented);
         File.WriteAllText("out\\var.json", jsonvar);
-
+        
         string jsoneff = JsonConvert.SerializeObject(effects.Values.ToList(), Newtonsoft.Json.Formatting.Indented);
         File.WriteAllText("out\\eff.json", jsoneff);
 

@@ -96,6 +96,9 @@
     <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.Diagram.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Diagram.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -245,6 +248,11 @@
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerPage.cs" />
+    <Compile Include="DockingModules\PropertyEditor\PropertyEditorControl.cs" />
+    <Compile Include="DockingModules\PropertyEditor\PropertyEditorControl.Designer.cs">
+      <DependentUpon>PropertyEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockingModules\PropertyEditor\PropertyEditorPage.cs" />
     <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.cs" />
     <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.Designer.cs">
       <DependentUpon>TriggerscripterControl.cs</DependentUpon>
@@ -320,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
       <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockingModules\PropertyEditor\PropertyEditorControl.resx">
+      <DependentUpon>PropertyEditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockingModules\Triggerscripter\TriggerscripterControl.resx">
       <DependentUpon>TriggerscripterControl.cs</DependentUpon>
@@ -401,6 +412,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ScriptComb\bin\Debug\out\var.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\out\cnd.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\out\eff.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScriptComb\out\var.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
