@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +15,19 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public static int socketSize = 10;
         public Rectangle rect;
         public TriggerScripterNode node;
-        public TriggerScripterSocket(string name, string type, Color socketColor, TriggerScripterNode n, Rectangle r)
+        public TriggerScripterSocket(string name, string type, Color socketColor, TriggerScripterNode n, Rectangle r, bool showType)
         {
             color = socketColor;
             text = name;
             valueType = type;
             node = n;
             rect = r;
+            this.showType = showType;
         }
 
+        protected bool showType = true;
+        public string text;
         public string valueType = "null";
-        protected string text;
         public Color color;
         public bool PointIsIn(int x, int y)
         {
@@ -39,9 +42,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
     }
     public class TriggerScripterSocketInput : TriggerScripterSocket
     {
-        List<TriggerScripterSocketOutput> connectedSockets = new List<TriggerScripterSocketOutput>();
-        public TriggerScripterSocketInput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r)
-            : base(name, type, socketCoolor, n, r)
+        public List<TriggerScripterSocketOutput> connectedSockets = new List<TriggerScripterSocketOutput>();
+        public TriggerScripterSocketInput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r, bool showType)
+            : base(name, type, socketCoolor, n, r, showType)
         {
 
         }
@@ -54,18 +57,21 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             base.Draw(e);
             Font f = new Font("Arial", 14.5f, FontStyle.Regular);
-            if (valueType != "")
+
+            if (showType)
             {
-                e.Graphics.DrawString(text, f, new SolidBrush(Color.White), new PointF(node.x + rect.X + 15, node.y + rect.Y - 20));
-                e.Graphics.DrawString(valueType, f, new SolidBrush(Color.White), new PointF(node.x + rect.X + 15, node.y + rect.Y + 4));
+                node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X + 15, rect.Y - 20);
+                node.DrawStringOnNode(e.Graphics, f, "[" + valueType + "]", Color.White, rect.X + 15, rect.Y + 4);
             }
+            else
+                node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X + 15, rect.Y - 9);
         }
     }
     public class TriggerScripterSocketOutput : TriggerScripterSocket
     {
-        List<TriggerScripterSocketInput> connectedSockets = new List<TriggerScripterSocketInput>();
-        public TriggerScripterSocketOutput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r)
-            : base(name, type, socketCoolor, n, r)
+        public List<TriggerScripterSocketInput> connectedSockets = new List<TriggerScripterSocketInput>();
+        public TriggerScripterSocketOutput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r, bool showType)
+            : base(name, type, socketCoolor, n, r, showType)
         {
 
         }
@@ -74,13 +80,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             base.Draw(e);
             Font f = new Font("Arial", 14.5f, FontStyle.Regular);
-            if (valueType != "")
+            if(showType)
             {
-                e.Graphics.DrawString(text, f, new SolidBrush(Color.White), new PointF(node.x + rect.X, node.y + rect.Y - 20), new StringFormat(StringFormatFlags.DirectionRightToLeft));
-                e.Graphics.DrawString("[" + valueType + "]", f, new SolidBrush(Color.White), new PointF(node.x + rect.X, node.y + rect.Y + 4), new StringFormat(StringFormatFlags.DirectionRightToLeft));
+                node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X, rect.Y - 20, StringFormatFlags.DirectionRightToLeft);
+                node.DrawStringOnNode(e.Graphics, f, "[" + valueType + "]", Color.White, rect.X, rect.Y + 4, StringFormatFlags.DirectionRightToLeft);
             }
             else
-                e.Graphics.DrawString(text, f, new SolidBrush(Color.White), new PointF(node.x + rect.X, node.y + rect.Y - 4), new StringFormat(StringFormatFlags.DirectionRightToLeft));
+                node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X, rect.Y - 9, StringFormatFlags.DirectionRightToLeft);
         }
         public void DrawConnections(PaintEventArgs e)
         {
@@ -112,14 +118,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
     public class TriggerScripterNode
     {
         public TriggerscripterControl owner;
-        public int width = 350, height;
+        public int width = 350, height, bottomPadding = 0;
         public int x, y;
         public int layer = 0;
         public Color headerColor = Color.DarkOrange;
         public string nodeTitle = "node";
         public string typeTitle = "type";
         public string handleAs = "null";
-        public int id;
 
         public object data;
 
@@ -147,7 +152,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             y += my;
         }
         
-        public void AddSocket(bool isInput, string text, string type, Color color)
+        public void AddSocket(bool isInput, string text, string type, Color color, bool showType = true)
         {
             if(isInput)
             {
@@ -156,7 +161,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     inSockets * socketSpacing - (TriggerScripterSocket.socketSize / 2) + headerHeight + 40,
                     TriggerScripterSocket.socketSize,
                     TriggerScripterSocket.socketSize);
-                sockets.Add(r, new TriggerScripterSocketInput(text, type, color, this, r));
+                sockets.Add(r, new TriggerScripterSocketInput(text, type, color, this, r, showType));
                 inSockets++;
             }
             else
@@ -166,12 +171,25 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     outSockets * socketSpacing - (TriggerScripterSocket.socketSize / 2) + headerHeight + 40,
                     TriggerScripterSocket.socketSize,
                     TriggerScripterSocket.socketSize);
-                sockets.Add(r, new TriggerScripterSocketOutput(text, type, color, this, r));
+                sockets.Add(r, new TriggerScripterSocketOutput(text, type, color, this, r, showType));
                 outSockets++;
             }
 
             int greater = inSockets > outSockets ? inSockets : outSockets;
             height = 90 + (socketSpacing * greater);
+        }
+        public TriggerScripterSocket GetSocket(string name)
+        {
+            foreach(TriggerScripterSocket s in sockets.Values)
+            {
+                if (s.text == name)
+                {
+                    return s;
+                }
+            }
+            {
+                return null;
+            }
         }
         public bool PointIsIn(int mx, int my, out int offsX, out int offsY)
         {
@@ -216,20 +234,48 @@ namespace SMHEditor.DockingModules.Triggerscripter
         static int socketSpacing = 65;
         static int headerHeight = 70;
         static Brush backBrush = new SolidBrush(Color.FromArgb(255, 40, 40, 40));
+        public string TrunicateString(Graphics g, Font f, string s, int width)
+        {
+            string ts = s;
+            Matrix m = g.Transform.Clone();
+            g.Transform = new Matrix();
+            SizeF size = g.MeasureString(s, f);
+            g.Transform = m;
+
+            bool trunicated = false;
+            while (size.Width >= width)
+            {
+                ts = ts.Substring(0, ts.Length - 1);
+                size = g.MeasureString(ts, f);
+                trunicated = true;
+            }
+            if (trunicated) ts += "...";
+            return ts;
+        }
+        public void DrawStringOnNode(Graphics g, Font f, string s, Color c, int xOffs, int yOffs)
+        {
+            DrawStringOnNode(g, f, s, c, xOffs, yOffs, (StringFormatFlags)0);
+        }
+        public void DrawStringOnNode(Graphics g, Font f, string s, Color c, int xOffs, int yOffs, StringFormatFlags flags)
+        {
+            g.DrawString(s, f, new SolidBrush(c), xOffs + x, yOffs + y, new StringFormat(flags));
+        }
         public virtual void Draw(PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(backBrush, x, y, width, height);
+            e.Graphics.FillRectangle(backBrush, x, y, width, height + bottomPadding);
             e.Graphics.FillRectangle(new SolidBrush(headerColor), x, y, width, headerHeight);
 
-            e.Graphics.DrawString(nodeTitle, new Font("Arial", 18, FontStyle.Bold), new SolidBrush(Color.White), x + 3, y + 3);
-            e.Graphics.DrawString(typeTitle, new Font("Arial", 18, FontStyle.Regular), new SolidBrush(Color.White), x + 3, y + 29);
+            Font fb = new Font("Arial", 18, FontStyle.Bold);
+            Font fr = new Font("Arial", 18, FontStyle.Regular);
+            DrawStringOnNode(e.Graphics, fb, TrunicateString(e.Graphics, fb, nodeTitle, width - 60), Color.White, 3, 3);
+            DrawStringOnNode(e.Graphics, fr, TrunicateString(e.Graphics, fr, typeTitle, width - 60), Color.White, 3, 29);
 
             Color borderColor = selected ? Color.White : Color.Black;
-            e.Graphics.DrawRectangle(new Pen(borderColor), x, y, width, height);
+            e.Graphics.DrawRectangle(new Pen(borderColor), x, y, width, height + bottomPadding);
 
-            foreach (var s in sockets)
+            foreach (var socket in sockets)
             {
-                s.Value.Draw(e);
+                socket.Value.Draw(e);
             }
         }
     }
@@ -244,10 +290,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             typeTitle = "Trigger";
             handleAs = "Trigger";
-            AddSocket(true, "Caller", "TRG", TriggerScripterPage.trgColor);
-            AddSocket(true, "Conditions", "CND", TriggerScripterPage.cndColor);
-            AddSocket(false, "Call On True", "EFF", TriggerScripterPage.effColor);
-            AddSocket(false, "Call On False", "EFF", TriggerScripterPage.effColor);
+            AddSocket(true, "Caller", "TRG", TriggerScripterPage.trgColor, false);
+            AddSocket(true, "Conditions", "CND", TriggerScripterPage.cndColor, false);
+            AddSocket(false, "Call On True", "EFF", TriggerScripterPage.effColor, false);
+            AddSocket(false, "Call On False", "EFF", TriggerScripterPage.effColor, false);
 
             nameProperty = new PropertyItem_String("Name");
             nameProperty.tb.TextChanged += OnNameChange;
@@ -266,9 +312,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         public override void Deselected()
         {
-            MainWindow.propertyEditor.control.RemoveProperty(nameProperty);
-            MainWindow.propertyEditor.control.RemoveProperty(active);
-            MainWindow.propertyEditor.control.RemoveProperty(conditionalType);
+            MainWindow.propertyEditor.control.Clear();
         }
 
         public void OnNameChange(object o, EventArgs e)
@@ -286,6 +330,42 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 e.Graphics.FillEllipse(new SolidBrush(Color.Red), x + width - 30, y + 10, 20, 20);
 
             e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 1), x + width - 30, y + 10, 20, 20);
+        }
+    }
+    public class TriggerScripterNode_Variable: TriggerScripterNode
+    {
+        public PropertyItem_String nameProperty;
+        public PropertyItem_String valueProperty;
+        public TriggerScripterNode_Variable(TriggerscripterControl c, int x, int y) : base(c,x,y)
+        {
+            handleAs = "Variable";
+            nameProperty = new PropertyItem_String("Name");
+            nameProperty.tb.TextChanged += OnNameChange;
+
+            valueProperty = new PropertyItem_String("Value");
+        }
+
+        public override void Deselected()
+        {
+            MainWindow.propertyEditor.control.Clear();
+        }
+        public override void Selected()
+        {
+            MainWindow.propertyEditor.control.Clear();
+            MainWindow.propertyEditor.control.AddProperty(nameProperty);
+            MainWindow.propertyEditor.control.AddProperty(valueProperty);
+        }
+
+        public override void Draw(PaintEventArgs e)
+        {
+            base.Draw(e);
+            e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(60, 60, 60)), x + 10, y + height - 10, width - 20, 50);
+            Font f = new Font("Arial", 16, FontStyle.Regular);
+            DrawStringOnNode(e.Graphics, f, TrunicateString(e.Graphics, f, valueProperty.tb.Text, width - 40), Color.White, 15, height);
+        }
+        public void OnNameChange(object o, EventArgs e)
+        {
+            nodeTitle = nameProperty.tb.Text;
         }
     }
 }

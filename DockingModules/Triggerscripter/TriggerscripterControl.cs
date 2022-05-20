@@ -16,24 +16,28 @@ using ComponentFactory.Krypton.Docking;
 using ComponentFactory.Krypton.Navigator;
 using ComponentFactory.Krypton.Ribbon;
 using ComponentFactory.Krypton.Workspace;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
-    class Input
+    public class Input
     {
         public string name;
         public string valueType;
         public bool optional;
         public int sigId;
+        public int value;
     }
-    class Output
+    public class Output
     {
         public string name;
         public string valueType;
         public bool optional;
         public int sigId;
+        public int value;
     }
-    class Effect
+    public class Effect
     {
         public string name;
         public List<Input> inputs = new List<Input>();
@@ -42,13 +46,29 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public int dbid;
         public int version;
     }
-    class Condition
+    public class Condition
     {
         public string name;
         public List<Input> inputs = new List<Input>();
         public List<Output> outputs = new List<Output>();
         public int dbid;
         public int version;
+    }
+    public class Variable
+    {
+        public string name;
+        public int id;
+        public string value;
+    }
+    public class Trigger
+    {
+        public string name;
+        public bool cndIsOr;
+        public bool active;
+        public int id;
+        public List<Effect> effectsTrue;
+        public List<Effect> effectsFalse;
+        public List<Condition> conditions;
     }
 
     public partial class TriggerscripterControl : UserControl
@@ -80,6 +100,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             lastY = mouse.Y;
             lastM = mouse.Scroll.Y;
             Invalidate();
+
+            if(OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
+            {
+                CompileCurrentGraph(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+            }
         }
 
         public void AddNode(TriggerScripterNode n)
@@ -305,6 +330,75 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     n.SetPos(mx - n.selectedX, my - n.selectedY);
                 }
             }
+        }
+
+
+        int varID = 0, triggerID = 0;
+        Dictionary<TriggerScripterNode_Trigger, int> triggers = new Dictionary<TriggerScripterNode_Trigger, int>();
+        Dictionary<TriggerScripterNode, Variable> vars = new Dictionary<TriggerScripterNode, Variable>();
+        public void CompileCurrentGraph(string outPath)
+        {
+            triggers.Clear();
+            vars.Clear();
+
+            XDocument doc = new XDocument();
+            foreach(TriggerScripterNode n in nodes)
+            {
+                if(n.handleAs == "Trigger")
+                {
+                    TriggerScripterNode_Trigger tn = n as TriggerScripterNode_Trigger;
+                    if(tn.active.state)
+                    {
+                        CompileTrigger(tn);
+                    }
+                }
+            }
+
+            #region XML
+            XDocument x = new XDocument();
+
+            XElement triggerSystem = new XElement("TriggerSystem");
+            XElement triggerGroups = new XElement("TriggerGroups");
+            XElement triggerVars = new XElement("TriggerVars");
+            XElement triggersNode = new XElement("Trigers");
+            triggerSystem.Add(triggerGroups);
+            triggerSystem.Add(triggerVars);
+            triggerSystem.Add(triggersNode);
+
+            x.Add(triggerSystem);
+
+            foreach(var tp in triggers)
+            {
+                Trigger t = tp.Value;
+                XElement tNode = new XElement("Trigger");
+                triggersNode.Add(tNode);
+                tNode.Add(new XAttribute("Name", t.name));
+                tNode.Add(new XAttribute("Active", t.active));
+                tNode.Add(new XAttribute("EvaluateFrequency", 0));
+                tNode.Add(new XAttribute("EvalLimit", 0));
+                tNode.Add(new XAttribute("CommentOut", false));
+                tNode.Add(new XAttribute("X", tp.Key.x));
+                tNode.Add(new XAttribute("Y", tp.Key.y));
+                tNode.Add(new XAttribute("GroupID", -1));
+
+                XElement cnd = new XElement("TriggerConditions");
+                XElement effT = new XElement("TriggerEffectsOnTrue");
+                foreach(Effect e in t.effectsTrue)
+                {
+                    XElement eff = new XElement("Effect");
+                    effT.Add(eff);
+                    eff.Add(new XAttribute("ID", 0));
+                    eff.Add(new XAttribute("Type", e.name));
+                    eff.Add(new XAttribute("DBID", e.dbid));
+                    eff.Add(new XAttribute("Version", e.version));
+                    eff.Add(new XAttribute("CommentOut", false));
+                }
+
+                XElement effF = new XElement("TriggerEffectsOnFalse");
+            }
+
+            x.Save(outPath);
+            #endregion
         }
     }
 }

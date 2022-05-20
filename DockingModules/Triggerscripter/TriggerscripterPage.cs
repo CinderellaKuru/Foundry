@@ -838,7 +838,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             TriggerScripterNode_Trigger n = new TriggerScripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
-            n.id = trgID;
             n.nodeTitle = "NewTrigger" + trgID.ToString();
             n.nameProperty.tb.Text = n.nodeTitle;
 
@@ -848,15 +847,18 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void CreateVarNode(object o, EventArgs e)
         {
             string var = (o as MenuItem).Tag as string;
-            TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
+            TriggerScripterNode_Variable n = new TriggerScripterNode_Variable(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
-            n.id = varID;
+
             n.nodeTitle = "New" + var + varID.ToString();
+            n.nameProperty.tb.Text = n.nodeTitle;
+
             n.typeTitle = var;
-            n.handleAs = "Variable";
-            n.AddSocket(true, "Set", var, requiredVarColor);
-            n.AddSocket(false, "Use", var, requiredVarColor);
+            n.AddSocket(true, "Set", var, requiredVarColor, false);
+            n.AddSocket(false, "Use", var, requiredVarColor, false);
+
+            n.bottomPadding = 50;
 
             c.AddNode(n);
             varID++;
@@ -867,12 +869,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
-            n.id = effID;
             n.nodeTitle = eff.name;
             n.typeTitle = "Effect";
             n.handleAs = "Effect";
-            n.AddSocket(true, "Caller", "EFF", effColor);
-            n.AddSocket(false, "Call", "EFF", effColor);
+            n.AddSocket(true, "Caller", "EFF", effColor, false);
+            n.AddSocket(false, "Call", "EFF", effColor, false);
 
             foreach (Input i in eff.inputs)
             {
@@ -894,12 +895,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
-            n.id = cndID;
             n.nodeTitle = cnd.name;
             n.typeTitle = "Condition";
             n.handleAs = "Condition";
 
-            n.AddSocket(false, "Result", "CND", cndColor);
+            n.AddSocket(false, "Result", "CND", cndColor, false);
 
             foreach (Input i in cnd.inputs)
             {
