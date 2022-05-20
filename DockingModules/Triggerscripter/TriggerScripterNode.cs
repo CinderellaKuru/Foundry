@@ -121,6 +121,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public string handleAs = "null";
         public int id;
 
+        public object data;
+
         public int selectedX = 0, selectedY = 0;
         public bool selected = false;
 
@@ -236,29 +238,54 @@ namespace SMHEditor.DockingModules.Triggerscripter
     {
         public PropertyItem_String nameProperty;
         public PropertyItem_Bool conditionalType;
+        public PropertyItem_Bool active;
+        
         public TriggerScripterNode_Trigger(TriggerscripterControl control, int px, int py) : base(control, px, py)
         {
-            nameProperty = new PropertyItem_String();
+            typeTitle = "Trigger";
+            handleAs = "Trigger";
+            AddSocket(true, "Caller", "TRG", TriggerScripterPage.trgColor);
+            AddSocket(true, "Conditions", "CND", TriggerScripterPage.cndColor);
+            AddSocket(false, "Call On True", "EFF", TriggerScripterPage.effColor);
+            AddSocket(false, "Call On False", "EFF", TriggerScripterPage.effColor);
+
+            nameProperty = new PropertyItem_String("Name");
             nameProperty.tb.TextChanged += OnNameChange;
 
-            conditionalType = new PropertyItem_Bool("And", "Or");
+            conditionalType = new PropertyItem_Bool("Condition Type", "And", "Or");
+
+            active = new PropertyItem_Bool("Active On Start", "False", "True");
         }
 
         public override void Selected()
         {
             MainWindow.propertyEditor.control.Clear();
             MainWindow.propertyEditor.control.AddProperty(nameProperty);
+            MainWindow.propertyEditor.control.AddProperty(active);
             MainWindow.propertyEditor.control.AddProperty(conditionalType);
         }
         public override void Deselected()
         {
             MainWindow.propertyEditor.control.RemoveProperty(nameProperty);
+            MainWindow.propertyEditor.control.RemoveProperty(active);
             MainWindow.propertyEditor.control.RemoveProperty(conditionalType);
         }
 
         public void OnNameChange(object o, EventArgs e)
         {
             nodeTitle = nameProperty.tb.Text;
+        }
+
+        public override void Draw(PaintEventArgs e)
+        {
+            base.Draw(e);
+
+            if(active.state == true)
+                e.Graphics.FillEllipse(new SolidBrush(Color.Green), x + width - 30, y + 10, 20, 20);
+            else
+                e.Graphics.FillEllipse(new SolidBrush(Color.Red), x + width - 30, y + 10, 20, 20);
+
+            e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 1), x + width - 30, y + 10, 20, 20);
         }
     }
 }

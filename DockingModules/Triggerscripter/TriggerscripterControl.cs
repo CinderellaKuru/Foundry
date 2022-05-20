@@ -24,14 +24,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public string name;
         public string valueType;
         public bool optional;
-        public string sigId;
+        public int sigId;
     }
     class Output
     {
         public string name;
         public string valueType;
         public bool optional;
-        public string sigId;
+        public int sigId;
     }
     class Effect
     {
@@ -39,16 +39,16 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public List<Input> inputs = new List<Input>();
         public List<Output> outputs = new List<Output>();
         public List<string> sources = new List<string>();
-        public string dbid;
-        public string version;
+        public int dbid;
+        public int version;
     }
     class Condition
     {
         public string name;
         public List<Input> inputs = new List<Input>();
         public List<Output> outputs = new List<Output>();
-        public string dbid;
-        public string version;
+        public int dbid;
+        public int version;
     }
 
     public partial class TriggerscripterControl : UserControl

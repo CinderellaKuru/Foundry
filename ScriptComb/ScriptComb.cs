@@ -10,14 +10,14 @@ class Input
     public string name;
     public string valueType;
     public bool optional;
-    public string sigId;
+    public int sigId;
 }
 class Output
 {
     public string name;
     public string valueType;
     public bool optional;
-    public string sigId;
+    public int sigId;
 }
 class Effect
 {
@@ -25,16 +25,16 @@ class Effect
     public List<Input> inputs = new List<Input>();
     public List<Output> outputs = new List<Output>();
     public List<string> sources = new List<string>();
-    public string dbid;
-    public string version;
+    public int dbid;
+    public int version;
 }
 class Condition
 {
     public string name;
     public List<Input> inputs = new List<Input>();
     public List<Output> outputs = new List<Output>();
-    public string dbid;
-    public string version;
+    public int dbid;
+    public int version;
 }
 
 class ScriptComb
@@ -79,9 +79,9 @@ class ScriptComb
                             else continue;
                             Effect e = new Effect();
                             e.name = effect.Attributes[1].Value;
-                            e.dbid = effect.Attributes[2].Value;
-                            e.version = effect.Attributes[3].Value;
-                            
+                            int.TryParse(effect.Attributes[2].Value, out e.dbid);
+                            int.TryParse(effect.Attributes[3].Value, out e.version);
+
 
                             for (int j = 0; j < effect.ChildNodes.Count; j++)
                             {
@@ -91,7 +91,7 @@ class ScriptComb
                                     input.name = effect.ChildNodes[j].Attributes[0].Value.Replace(" ", "");
                                     input.optional = bool.Parse(effect.ChildNodes[j].Attributes[2].Value);
                                     input.valueType = vars[int.Parse(effect.ChildNodes[j].InnerText)].Replace(" ", "");
-                                    input.sigId = effect.ChildNodes[j].Attributes[1].Value;
+                                    int.TryParse(effect.ChildNodes[j].Attributes[1].Value, out input.sigId);
 
                                     e.inputs.Add(input);
                                 }
@@ -102,7 +102,7 @@ class ScriptComb
                                     output.name = effect.ChildNodes[j].Attributes[0].Value.Replace(" ", "");
                                     output.optional = bool.Parse(effect.ChildNodes[j].Attributes[2].Value);
                                     output.valueType = vars[int.Parse(effect.ChildNodes[j].InnerText)].Replace(" ", "");
-                                    output.sigId = effect.ChildNodes[j].Attributes[1].Value;
+                                    int.TryParse(effect.ChildNodes[j].Attributes[1].Value, out output.sigId);
 
                                     e.outputs.Add(output);
                                 }
@@ -136,8 +136,8 @@ class ScriptComb
                     {
                         Condition c = new Condition();
                         c.name = condition.ChildNodes[j].Attributes[1].Value;
-                        c.dbid = condition.ChildNodes[j].Attributes[2].Value;
-                        c.version = condition.ChildNodes[j].Attributes[3].Value;
+                        int.TryParse(condition.ChildNodes[j].Attributes[2].Value, out c.dbid);
+                        int.TryParse(condition.ChildNodes[j].Attributes[3].Value, out c.version);
 
                         for (int k = 0; k < condition.ChildNodes[j].ChildNodes.Count; k++)
                         {
@@ -147,7 +147,7 @@ class ScriptComb
                                 input.name = condition.ChildNodes[j].ChildNodes[k].Attributes[0].Value;
                                 input.optional = bool.Parse(condition.ChildNodes[j].ChildNodes[k].Attributes[2].Value);
                                 input.valueType = vars[int.Parse(condition.ChildNodes[j].ChildNodes[k].InnerText)];
-                                input.sigId = condition.ChildNodes[j].ChildNodes[k].Attributes[1].Value;
+                                int.TryParse(condition.ChildNodes[j].ChildNodes[k].Attributes[1].Value, out input.sigId);
                                 if (!varTypes.Contains(input.valueType)) varTypes.Add(input.valueType);
 
                                 c.inputs.Add(input);
@@ -159,7 +159,7 @@ class ScriptComb
                                 output.name = condition.ChildNodes[j].ChildNodes[k].Attributes[0].Value;
                                 output.optional = bool.Parse(condition.ChildNodes[j].ChildNodes[k].Attributes[2].Value);
                                 output.valueType = vars[int.Parse(condition.ChildNodes[j].ChildNodes[k].InnerText)];
-                                output.sigId = condition.ChildNodes[j].ChildNodes[k].Attributes[1].Value;
+                                int.TryParse(condition.ChildNodes[j].ChildNodes[k].Attributes[1].Value, out output.sigId);
                                 if (!varTypes.Contains(output.valueType)) varTypes.Add(output.valueType);
 
                                 c.outputs.Add(output);
@@ -178,14 +178,15 @@ class ScriptComb
         }
         Console.WriteLine("Loading... Done.");
 
+        varTypes.Remove("Trigger");
         string jsonvar = JsonConvert.SerializeObject(varTypes, Newtonsoft.Json.Formatting.Indented);
-        File.WriteAllText("out\\var.json", jsonvar);
+        File.WriteAllText("out\\var.txt", jsonvar);
         
         string jsoneff = JsonConvert.SerializeObject(effects.Values.ToList(), Newtonsoft.Json.Formatting.Indented);
-        File.WriteAllText("out\\eff.json", jsoneff);
+        File.WriteAllText("out\\eff.txt", jsoneff);
 
         string jsoncnd = JsonConvert.SerializeObject(conditions.Values.ToList(), Newtonsoft.Json.Formatting.Indented);
-        File.WriteAllText("out\\cnd.json", jsoncnd);
+        File.WriteAllText("out\\cnd.txt", jsoncnd);
 
 
         //Console.WriteLine(varTypes.Count);

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
-    public class TriggerscripterPage : KryptonPage
+    public class TriggerScripterPage : KryptonPage
     {
         public static Dictionary<string, string> nodeSubCategories = new Dictionary<string, string>()
         {
@@ -698,15 +698,15 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"UnitLocationDistanceCnd", "Game|World"},
             {"UnitUnitDistanceCnd", "Game|World"}
         };
-        
-        Color requiredVarColor = Color.ForestGreen;
-        Color optionalVarColor = Color.Green;
-        Color cndColor = Color.Maroon;
-        Color trgColor = Color.Blue;
-        Color effColor = Color.DeepPink;
+
+        public static Color requiredVarColor = Color.ForestGreen;
+        public static Color optionalVarColor = Color.Green;
+        public static Color cndColor = Color.Maroon;
+        public static Color trgColor = Color.Blue;
+        public static Color effColor = Color.DeepPink;
         TriggerscripterControl c;
 
-        public TriggerscripterPage()
+        public TriggerScripterPage()
         {
             c = new TriggerscripterControl();
             c.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Top;
@@ -837,13 +837,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             TriggerScripterNode_Trigger n = new TriggerScripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
 
+            n.data = ((MenuItem)o).Tag;
             n.id = trgID;
             n.nodeTitle = "NewTrigger" + trgID.ToString();
-            n.typeTitle = "Trigger";
-            n.AddSocket(true, "Caller", "TRG", trgColor);
-            n.AddSocket(true, "Conditions", "CND", cndColor);
-            n.AddSocket(false, "Call On True", "EFF", effColor);
-            n.AddSocket(false, "Call On False", "EFF",  effColor);
             n.nameProperty.tb.Text = n.nodeTitle;
 
             c.AddNode(n);
@@ -854,9 +850,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             string var = (o as MenuItem).Tag as string;
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
+            n.data = ((MenuItem)o).Tag;
             n.id = varID;
             n.nodeTitle = "New" + var + varID.ToString();
             n.typeTitle = var;
+            n.handleAs = "Variable";
             n.AddSocket(true, "Set", var, requiredVarColor);
             n.AddSocket(false, "Use", var, requiredVarColor);
 
@@ -868,9 +866,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             Effect eff = (o as MenuItem).Tag as Effect;
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
+            n.data = ((MenuItem)o).Tag;
             n.id = effID;
             n.nodeTitle = eff.name;
             n.typeTitle = "Effect";
+            n.handleAs = "Effect";
             n.AddSocket(true, "Caller", "EFF", effColor);
             n.AddSocket(false, "Call", "EFF", effColor);
 
@@ -893,9 +893,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             Condition cnd = (o as MenuItem).Tag as Condition;
             TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
 
+            n.data = ((MenuItem)o).Tag;
             n.id = cndID;
             n.nodeTitle = cnd.name;
             n.typeTitle = "Condition";
+            n.handleAs = "Condition";
 
             n.AddSocket(false, "Result", "CND", cndColor);
 

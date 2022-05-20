@@ -54,8 +54,9 @@ namespace SMHEditor.DockingModules.PropertyEditor
     {
         public KryptonTextBox tb = new KryptonTextBox();
 
-        public PropertyItem_String() : base()
+        public PropertyItem_String(string title) : base()
         {
+            name = title;
         }
 
         public override void Register(PropertyEditorControl c)
@@ -83,9 +84,12 @@ namespace SMHEditor.DockingModules.PropertyEditor
         public bool state = false;
         public Button button;
 
-        public PropertyItem_Bool(string falseText, string trueText) : base()
+        public PropertyItem_Bool(string title, string falseText, string trueText) : base()
         {
+            name = title;
             button = new Button();
+            button.BackColor = Program.window.darkmode.GetBackColor1(PaletteBackStyle.PanelClient, PaletteState.Normal);
+            button.ForeColor = Color.White;
             button.AutoSize = false;
             button.Click += OnPressed;
             this.falseText = falseText;

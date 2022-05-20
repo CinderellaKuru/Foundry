@@ -37,7 +37,7 @@ namespace SMHEditor
         //Project stuff
         public static ModProject project;
         public static ViewportPage vp;
-        public static TriggerscripterPage ts;
+        public static TriggerScripterPage ts;
         public static PropertyEditorPage propertyEditor;
 
 
@@ -55,7 +55,7 @@ namespace SMHEditor
             dockingManager.ManageFloating(FLOATING_NAME, this);
 
             // static triggerscripter page.
-            ts = new TriggerscripterPage();
+            ts = new TriggerScripterPage();
             // static map editor page.
             vp = new ViewportPage();
             // static property editor
