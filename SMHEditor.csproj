@@ -253,6 +253,7 @@
       <DependentUpon>PropertyEditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DockingModules\PropertyEditor\PropertyEditorPage.cs" />
+    <Compile Include="DockingModules\Triggerscripter\TriggerscripterCompiler.cs" />
     <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.cs" />
     <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.Designer.cs">
       <DependentUpon>TriggerscripterControl.cs</DependentUpon>
@@ -398,9 +399,7 @@
   <ItemGroup>
     <None Include="ext\CommandPositions\7.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DockingModules\Triggerscripter\Nodes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="ScriptComb\bin\Debug\out\out.txt" />
   </ItemGroup>

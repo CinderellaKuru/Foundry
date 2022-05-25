@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
-    public class TriggerScripterSocket
+    public class TriggerscripterSocket
     {
         public static int socketSize = 10;
         public Rectangle rect;
-        public TriggerScripterNode node;
-        public TriggerScripterSocket(string name, string type, Color socketColor, TriggerScripterNode n, Rectangle r, bool showType)
+        public TriggerscripterNode node;
+        public TriggerscripterSocket(string name, string type, Color socketColor, TriggerscripterNode n, Rectangle r, bool showType)
         {
             color = socketColor;
             text = name;
@@ -40,15 +40,15 @@ namespace SMHEditor.DockingModules.Triggerscripter
             e.Graphics.DrawRectangle(new Pen(Color.DarkGray), nodePlusOffs);
         }
     }
-    public class TriggerScripterSocketInput : TriggerScripterSocket
+    public class TriggerscripterSocketInput : TriggerscripterSocket
     {
-        public List<TriggerScripterSocketOutput> connectedSockets = new List<TriggerScripterSocketOutput>();
-        public TriggerScripterSocketInput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r, bool showType)
+        public List<TriggerscripterSocketOutput> connectedSockets = new List<TriggerscripterSocketOutput>();
+        public TriggerscripterSocketInput(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
             : base(name, type, socketCoolor, n, r, showType)
         {
 
         }
-        public void FinalizeConnection(TriggerScripterSocketOutput s)
+        public void FinalizeConnection(TriggerscripterSocketOutput s)
         {
             connectedSockets.Add(s);
         }
@@ -67,10 +67,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X + 15, rect.Y - 9);
         }
     }
-    public class TriggerScripterSocketOutput : TriggerScripterSocket
+    public class TriggerscripterSocketOutput : TriggerscripterSocket
     {
-        public List<TriggerScripterSocketInput> connectedSockets = new List<TriggerScripterSocketInput>();
-        public TriggerScripterSocketOutput(string name, string type, Color socketCoolor, TriggerScripterNode n, Rectangle r, bool showType)
+        public List<TriggerscripterSocketInput> connectedSockets = new List<TriggerscripterSocketInput>();
+        public TriggerscripterSocketOutput(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
             : base(name, type, socketCoolor, n, r, showType)
         {
 
@@ -90,7 +90,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         public void DrawConnections(PaintEventArgs e)
         {
-            foreach (TriggerScripterSocket s in connectedSockets)
+            foreach (TriggerscripterSocket s in connectedSockets)
             {
                 e.Graphics.DrawLine(new Pen(Color.Black, 7.0f),
                     node.x + rect.X + (socketSize / 2),
@@ -105,7 +105,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     s.node.y + s.rect.Y + (socketSize / 2));
             }
         }
-        public void Connect(TriggerScripterSocketInput s)
+        public void Connect(TriggerscripterSocketInput s)
         {
             if (valueType == s.valueType)
             {
@@ -115,7 +115,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
     }
 
-    public class TriggerScripterNode
+    public class TriggerscripterNode
     {
         public TriggerscripterControl owner;
         public int width = 350, height, bottomPadding = 0;
@@ -131,10 +131,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public int selectedX = 0, selectedY = 0;
         public bool selected = false;
 
-        public Dictionary<Rectangle, TriggerScripterSocket> sockets = new Dictionary<Rectangle, TriggerScripterSocket>();
+        public Dictionary<Rectangle, TriggerscripterSocket> sockets = new Dictionary<Rectangle, TriggerscripterSocket>();
         int inSockets = 0, outSockets = 0;
 
-        public TriggerScripterNode(TriggerscripterControl control, int px, int py)
+        public TriggerscripterNode(TriggerscripterControl control, int px, int py)
         {
             owner = control;
             x = px;
@@ -157,30 +157,30 @@ namespace SMHEditor.DockingModules.Triggerscripter
             if(isInput)
             {
                 Rectangle r = new Rectangle(
-                    -TriggerScripterSocket.socketSize / 2,
-                    inSockets * socketSpacing - (TriggerScripterSocket.socketSize / 2) + headerHeight + 40,
-                    TriggerScripterSocket.socketSize,
-                    TriggerScripterSocket.socketSize);
-                sockets.Add(r, new TriggerScripterSocketInput(text, type, color, this, r, showType));
+                    -TriggerscripterSocket.socketSize / 2,
+                    inSockets * socketSpacing - (TriggerscripterSocket.socketSize / 2) + headerHeight + 40,
+                    TriggerscripterSocket.socketSize,
+                    TriggerscripterSocket.socketSize);
+                sockets.Add(r, new TriggerscripterSocketInput(text, type, color, this, r, showType));
                 inSockets++;
             }
             else
             {
                 Rectangle r = new Rectangle(
-                    -TriggerScripterSocket.socketSize / 2 + width,
-                    outSockets * socketSpacing - (TriggerScripterSocket.socketSize / 2) + headerHeight + 40,
-                    TriggerScripterSocket.socketSize,
-                    TriggerScripterSocket.socketSize);
-                sockets.Add(r, new TriggerScripterSocketOutput(text, type, color, this, r, showType));
+                    -TriggerscripterSocket.socketSize / 2 + width,
+                    outSockets * socketSpacing - (TriggerscripterSocket.socketSize / 2) + headerHeight + 40,
+                    TriggerscripterSocket.socketSize,
+                    TriggerscripterSocket.socketSize);
+                sockets.Add(r, new TriggerscripterSocketOutput(text, type, color, this, r, showType));
                 outSockets++;
             }
 
             int greater = inSockets > outSockets ? inSockets : outSockets;
             height = 90 + (socketSpacing * greater);
         }
-        public TriggerScripterSocket GetSocket(string name)
+        public TriggerscripterSocket GetSocket(string name)
         {
-            foreach(TriggerScripterSocket s in sockets.Values)
+            foreach(TriggerscripterSocket s in sockets.Values)
             {
                 if (s.text == name)
                 {
@@ -280,13 +280,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
     }
 
-    public class TriggerScripterNode_Trigger : TriggerScripterNode
+    public class TriggerscripterNode_Trigger : TriggerscripterNode
     {
         public PropertyItem_String nameProperty;
         public PropertyItem_Bool conditionalType;
         public PropertyItem_Bool active;
         
-        public TriggerScripterNode_Trigger(TriggerscripterControl control, int px, int py) : base(control, px, py)
+        public TriggerscripterNode_Trigger(TriggerscripterControl control, int px, int py) : base(control, px, py)
         {
             typeTitle = "Trigger";
             handleAs = "Trigger";
@@ -332,11 +332,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 1), x + width - 30, y + 10, 20, 20);
         }
     }
-    public class TriggerScripterNode_Variable: TriggerScripterNode
+    public class TriggerscripterNode_Variable: TriggerscripterNode
     {
         public PropertyItem_String nameProperty;
         public PropertyItem_String valueProperty;
-        public TriggerScripterNode_Variable(TriggerscripterControl c, int x, int y) : base(c,x,y)
+        public TriggerscripterNode_Variable(TriggerscripterControl c, int x, int y) : base(c,x,y)
         {
             handleAs = "Variable";
             nameProperty = new PropertyItem_String("Name");

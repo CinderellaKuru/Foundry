@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -835,7 +836,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         int cndID = 0; int effID = 0;
         void CreateTriggerNode(object o, EventArgs e)
         {
-            TriggerScripterNode_Trigger n = new TriggerScripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
             n.nodeTitle = "NewTrigger" + trgID.ToString();
@@ -847,7 +848,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void CreateVarNode(object o, EventArgs e)
         {
             string var = (o as MenuItem).Tag as string;
-            TriggerScripterNode_Variable n = new TriggerScripterNode_Variable(c, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
 
@@ -866,7 +867,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void CreateEffectNode(object o, EventArgs e)
         {
             Effect eff = (o as MenuItem).Tag as Effect;
-            TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode n = new TriggerscripterNode(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
             n.nodeTitle = eff.name;
@@ -892,7 +893,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void CreateConditionNode(object o, EventArgs e)
         {
             Condition cnd = (o as MenuItem).Tag as Condition;
-            TriggerScripterNode n = new TriggerScripterNode(c, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode n = new TriggerscripterNode(c, mCap[0].X, mCap[0].Y);
 
             n.data = ((MenuItem)o).Tag;
             n.nodeTitle = cnd.name;
@@ -915,5 +916,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             c.AddNode(n);
             cndID++;
         }
+
+
     }
 }

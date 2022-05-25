@@ -18,6 +18,7 @@ using ComponentFactory.Krypton.Ribbon;
 using ComponentFactory.Krypton.Workspace;
 using System.Xml;
 using System.Xml.Linq;
+using System.IO;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
@@ -56,9 +57,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
     }
     public class Variable
     {
-        public string name;
         public int id;
+        public string name;
         public string value;
+        public string type;
     }
     public class Trigger
     {
@@ -74,7 +76,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
     public partial class TriggerscripterControl : UserControl
     {
         Timer t = new Timer();
-        List<TriggerScripterNode> nodes = new List<TriggerScripterNode>();
+        public List<TriggerscripterNode> nodes = new List<TriggerscripterNode>();
 
         public TriggerscripterControl()
         {
@@ -103,11 +105,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             if(OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
             {
-                CompileCurrentGraph(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+                TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+                SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.ts");
             }
         }
 
-        public void AddNode(TriggerScripterNode n)
+        public void AddNode(TriggerscripterNode n)
         {
             nodes.Add(n);
         }
@@ -154,26 +157,26 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
 
             //draw nodes
-            foreach (TriggerScripterNode n in nodes)
+            foreach (TriggerscripterNode n in nodes)
             {
                 n.Draw(e);
             }
             //draw sockets
-            foreach (TriggerScripterNode n in nodes)
+            foreach (TriggerscripterNode n in nodes)
             {
-                foreach (TriggerScripterSocket s in n.sockets.Values)
+                foreach (TriggerscripterSocket s in n.sockets.Values)
                 {
                     s.Draw(e);
                 }
             }
             //draw connections
-            foreach (TriggerScripterNode n in nodes)
+            foreach (TriggerscripterNode n in nodes)
             {
-                foreach (TriggerScripterSocket s in n.sockets.Values)
+                foreach (TriggerscripterSocket s in n.sockets.Values)
                 {
-                    if (s is TriggerScripterSocketOutput)
+                    if (s is TriggerscripterSocketOutput)
                     {
-                        ((TriggerScripterSocketOutput)s).DrawConnections(e);
+                        ((TriggerscripterSocketOutput)s).DrawConnections(e);
                     }
                 }
             }
@@ -206,7 +209,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
 
-        TriggerScripterSocket selectedSocket = null;
+        TriggerscripterSocket selectedSocket = null;
         bool lastClicked = false, suspendInput = false;
         float lastX = 0, lastY = 0, lastM = 0;
         void PollMouse(MouseState m)
@@ -242,27 +245,27 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                     if (selectedSocket != null)
                     {
-                        foreach (TriggerScripterNode n in nodes)
+                        foreach (TriggerscripterNode n in nodes)
                         {
-                            foreach (TriggerScripterSocket s in n.sockets.Values)
+                            foreach (TriggerscripterSocket s in n.sockets.Values)
                             {
                                 if (s.PointIsIn(p[0].X, p[0].Y))
                                 {
                                     if (selectedSocket.node != s.node && (
-                                         (selectedSocket is TriggerScripterSocketInput && s is TriggerScripterSocketOutput) ||
-                                         (selectedSocket is TriggerScripterSocketOutput && s is TriggerScripterSocketInput))
+                                         (selectedSocket is TriggerscripterSocketInput && s is TriggerscripterSocketOutput) ||
+                                         (selectedSocket is TriggerscripterSocketOutput && s is TriggerscripterSocketInput))
                                         )
                                     {
-                                        TriggerScripterSocketOutput outSocket;
-                                        if (selectedSocket is TriggerScripterSocketOutput)
+                                        TriggerscripterSocketOutput outSocket;
+                                        if (selectedSocket is TriggerscripterSocketOutput)
                                         {
-                                            outSocket = selectedSocket as TriggerScripterSocketOutput;
-                                            outSocket.Connect(s as TriggerScripterSocketInput);
+                                            outSocket = selectedSocket as TriggerscripterSocketOutput;
+                                            outSocket.Connect(s as TriggerscripterSocketInput);
                                         }
-                                        if (s is TriggerScripterSocketOutput)
+                                        if (s is TriggerscripterSocketOutput)
                                         {
-                                            outSocket = s as TriggerScripterSocketOutput;
-                                            outSocket.Connect(selectedSocket as TriggerScripterSocketInput);
+                                            outSocket = s as TriggerscripterSocketOutput;
+                                            outSocket.Connect(selectedSocket as TriggerscripterSocketInput);
                                         }
 
                                     }
@@ -295,7 +298,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnClick(int x, int y)
         {
-            foreach (TriggerScripterNode n in nodes)
+            foreach (TriggerscripterNode n in nodes)
             {
                 int ox, oy;
                 if (n.PointIsInHeader(x, y, out ox, out oy))
@@ -323,7 +326,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnMouseHeld(int mx, int my)
         {
-            foreach (TriggerScripterNode n in nodes)
+            foreach (TriggerscripterNode n in nodes)
             {
                 if (n.selected)
                 {
@@ -333,72 +336,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
 
-        int varID = 0, triggerID = 0;
-        Dictionary<TriggerScripterNode_Trigger, int> triggers = new Dictionary<TriggerScripterNode_Trigger, int>();
-        Dictionary<TriggerScripterNode, Variable> vars = new Dictionary<TriggerScripterNode, Variable>();
-        public void CompileCurrentGraph(string outPath)
+        public class SavableNode
         {
-            triggers.Clear();
-            vars.Clear();
-
-            XDocument doc = new XDocument();
-            foreach(TriggerScripterNode n in nodes)
-            {
-                if(n.handleAs == "Trigger")
-                {
-                    TriggerScripterNode_Trigger tn = n as TriggerScripterNode_Trigger;
-                    if(tn.active.state)
-                    {
-                        CompileTrigger(tn);
-                    }
-                }
-            }
-
-            #region XML
-            XDocument x = new XDocument();
-
-            XElement triggerSystem = new XElement("TriggerSystem");
-            XElement triggerGroups = new XElement("TriggerGroups");
-            XElement triggerVars = new XElement("TriggerVars");
-            XElement triggersNode = new XElement("Trigers");
-            triggerSystem.Add(triggerGroups);
-            triggerSystem.Add(triggerVars);
-            triggerSystem.Add(triggersNode);
-
-            x.Add(triggerSystem);
-
-            foreach(var tp in triggers)
-            {
-                Trigger t = tp.Value;
-                XElement tNode = new XElement("Trigger");
-                triggersNode.Add(tNode);
-                tNode.Add(new XAttribute("Name", t.name));
-                tNode.Add(new XAttribute("Active", t.active));
-                tNode.Add(new XAttribute("EvaluateFrequency", 0));
-                tNode.Add(new XAttribute("EvalLimit", 0));
-                tNode.Add(new XAttribute("CommentOut", false));
-                tNode.Add(new XAttribute("X", tp.Key.x));
-                tNode.Add(new XAttribute("Y", tp.Key.y));
-                tNode.Add(new XAttribute("GroupID", -1));
-
-                XElement cnd = new XElement("TriggerConditions");
-                XElement effT = new XElement("TriggerEffectsOnTrue");
-                foreach(Effect e in t.effectsTrue)
-                {
-                    XElement eff = new XElement("Effect");
-                    effT.Add(eff);
-                    eff.Add(new XAttribute("ID", 0));
-                    eff.Add(new XAttribute("Type", e.name));
-                    eff.Add(new XAttribute("DBID", e.dbid));
-                    eff.Add(new XAttribute("Version", e.version));
-                    eff.Add(new XAttribute("CommentOut", false));
-                }
-
-                XElement effF = new XElement("TriggerEffectsOnFalse");
-            }
-
-            x.Save(outPath);
-            #endregion
+            public int x, y;
+            public object nodeObj;
+        }
+        void SaveToFile(string path)
+        {
+            File.WriteAllText();
         }
     }
 }
