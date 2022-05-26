@@ -700,13 +700,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"UnitUnitDistanceCnd", "Game|World"}
         };
 
-        public static Color requiredVarColor = Color.ForestGreen;
-        public static Color optionalVarColor = Color.Green;
-        public static Color cndColor = Color.Maroon;
-        public static Color trgColor = Color.Blue;
-        public static Color effColor = Color.DeepPink;
         TriggerscripterControl c;
-
         public TriggerScripterPage()
         {
             c = new TriggerscripterControl();
@@ -716,29 +710,29 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             ContextMenu cm = new ContextMenu();
             ContextMenu = cm;
-            cm.Popup += CaptureMousePos;
+            cm.Popup += c.CaptureMousePos;
             MenuItem trg = new MenuItem("New Trigger");
-            trg.Click += CreateTriggerNode;
+            trg.Click += c.CreateTriggerNode;
             cm.MenuItems.Add(trg);
 
-            MenuItem eff = new MenuItem("Effects");
-            MenuItem cnd = new MenuItem("Conditionals");
-            MenuItem var = new MenuItem("Variables");
-            cm.MenuItems.Add(eff);
-            cm.MenuItems.Add(cnd);
-            cm.MenuItems.Add(var);
+            MenuItem effMI = new MenuItem("Effects");
+            MenuItem cndMI = new MenuItem("Conditionals");
+            MenuItem varMI = new MenuItem("Variables");
+            cm.MenuItems.Add(effMI);
+            cm.MenuItems.Add(cndMI);
+            cm.MenuItems.Add(varMI);
 
             Dictionary<string, MenuItem> hierarchy = new Dictionary<string, MenuItem>() {
-                { "eff|", eff },
-                { "cnd|", cnd },
-                { "var|", var }
+                { "eff|", effMI },
+                { "cnd|", cndMI },
+                { "var|", varMI }
             };
-            
+
             foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(SMHEditor.Properties.Resources.eff))
             {
                 string s = nodeSubCategories[e.name + "Eff"];
                 string[] h = s.Split('|');
-                MenuItem last = eff;
+                MenuItem last = effMI;
                 string concat = "eff|";
                 foreach (string n in h)
                 {
@@ -758,16 +752,16 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 MenuItem effectItem = new MenuItem(e.name);
                 effectItem.Tag = e;
-                effectItem.Click += CreateEffectNode;
+                effectItem.Click += c.CreateEffectNode;
                 last.MenuItems.Add(effectItem);
             }
 
             List<Condition> cs = JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd);
-            foreach (Condition c in cs)
+            foreach (Condition cnd in cs)
             {
-                string s = nodeSubCategories[c.name + "Cnd"];
+                string s = nodeSubCategories[cnd.name + "Cnd"];
                 string[] h = s.Split('|');
-                MenuItem last = cnd;
+                MenuItem last = cndMI;
                 string concat = "cnd|";
                 foreach (string n in h)
                 {
@@ -785,9 +779,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     }
                 }
 
-                MenuItem cndItem = new MenuItem(c.name);
-                cndItem.Tag = c;
-                cndItem.Click += CreateConditionNode;
+                MenuItem cndItem = new MenuItem(cnd.name);
+                cndItem.Tag = cnd;
+                cndItem.Click += c.CreateConditionNode;
                 last.MenuItems.Add(cndItem);
 
             }
@@ -798,8 +792,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {
                 string vStr = nodeSubCategories[v + "Var"];
                 string concat = "var|";
-                MenuItem last = var;
-                foreach(string s in vStr.Split('|'))
+                MenuItem last = varMI;
+                foreach (string s in vStr.Split('|'))
                 {
                     concat += s + "|";
                     if (hierarchy.Keys.Contains(concat))
@@ -817,106 +811,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 MenuItem varItem = new MenuItem(v);
                 varItem.Tag = v;
-                varItem.Click += CreateVarNode;
+                varItem.Click += c.CreateVarNode;
                 last.MenuItems.Add(varItem);
             }
         }
-        Point[] mCap = new Point[] { new Point() };
-        void CaptureMousePos(object o, EventArgs e)
-        {
-            mCap[0] = c.PointToClient(new Point(
-                OpenTK.Input.Mouse.GetCursorState().X,
-                OpenTK.Input.Mouse.GetCursorState().Y));
-
-            c.transformInv.TransformPoints(mCap);
-            Console.WriteLine(mCap[0]);
-        }
-
-        int trgID = 0; int varID = 0;
-        int cndID = 0; int effID = 0;
-        void CreateTriggerNode(object o, EventArgs e)
-        {
-            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(c, mCap[0].X, mCap[0].Y);
-
-            n.data = ((MenuItem)o).Tag;
-            n.nodeTitle = "NewTrigger" + trgID.ToString();
-            n.nameProperty.tb.Text = n.nodeTitle;
-
-            c.AddNode(n);
-            trgID++;
-        }
-        void CreateVarNode(object o, EventArgs e)
-        {
-            string var = (o as MenuItem).Tag as string;
-            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(c, mCap[0].X, mCap[0].Y);
-
-            n.data = ((MenuItem)o).Tag;
-
-            n.nodeTitle = "New" + var + varID.ToString();
-            n.nameProperty.tb.Text = n.nodeTitle;
-
-            n.typeTitle = var;
-            n.AddSocket(true, "Set", var, requiredVarColor, false);
-            n.AddSocket(false, "Use", var, requiredVarColor, false);
-
-            n.bottomPadding = 50;
-
-            c.AddNode(n);
-            varID++;
-        }
-        void CreateEffectNode(object o, EventArgs e)
-        {
-            Effect eff = (o as MenuItem).Tag as Effect;
-            TriggerscripterNode n = new TriggerscripterNode(c, mCap[0].X, mCap[0].Y);
-
-            n.data = ((MenuItem)o).Tag;
-            n.nodeTitle = eff.name;
-            n.typeTitle = "Effect";
-            n.handleAs = "Effect";
-            n.AddSocket(true, "Caller", "EFF", effColor, false);
-            n.AddSocket(false, "Call", "EFF", effColor, false);
-
-            foreach (Input i in eff.inputs)
-            {
-                Color color = i.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(true, i.name, i.valueType, color);
-            }
-            foreach(Output ou in eff.outputs)
-            {
-                Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(false, ou.name, ou.valueType, color);
-            }
-
-            c.AddNode(n);
-            effID++;
-        }
-        void CreateConditionNode(object o, EventArgs e)
-        {
-            Condition cnd = (o as MenuItem).Tag as Condition;
-            TriggerscripterNode n = new TriggerscripterNode(c, mCap[0].X, mCap[0].Y);
-
-            n.data = ((MenuItem)o).Tag;
-            n.nodeTitle = cnd.name;
-            n.typeTitle = "Condition";
-            n.handleAs = "Condition";
-
-            n.AddSocket(false, "Result", "CND", cndColor, false);
-
-            foreach (Input i in cnd.inputs)
-            {
-                Color color = i.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(true, i.name, i.valueType, color);
-            }
-            foreach (Output ou in cnd.outputs)
-            {
-                Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(false, ou.name, ou.valueType, color);
-            }
-
-            c.AddNode(n);
-            cndID++;
-        }
-
-
     }
 }

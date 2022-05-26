@@ -68,9 +68,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public bool cndIsOr;
         public bool active;
         public int id;
-        public List<Effect> effectsTrue;
-        public List<Effect> effectsFalse;
-        public List<Condition> conditions;
     }
 
     public partial class TriggerscripterControl : UserControl
@@ -106,7 +103,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             if(OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
             {
                 TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
-                SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.ts");
+                SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
             }
         }
 
@@ -174,9 +171,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {
                 foreach (TriggerscripterSocket s in n.sockets.Values)
                 {
-                    if (s is TriggerscripterSocketOutput)
+                    if (s is TriggerscripterSocket_Output)
                     {
-                        ((TriggerscripterSocketOutput)s).DrawConnections(e);
+                        ((TriggerscripterSocket_Output)s).DrawConnections(e);
                     }
                 }
             }
@@ -252,20 +249,20 @@ namespace SMHEditor.DockingModules.Triggerscripter
                                 if (s.PointIsIn(p[0].X, p[0].Y))
                                 {
                                     if (selectedSocket.node != s.node && (
-                                         (selectedSocket is TriggerscripterSocketInput && s is TriggerscripterSocketOutput) ||
-                                         (selectedSocket is TriggerscripterSocketOutput && s is TriggerscripterSocketInput))
+                                         (selectedSocket is TriggerscripterSocket_Input && s is TriggerscripterSocket_Output) ||
+                                         (selectedSocket is TriggerscripterSocket_Output && s is TriggerscripterSocket_Input))
                                         )
                                     {
-                                        TriggerscripterSocketOutput outSocket;
-                                        if (selectedSocket is TriggerscripterSocketOutput)
+                                        TriggerscripterSocket_Output outSocket;
+                                        if (selectedSocket is TriggerscripterSocket_Output)
                                         {
-                                            outSocket = selectedSocket as TriggerscripterSocketOutput;
-                                            outSocket.Connect(s as TriggerscripterSocketInput);
+                                            outSocket = selectedSocket as TriggerscripterSocket_Output;
+                                            outSocket.Connect(s as TriggerscripterSocket_Input);
                                         }
-                                        if (s is TriggerscripterSocketOutput)
+                                        if (s is TriggerscripterSocket_Output)
                                         {
-                                            outSocket = s as TriggerscripterSocketOutput;
-                                            outSocket.Connect(selectedSocket as TriggerscripterSocketInput);
+                                            outSocket = s as TriggerscripterSocket_Output;
+                                            outSocket.Connect(selectedSocket as TriggerscripterSocket_Input);
                                         }
 
                                     }
@@ -336,14 +333,171 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
 
+        public static Color requiredVarColor = Color.ForestGreen;
+        public static Color optionalVarColor = Color.Green;
+        public static Color cndColor = Color.Maroon;
+        public static Color trgColor = Color.Blue;
+        public static Color effColor = Color.DeepPink;
+
+        
+        Point[] mCap = new Point[] { new Point() };
+        public void CaptureMousePos(object o, EventArgs e)
+        {
+            mCap[0] = PointToClient(new Point(
+                OpenTK.Input.Mouse.GetCursorState().X,
+                OpenTK.Input.Mouse.GetCursorState().Y));
+
+            transformInv.TransformPoints(mCap);
+            Console.WriteLine(mCap[0]);
+        }
+
+        int trgID = 0; int varID = 0;
+        int cndID = 0; int effID = 0;
+        public void CreateTriggerNode(object o, EventArgs e)
+        {
+            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, mCap[0].X, mCap[0].Y);
+
+            n.data = ((MenuItem)o).Tag;
+            n.nodeTitle = "NewTrigger" + trgID.ToString();
+            n.nameProperty.tb.Text = n.nodeTitle;
+            n.id = trgID;
+
+            AddNode(n);
+            trgID++;
+        }
+        public void CreateVarNode(object o, EventArgs e)
+        {
+            string var = (o as MenuItem).Tag as string;
+            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, mCap[0].X, mCap[0].Y);
+
+            n.data = ((MenuItem)o).Tag;
+            n.id = varID;
+
+            n.nodeTitle = "New" + var + varID.ToString();
+            n.nameProperty.tb.Text = n.nodeTitle;
+
+            n.typeTitle = var;
+            n.AddSocket(true, "Set", var, requiredVarColor, false);
+            n.AddSocket(false, "Use", var, requiredVarColor, false);
+
+            n.bottomPadding = 50;
+
+            AddNode(n);
+            varID++;
+        }
+        public void CreateEffectNode(object o, EventArgs e)
+        {
+            Effect eff = (o as MenuItem).Tag as Effect;
+            TriggerscripterNode n = new TriggerscripterNode(this, mCap[0].X, mCap[0].Y);
+
+            n.data = ((MenuItem)o).Tag;
+            n.id = effID;
+            n.nodeTitle = eff.name;
+            n.typeTitle = "Effect";
+            n.handleAs = "Effect";
+            n.AddSocket(true, "Caller", "EFF", effColor, false);
+            n.AddSocket(false, "Call", "EFF", effColor, false);
+
+            foreach (Input i in eff.inputs)
+            {
+                Color color = i.optional ? optionalVarColor : requiredVarColor;
+                n.AddSocket(true, i.name, i.valueType, color);
+            }
+            foreach (Output ou in eff.outputs)
+            {
+                Color color = ou.optional ? optionalVarColor : requiredVarColor;
+                n.AddSocket(false, ou.name, ou.valueType, color);
+            }
+
+            AddNode(n);
+            effID++;
+        }
+        public void CreateConditionNode(object o, EventArgs e)
+        {
+            Condition cnd = (o as MenuItem).Tag as Condition;
+            TriggerscripterNode n = new TriggerscripterNode(this, mCap[0].X, mCap[0].Y);
+            n.id = cndID;
+            n.data = ((MenuItem)o).Tag;
+            n.nodeTitle = cnd.name;
+            n.typeTitle = "Condition";
+            n.handleAs = "Condition";
+
+            n.AddSocket(false, "Result", "CND", cndColor, false);
+
+            foreach (Input i in cnd.inputs)
+            {
+                Color color = i.optional ? optionalVarColor : requiredVarColor;
+                n.AddSocket(true, i.name, i.valueType, color);
+            }
+            foreach (Output ou in cnd.outputs)
+            {
+                Color color = ou.optional ? optionalVarColor : requiredVarColor;
+                n.AddSocket(false, ou.name, ou.valueType, color);
+            }
+
+            AddNode(n);
+            cndID++;
+        }
+
         public class SavableNode
         {
             public int x, y;
             public object nodeObj;
         }
+        public List<SavableNode> GetSerializedNodes()
+        {
+            List<SavableNode> serializedNodes = new List<SavableNode>();
+            foreach (TriggerscripterNode n in nodes)
+            {
+                SavableNode sn = new SavableNode();
+                sn.nodeObj = n.data;
+                if (n is TriggerscripterNode_Trigger)
+                {
+                    Trigger t = new Trigger();
+                    t.active = ((TriggerscripterNode_Trigger)n).active.state;
+                    t.cndIsOr = ((TriggerscripterNode_Trigger)n).conditionalType.state;
+                    t.id = ((TriggerscripterNode_Trigger)n).id;
+                    t.name = ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text;
+                    sn.nodeObj = t;
+                }
+                if (n is TriggerscripterNode_Variable)
+                {
+                    Variable v = new Variable();
+                    v.id = n.id;
+                    v.value = ((TriggerscripterNode_Variable)n).valueProperty.tb.Text;
+                    v.name = ((TriggerscripterNode_Variable)n).nameProperty.tb.Text;
+                    v.type = n.typeTitle;
+                }
+                if (n.handleAs == "Effect")
+                {
+                    Effect e = (Effect)n.data;
+                    foreach(Input i in e.inputs)
+                    {
+                        if(n.sockets[i.name].connectedSockets.Count >= 1)
+                        {
+                            i.value = n.sockets[i.name].connectedSockets[0].node.id;
+                        }
+                    }
+                    foreach (Output o in e.outputs)
+                    {
+                        if (n.sockets[o.name].connectedSockets.Count >= 1)
+                        {
+                            o.value = n.sockets[o.name].connectedSockets[0].node.id;
+                        }
+                    }
+                }
+
+                sn.x = n.x;
+                sn.y = n.y;
+                serializedNodes.Add(sn);
+            }
+
+            return serializedNodes;
+        }
+
         void SaveToFile(string path)
         {
-            File.WriteAllText();
+            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedNodes(), Newtonsoft.Json.Formatting.Indented));
         }
     }
 }

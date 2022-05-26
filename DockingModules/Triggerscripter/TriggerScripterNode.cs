@@ -15,6 +15,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public static int socketSize = 10;
         public Rectangle rect;
         public TriggerscripterNode node;
+        public List<TriggerscripterSocket> connectedSockets = new List<TriggerscripterSocket>();
         public TriggerscripterSocket(string name, string type, Color socketColor, TriggerscripterNode n, Rectangle r, bool showType)
         {
             color = socketColor;
@@ -40,15 +41,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
             e.Graphics.DrawRectangle(new Pen(Color.DarkGray), nodePlusOffs);
         }
     }
-    public class TriggerscripterSocketInput : TriggerscripterSocket
+    public class TriggerscripterSocket_Input : TriggerscripterSocket
     {
-        public List<TriggerscripterSocketOutput> connectedSockets = new List<TriggerscripterSocketOutput>();
-        public TriggerscripterSocketInput(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
+        public TriggerscripterSocket_Input(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
             : base(name, type, socketCoolor, n, r, showType)
         {
 
         }
-        public void FinalizeConnection(TriggerscripterSocketOutput s)
+        public void FinalizeConnection(TriggerscripterSocket_Output s)
         {
             connectedSockets.Add(s);
         }
@@ -67,10 +67,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 node.DrawStringOnNode(e.Graphics, f, text, Color.White, rect.X + 15, rect.Y - 9);
         }
     }
-    public class TriggerscripterSocketOutput : TriggerscripterSocket
+    public class TriggerscripterSocket_Output : TriggerscripterSocket
     {
-        public List<TriggerscripterSocketInput> connectedSockets = new List<TriggerscripterSocketInput>();
-        public TriggerscripterSocketOutput(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
+        public TriggerscripterSocket_Output(string name, string type, Color socketCoolor, TriggerscripterNode n, Rectangle r, bool showType)
             : base(name, type, socketCoolor, n, r, showType)
         {
 
@@ -105,7 +104,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     s.node.y + s.rect.Y + (socketSize / 2));
             }
         }
-        public void Connect(TriggerscripterSocketInput s)
+        public void Connect(TriggerscripterSocket_Input s)
         {
             if (valueType == s.valueType)
             {
@@ -125,13 +124,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public string nodeTitle = "node";
         public string typeTitle = "type";
         public string handleAs = "null";
+        public int id = -1;
 
         public object data;
 
         public int selectedX = 0, selectedY = 0;
         public bool selected = false;
 
-        public Dictionary<Rectangle, TriggerscripterSocket> sockets = new Dictionary<Rectangle, TriggerscripterSocket>();
+        public Dictionary<string, TriggerscripterSocket> sockets = new Dictionary<string, TriggerscripterSocket>();
         int inSockets = 0, outSockets = 0;
 
         public TriggerscripterNode(TriggerscripterControl control, int px, int py)
@@ -161,7 +161,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     inSockets * socketSpacing - (TriggerscripterSocket.socketSize / 2) + headerHeight + 40,
                     TriggerscripterSocket.socketSize,
                     TriggerscripterSocket.socketSize);
-                sockets.Add(r, new TriggerscripterSocketInput(text, type, color, this, r, showType));
+                sockets.Add(text, new TriggerscripterSocket_Input(text, type, color, this, r, showType));
                 inSockets++;
             }
             else
@@ -171,7 +171,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     outSockets * socketSpacing - (TriggerscripterSocket.socketSize / 2) + headerHeight + 40,
                     TriggerscripterSocket.socketSize,
                     TriggerscripterSocket.socketSize);
-                sockets.Add(r, new TriggerscripterSocketOutput(text, type, color, this, r, showType));
+                sockets.Add(text, new TriggerscripterSocket_Output(text, type, color, this, r, showType));
                 outSockets++;
             }
 
@@ -290,10 +290,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             typeTitle = "Trigger";
             handleAs = "Trigger";
-            AddSocket(true, "Caller", "TRG", TriggerScripterPage.trgColor, false);
-            AddSocket(true, "Conditions", "CND", TriggerScripterPage.cndColor, false);
-            AddSocket(false, "Call On True", "EFF", TriggerScripterPage.effColor, false);
-            AddSocket(false, "Call On False", "EFF", TriggerScripterPage.effColor, false);
+            AddSocket(true, "Caller", "TRG", TriggerscripterControl.trgColor, false);
+            AddSocket(true, "Conditions", "CND", TriggerscripterControl.cndColor, false);
+            AddSocket(false, "Call On True", "EFF", TriggerscripterControl.effColor, false);
+            AddSocket(false, "Call On False", "EFF", TriggerscripterControl.effColor, false);
 
             nameProperty = new PropertyItem_String("Name");
             nameProperty.tb.TextChanged += OnNameChange;
