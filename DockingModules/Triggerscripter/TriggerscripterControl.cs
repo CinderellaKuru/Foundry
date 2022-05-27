@@ -340,24 +340,28 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public static Color effColor = Color.DeepPink;
 
         
-        Point[] mCap = new Point[] { new Point() };
+        Point[] nodeAddLocation = new Point[] { new Point() };
         public void CaptureMousePos(object o, EventArgs e)
         {
-            mCap[0] = PointToClient(new Point(
+            nodeAddLocation[0] = PointToClient(new Point(
                 OpenTK.Input.Mouse.GetCursorState().X,
                 OpenTK.Input.Mouse.GetCursorState().Y));
 
-            transformInv.TransformPoints(mCap);
-            Console.WriteLine(mCap[0]);
+            transformInv.TransformPoints(nodeAddLocation);
+            Console.WriteLine(nodeAddLocation[0]);
         }
 
         int trgID = 0; int varID = 0;
         int cndID = 0; int effID = 0;
         public void CreateTriggerNode(object o, EventArgs e)
         {
-            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
 
-            n.data = ((MenuItem)o).Tag;
+            if (o is MenuItem)
+                n.data = ((MenuItem)o).Tag;
+            else
+                n.data = o;
+
             n.nodeTitle = "NewTrigger" + trgID.ToString();
             n.nameProperty.tb.Text = n.nodeTitle;
             n.id = trgID;
@@ -368,11 +372,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public void CreateVarNode(object o, EventArgs e)
         {
             string var = (o as MenuItem).Tag as string;
-            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
 
-            n.data = ((MenuItem)o).Tag;
+            if (o is MenuItem)
+                n.data = ((MenuItem)o).Tag;
+            else
+                n.data = o;
+
             n.id = varID;
-
             n.nodeTitle = "New" + var + varID.ToString();
             n.nameProperty.tb.Text = n.nodeTitle;
 
@@ -388,9 +395,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public void CreateEffectNode(object o, EventArgs e)
         {
             Effect eff = (o as MenuItem).Tag as Effect;
-            TriggerscripterNode n = new TriggerscripterNode(this, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode n = new TriggerscripterNode(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
 
-            n.data = ((MenuItem)o).Tag;
+            if (o is MenuItem)
+                n.data = ((MenuItem)o).Tag;
+            else
+                n.data = o;
+
             n.id = effID;
             n.nodeTitle = eff.name;
             n.typeTitle = "Effect";
@@ -415,9 +426,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public void CreateConditionNode(object o, EventArgs e)
         {
             Condition cnd = (o as MenuItem).Tag as Condition;
-            TriggerscripterNode n = new TriggerscripterNode(this, mCap[0].X, mCap[0].Y);
+            TriggerscripterNode n = new TriggerscripterNode(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+
+            if (o is MenuItem)
+                n.data = ((MenuItem)o).Tag;
+            else
+                n.data = o;
+
             n.id = cndID;
-            n.data = ((MenuItem)o).Tag;
             n.nodeTitle = cnd.name;
             n.typeTitle = "Condition";
             n.handleAs = "Condition";
@@ -442,6 +458,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public class SavableNode
         {
             public int x, y;
+            public string handleAs;
             public object nodeObj;
         }
         public List<SavableNode> GetSerializedNodes()
@@ -450,8 +467,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
             foreach (TriggerscripterNode n in nodes)
             {
                 SavableNode sn = new SavableNode();
-                sn.nodeObj = n.data;
-                if (n is TriggerscripterNode_Trigger)
+                sn.handleAs = n.handleAs;
+                if (n.handleAs == "Trigger")
                 {
                     Trigger t = new Trigger();
                     t.active = ((TriggerscripterNode_Trigger)n).active.state;
@@ -460,23 +477,25 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     t.name = ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text;
                     sn.nodeObj = t;
                 }
-                if (n is TriggerscripterNode_Variable)
+                if (n.handleAs == "Variable")
                 {
                     Variable v = new Variable();
                     v.id = n.id;
                     v.value = ((TriggerscripterNode_Variable)n).valueProperty.tb.Text;
                     v.name = ((TriggerscripterNode_Variable)n).nameProperty.tb.Text;
                     v.type = n.typeTitle;
+                    sn.nodeObj = v;
                 }
                 if (n.handleAs == "Effect")
                 {
                     Effect e = (Effect)n.data;
                     foreach(Input i in e.inputs)
                     {
-                        if(n.sockets[i.name].connectedSockets.Count >= 1)
+                        if (n.sockets[i.name].connectedSockets.Count >= 1)
                         {
                             i.value = n.sockets[i.name].connectedSockets[0].node.id;
                         }
+                        else i.value = -1;
                     }
                     foreach (Output o in e.outputs)
                     {
@@ -484,7 +503,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
                         {
                             o.value = n.sockets[o.name].connectedSockets[0].node.id;
                         }
+                        else o.value = -1;
                     }
+                    sn.nodeObj = e;
                 }
 
                 sn.x = n.x;
@@ -497,7 +518,27 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
         void SaveToFile(string path)
         {
-            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedNodes(), Newtonsoft.Json.Formatting.Indented));
+            JsonSerializerSettings s = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.None,
+                Formatting = Newtonsoft.Json.Formatting.Indented
+            };
+            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedNodes(), s));
+        }
+        void LoadFromFile(string path)
+        {
+            nodes.Clear();
+            List<SavableNode> sn = JsonConvert.DeserializeObject<List<SavableNode>>(File.ReadAllText(path));
+            foreach(SavableNode n in sn)
+            {
+                if(n.handleAs == "Trigger")
+                {
+                    Trigger t = (Trigger)n.nodeObj;
+                    nodeAddLocation[0].X = n.x;
+                    nodeAddLocation[0].Y = n.y;
+                    CreateTriggerNode(t, null);
+                }
+            }
         }
     }
 }
