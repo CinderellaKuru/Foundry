@@ -19,6 +19,7 @@ using ComponentFactory.Krypton.Workspace;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace SMHEditor.DockingModules.Triggerscripter
 {
@@ -28,7 +29,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public string valueType;
         public bool optional;
         public int sigId;
-        public int value;
     }
     public class Output
     {
@@ -36,7 +36,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public string valueType;
         public bool optional;
         public int sigId;
-        public int value;
     }
     public class Effect
     {
@@ -55,20 +54,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public int dbid;
         public int version;
     }
-    public class Variable
-    {
-        public int id;
-        public string name;
-        public string value;
-        public string type;
-    }
-    public class Trigger
-    {
-        public string name;
-        public bool cndIsOr;
-        public bool active;
-        public int id;
-    }
+
 
     public partial class TriggerscripterControl : UserControl
     {
@@ -100,11 +86,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
             lastM = mouse.Scroll.Y;
             Invalidate();
 
-            if(OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
+            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.L))
             {
-                TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
-                SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
+                //TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+                //SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
+                LoadFromFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
             }
+            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
+                SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
         }
 
         public void AddNode(TriggerscripterNode n)
@@ -339,7 +328,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public static Color trgColor = Color.Blue;
         public static Color effColor = Color.DeepPink;
 
-        
+
         Point[] nodeAddLocation = new Point[] { new Point() };
         public void CaptureMousePos(object o, EventArgs e)
         {
@@ -353,167 +342,244 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
         int trgID = 0; int varID = 0;
         int cndID = 0; int effID = 0;
-        public void CreateTriggerNode(object o, EventArgs e)
+
+        public void CreateNewTriggerPressed(object o, EventArgs e)
         {
-            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
-
-            if (o is MenuItem)
-                n.data = ((MenuItem)o).Tag;
-            else
-                n.data = o;
-
-            n.nodeTitle = "NewTrigger" + trgID.ToString();
-            n.nameProperty.tb.Text = n.nodeTitle;
-            n.id = trgID;
-
-            AddNode(n);
+            SerializedTrigger t = new SerializedTrigger();
+            t.name = "NewTrigger" + trgID;
+            CreateTriggerNode(t, trgID, nodeAddLocation[0].X, nodeAddLocation[0].Y);
             trgID++;
         }
-        public void CreateVarNode(object o, EventArgs e)
+        public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, int x, int y)
         {
-            string var = (o as MenuItem).Tag as string;
-            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, x, y);
 
-            if (o is MenuItem)
-                n.data = ((MenuItem)o).Tag;
-            else
-                n.data = o;
+            n.id = id;
+            n.data = t;
 
-            n.id = varID;
-            n.nodeTitle = "New" + var + varID.ToString();
+            if (((SerializedTrigger)n.data).active)
+                n.active.OnPressed(null, null);
+            if (((SerializedTrigger)n.data).cndIsOr)
+                n.conditionalType.OnPressed(null, null);
+            n.nameProperty.tb.Text = ((SerializedTrigger)n.data).name;
+
+
             n.nameProperty.tb.Text = n.nodeTitle;
+            n.id = trgID;
+            AddNode(n);
+            return n;
+        }
 
-            n.typeTitle = var;
-            n.AddSocket(true, "Set", var, requiredVarColor, false);
-            n.AddSocket(false, "Use", var, requiredVarColor, false);
+        public void CreateNewVarPressed(object o, EventArgs e)
+        {
+            SerializedVariable var = new SerializedVariable();
+            var.type = (string)((MenuItem)o).Tag;
+            var.name = "New" + var.type + varID.ToString();
+            var.value = "";
+            CreateVarNode(var, varID, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+            varID++;
+        }
+        public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, int x, int y)
+        {
+            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, x, y);
+
+            n.data = v;
+            n.id = id;
+
+            n.nodeTitle = v.name;
+            n.nameProperty.tb.Text = v.name;
+            n.valueProperty.tb.Text = v.value;
+
+            n.typeTitle = v.type;
+            n.AddSocket(true, "Set", v.type, requiredVarColor, false);
+            n.AddSocket(false, "Use", v.type, requiredVarColor, false);
 
             n.bottomPadding = 50;
 
             AddNode(n);
-            varID++;
+            return n;
         }
-        public void CreateEffectNode(object o, EventArgs e)
+
+        public void CreateNewEffectPressed(object o, EventArgs e)
         {
-            Effect eff = (o as MenuItem).Tag as Effect;
-            TriggerscripterNode n = new TriggerscripterNode(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+            CreateEffectNode((Effect)((MenuItem)o).Tag, effID++, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+        }
+        public TriggerscripterNode CreateEffectNode(Effect e, int id, int x, int y)
+        {
+            TriggerscripterNode n = new TriggerscripterNode(this, x, y);
 
-            if (o is MenuItem)
-                n.data = ((MenuItem)o).Tag;
-            else
-                n.data = o;
+            n.data = e;
+            n.id = id;
 
-            n.id = effID;
-            n.nodeTitle = eff.name;
+            n.nodeTitle = e.name;
             n.typeTitle = "Effect";
             n.handleAs = "Effect";
             n.AddSocket(true, "Caller", "EFF", effColor, false);
             n.AddSocket(false, "Call", "EFF", effColor, false);
 
-            foreach (Input i in eff.inputs)
+            foreach (Input i in e.inputs)
             {
                 Color color = i.optional ? optionalVarColor : requiredVarColor;
                 n.AddSocket(true, i.name, i.valueType, color);
             }
-            foreach (Output ou in eff.outputs)
+            foreach (Output ou in e.outputs)
             {
                 Color color = ou.optional ? optionalVarColor : requiredVarColor;
                 n.AddSocket(false, ou.name, ou.valueType, color);
             }
 
             AddNode(n);
-            effID++;
-        }
-        public void CreateConditionNode(object o, EventArgs e)
-        {
-            Condition cnd = (o as MenuItem).Tag as Condition;
-            TriggerscripterNode n = new TriggerscripterNode(this, nodeAddLocation[0].X, nodeAddLocation[0].Y);
 
-            if (o is MenuItem)
-                n.data = ((MenuItem)o).Tag;
-            else
-                n.data = o;
+            return n;
+        }
+
+        public void CreateNewConditionPressed(object o, EventArgs e)
+        {
+            CreateConditionNode((Condition)((MenuItem)o).Tag, cndID++, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+        }
+        public TriggerscripterNode CreateConditionNode(Condition c, int id, int x, int y)
+        {
+            TriggerscripterNode n = new TriggerscripterNode(this, x, y);
+
+            n.data = c;
+            n.id = id;
 
             n.id = cndID;
-            n.nodeTitle = cnd.name;
+            n.nodeTitle = c.name;
             n.typeTitle = "Condition";
             n.handleAs = "Condition";
 
             n.AddSocket(false, "Result", "CND", cndColor, false);
 
-            foreach (Input i in cnd.inputs)
+            foreach (Input i in c.inputs)
             {
                 Color color = i.optional ? optionalVarColor : requiredVarColor;
                 n.AddSocket(true, i.name, i.valueType, color);
             }
-            foreach (Output ou in cnd.outputs)
+            foreach (Output ou in c.outputs)
             {
                 Color color = ou.optional ? optionalVarColor : requiredVarColor;
                 n.AddSocket(false, ou.name, ou.valueType, color);
             }
 
             AddNode(n);
-            cndID++;
+
+            return n;
         }
 
-        public class SavableNode
+        public class SerializedVariable
         {
+            public string name;
+            public string value;
+            public string type;
+        }
+        public class SerializedTrigger
+        {
+            public string name;
+            public bool cndIsOr;
+            public bool active;
+        }
+        public class SerializedNodeLink
+        {
+            public string sourceType;
+            public string sourceSocketName;
+            public int sourceId;
+
+            public int targetId;
+            public string targetType;
+            public string targetSocketName;
+        }
+        public class SerializableNode
+        {
+            public int id;
             public int x, y;
             public string handleAs;
-            public object nodeObj;
+            public SerializedTrigger trigger;
+            public SerializedVariable variable;
+            public Effect effect;
+            public Condition condition;
         }
-        public List<SavableNode> GetSerializedNodes()
+        public class SerializedTriggerscripter
         {
-            List<SavableNode> serializedNodes = new List<SavableNode>();
+            public int lastTrg, lastVar, lastEff, lastCnd;
+            public List<SerializableNode> nodes = new List<SerializableNode>();
+            public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
+        }
+        public SerializedTriggerscripter GetSerializedNodes()
+        {
+            SerializedTriggerscripter sts = new SerializedTriggerscripter();
             foreach (TriggerscripterNode n in nodes)
             {
-                SavableNode sn = new SavableNode();
+                SerializableNode sn = new SerializableNode();
                 sn.handleAs = n.handleAs;
                 if (n.handleAs == "Trigger")
                 {
-                    Trigger t = new Trigger();
+                    SerializedTrigger t = new SerializedTrigger();
                     t.active = ((TriggerscripterNode_Trigger)n).active.state;
                     t.cndIsOr = ((TriggerscripterNode_Trigger)n).conditionalType.state;
-                    t.id = ((TriggerscripterNode_Trigger)n).id;
                     t.name = ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text;
-                    sn.nodeObj = t;
+                    sn.trigger = t;
                 }
                 if (n.handleAs == "Variable")
                 {
-                    Variable v = new Variable();
-                    v.id = n.id;
+                    SerializedVariable v = new SerializedVariable();
                     v.value = ((TriggerscripterNode_Variable)n).valueProperty.tb.Text;
                     v.name = ((TriggerscripterNode_Variable)n).nameProperty.tb.Text;
                     v.type = n.typeTitle;
-                    sn.nodeObj = v;
+                    sn.variable = v;
                 }
                 if (n.handleAs == "Effect")
                 {
                     Effect e = (Effect)n.data;
-                    foreach(Input i in e.inputs)
+                    sn.effect = e;
+                }
+                if (n.handleAs == "Condition")
+                {
+                    Condition c = (Condition)n.data;
+                    sn.condition = c;
+                }
+
+                foreach (TriggerscripterSocket os in n.sockets.Values)
+                {
+                    if (os is TriggerscripterSocket_Output)
                     {
-                        if (n.sockets[i.name].connectedSockets.Count >= 1)
+                        foreach (TriggerscripterSocket s in os.connectedSockets)
                         {
-                            i.value = n.sockets[i.name].connectedSockets[0].node.id;
+                            SerializedNodeLink link = new SerializedNodeLink();
+                            link.sourceId = n.id;
+                            link.sourceSocketName = os.text;
+
+                            if (n is TriggerscripterNode_Variable)
+                                link.sourceType = "Variable";
+                            else
+                                link.sourceType = n.typeTitle;
+
+                            link.targetId = s.node.id;
+                            link.targetSocketName = s.text;
+                            if (s.node is TriggerscripterNode_Variable)
+                                link.targetType = "Variable";
+                            else
+                                link.targetType = s.node.typeTitle;
+
+                            sts.links.Add(link);
                         }
-                        else i.value = -1;
+
+
                     }
-                    foreach (Output o in e.outputs)
-                    {
-                        if (n.sockets[o.name].connectedSockets.Count >= 1)
-                        {
-                            o.value = n.sockets[o.name].connectedSockets[0].node.id;
-                        }
-                        else o.value = -1;
-                    }
-                    sn.nodeObj = e;
                 }
 
                 sn.x = n.x;
                 sn.y = n.y;
-                serializedNodes.Add(sn);
+                sn.id = n.id;
+
+                sts.lastTrg = trgID;
+                sts.lastVar = varID;
+                sts.lastEff = effID;
+                sts.lastCnd = cndID;
+                sts.nodes.Add(sn);
             }
 
-            return serializedNodes;
+            return sts;
         }
 
         void SaveToFile(string path)
@@ -528,17 +594,91 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void LoadFromFile(string path)
         {
             nodes.Clear();
-            List<SavableNode> sn = JsonConvert.DeserializeObject<List<SavableNode>>(File.ReadAllText(path));
-            foreach(SavableNode n in sn)
+            Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> variables = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> effects = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> conditions = new Dictionary<int, TriggerscripterNode>();
+            SerializedTriggerscripter sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(File.ReadAllText(path));
+            foreach (SerializableNode n in sts.nodes)
             {
-                if(n.handleAs == "Trigger")
+                if (n.handleAs == "Trigger")
                 {
-                    Trigger t = (Trigger)n.nodeObj;
-                    nodeAddLocation[0].X = n.x;
-                    nodeAddLocation[0].Y = n.y;
-                    CreateTriggerNode(t, null);
+                    triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Variable")
+                {
+                    variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Effect")
+                {
+                    effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Condition")
+                {
+                    conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
                 }
             }
+            foreach (SerializedNodeLink l in sts.links)
+            {
+                if(l.sourceType == "Trigger")
+                {
+                    switch(l.targetType)
+                    {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)triggers[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if(l.sourceType == "Effect")
+                {
+                    switch (l.targetType)
+                    {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Variable":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (l.sourceType == "Condition")
+                {
+                    switch (l.targetType)
+                    {
+                        case "Trigger":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Variable":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (l.sourceType == "Variable")
+                {
+                    switch (l.targetType)
+                    {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Condition":
+                            ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            trgID = sts.lastTrg;
+            varID = sts.lastVar;
+            effID = sts.lastEff;
+            cndID = sts.lastCnd;
         }
     }
 }

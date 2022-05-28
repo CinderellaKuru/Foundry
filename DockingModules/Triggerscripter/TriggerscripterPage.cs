@@ -712,7 +712,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             ContextMenu = cm;
             cm.Popup += c.CaptureMousePos;
             MenuItem trg = new MenuItem("New Trigger");
-            trg.Click += c.CreateTriggerNode;
+            trg.Click += c.CreateNewTriggerPressed;
             cm.MenuItems.Add(trg);
 
             MenuItem effMI = new MenuItem("Effects");
@@ -752,7 +752,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 MenuItem effectItem = new MenuItem(e.name);
                 effectItem.Tag = e;
-                effectItem.Click += c.CreateEffectNode;
+                effectItem.Click += c.CreateNewEffectPressed;
                 last.MenuItems.Add(effectItem);
             }
 
@@ -781,7 +781,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 MenuItem cndItem = new MenuItem(cnd.name);
                 cndItem.Tag = cnd;
-                cndItem.Click += c.CreateConditionNode;
+                cndItem.Click += c.CreateNewConditionPressed;
                 last.MenuItems.Add(cndItem);
 
             }
@@ -811,7 +811,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
                 MenuItem varItem = new MenuItem(v);
                 varItem.Tag = v;
-                varItem.Click += c.CreateVarNode;
+                varItem.Click += c.CreateNewVarPressed;
                 last.MenuItems.Add(varItem);
             }
         }
