@@ -94,6 +94,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
                 SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
+            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.C))
+            {
+                TriggerscripterCompiler c = new TriggerscripterCompiler();
+                c.Compile(nodes, varID, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+            }
         }
 
         public void AddNode(TriggerscripterNode n)
@@ -196,6 +201,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
 
         TriggerscripterSocket selectedSocket = null;
+        TriggerscripterNode selectedNode = null;
         bool lastClicked = false, suspendInput = false;
         float lastX = 0, lastY = 0, lastM = 0;
         void PollMouse(MouseState m)
@@ -210,13 +216,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
                 transformInv.TransformPoints(p);
 
-                Console.WriteLine(lastClicked);
-
                 if (!lastClicked)
                 {
                     if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
                     {
                         OnClick(p[0].X, p[0].Y);
+                        Console.WriteLine("Q");
                         lastClicked = true;
                     }
                     else lastClicked = false;
@@ -284,6 +289,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnClick(int x, int y)
         {
+            selectedNode = null;
             foreach (TriggerscripterNode n in nodes)
             {
                 int ox, oy;
@@ -293,12 +299,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     n.selectedY = oy;
                     selectedSocket = null;
                     n.selected = true;
-                    n.Selected();
+                    selectedNode = n;
                 }
                 else
                 {
                     n.selected = false;
-                    n.Deselected();
                 }
 
                 foreach (var s in n.sockets)
@@ -309,6 +314,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     }
                 }
             }
+            MainWindow.propertyEditor.control.Clear();
+            if (selectedNode != null)
+            {
+                selectedNode.Selected();
+            }
+            MainWindow.propertyEditor.control.FinishLayout();
         }
         void OnMouseHeld(int mx, int my)
         {
@@ -357,11 +368,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
             n.id = id;
             n.data = t;
 
-            if (((SerializedTrigger)n.data).active)
-                n.active.OnPressed(null, null);
-            if (((SerializedTrigger)n.data).cndIsOr)
-                n.conditionalType.OnPressed(null, null);
-            n.nameProperty.tb.Text = ((SerializedTrigger)n.data).name;
+            if (t.active)
+                n.activeProperty.button.PerformClick();
+            if (t.cndIsOr)
+                n.conditionalTypeProperty.button.PerformClick();
+            n.nameProperty.tb.Text = t.name;
 
 
             n.nameProperty.tb.Text = n.nodeTitle;
@@ -505,7 +516,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             public List<SerializableNode> nodes = new List<SerializableNode>();
             public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
         }
-        public SerializedTriggerscripter GetSerializedNodes()
+        public SerializedTriggerscripter GetSerializedGraph()
         {
             SerializedTriggerscripter sts = new SerializedTriggerscripter();
             foreach (TriggerscripterNode n in nodes)
@@ -515,8 +526,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 if (n.handleAs == "Trigger")
                 {
                     SerializedTrigger t = new SerializedTrigger();
-                    t.active = ((TriggerscripterNode_Trigger)n).active.state;
-                    t.cndIsOr = ((TriggerscripterNode_Trigger)n).conditionalType.state;
+                    t.active = ((TriggerscripterNode_Trigger)n).activeProperty.state;
+                    t.cndIsOr = ((TriggerscripterNode_Trigger)n).conditionalTypeProperty.state;
                     t.name = ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text;
                     sn.trigger = t;
                 }
@@ -589,7 +600,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 TypeNameHandling = TypeNameHandling.None,
                 Formatting = Newtonsoft.Json.Formatting.Indented
             };
-            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedNodes(), s));
+            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedGraph(), s));
         }
         void LoadFromFile(string path)
         {

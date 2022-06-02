@@ -22,8 +22,8 @@ namespace SMHEditor.DockingModules.PropertyEditor
         {
         }
 
-        public virtual void Register(PropertyEditorControl c) { c.Invalidate(); }
-        public virtual void Unregister(PropertyEditorControl c) { c.Invalidate(); }
+        public virtual void Register(PropertyEditorControl c) { }
+        public virtual void Unregister(PropertyEditorControl c) { }
 
         public virtual void Draw(PaintEventArgs e, int controlWidth)
         {
@@ -128,33 +128,32 @@ namespace SMHEditor.DockingModules.PropertyEditor
 
     public partial class PropertyEditorControl : UserControl
     {
-        private List<PropertyItem> properties = new List<PropertyItem>();
+        private List<PropertyItem> propertyItems = new List<PropertyItem>();
         public PropertyEditorControl()
         {
             InitializeComponent();
         }
 
-        public void Clear()
-        {
-            currentY = 0;
-            foreach (PropertyItem i in properties)
-            {
-                i.Unregister(this);
-            }
-            properties.Clear();
-        }
         public void AddProperty(PropertyItem i)
         {
             i.y = currentY;
-            properties.Add(i);
+            propertyItems.Add(i);
             i.Register(this);
             currentY += i.height;
         }
-        public void RemoveProperty(PropertyItem i)
+        public void Clear()
         {
-            properties.Remove(i);
-            i.Unregister(this);
-            currentY -= i.height;
+            foreach(PropertyItem p in propertyItems)
+            {
+                p.Unregister(this);
+                p.y = 0;
+            }
+            propertyItems.Clear();
+            currentY = 0;
+        }
+        public void FinishLayout()
+        {
+            Invalidate();
         }
 
         int currentY = 0;
@@ -164,9 +163,8 @@ namespace SMHEditor.DockingModules.PropertyEditor
                 ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelClient,
                 ComponentFactory.Krypton.Toolkit.PaletteState.Normal));
             base.OnPaint(e);
-
-
-            foreach (PropertyItem i in properties)
+            
+            foreach (PropertyItem i in propertyItems)
             {
                 i.Draw(e, Width);
             }
