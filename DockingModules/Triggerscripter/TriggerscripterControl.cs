@@ -86,6 +86,41 @@ namespace SMHEditor.DockingModules.Triggerscripter
             lastM = mouse.Scroll.Y;
             Invalidate();
 
+            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.Delete))
+            {
+                foreach (TriggerscripterNode n in nodes.ToArray())
+                {
+                    if (n.selected)
+                    {
+                        //for each socket in this node's sockets
+                        foreach (TriggerscripterSocket s in n.sockets.Values)
+                        {
+                            //if it is an input
+                            if (s is TriggerscripterSocket_Input)
+                            {
+                                //foreach output connected to this input
+                                foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).connectedSockets)
+                                {
+                                    //disconnect this input from the output
+                                    ((TriggerscripterSocket_Output)cs).Disconnect((TriggerscripterSocket_Input)s);
+                                }
+                            }
+
+                            //if it is an output
+                            else
+                            {
+                                //foreach input connected to this output
+                                foreach (TriggerscripterSocket cs in s.connectedSockets.ToArray())
+                                {
+                                    ((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)cs);
+                                }
+                            }
+
+                            nodes.Remove(n);
+                        }
+                    }
+                }
+            }
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.L))
             {
                 //TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
@@ -97,7 +132,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.C))
             {
                 TriggerscripterCompiler c = new TriggerscripterCompiler();
-                c.Compile(nodes, varID, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
+                c.Compile(nodes, varID, "D:\\StumpyHWDEMod\\SMEditorTests\\data\\triggerscripts\\test.triggerscript");
             }
         }
 

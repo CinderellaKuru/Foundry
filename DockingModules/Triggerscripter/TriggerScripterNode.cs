@@ -32,7 +32,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public Color color;
         public bool PointIsIn(int x, int y)
         {
-            return (x >= node.x + rect.X && x < node.x + rect.X + rect.Width && y >= node.y + rect.Y && y < node.y + rect.Y + rect.Height);
+            return (x >= node.x + rect.X-rect.Width && x < node.x + rect.X + (rect.Width*2) && y >= node.y + rect.Y - rect.Height && y < node.y + rect.Y + (rect.Height*2));
         }
         public virtual void Draw(PaintEventArgs e)
         {
@@ -111,6 +111,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 connectedSockets.Add(s);
                 s.FinalizeConnection(this);
             }
+        }
+        public void Disconnect(TriggerscripterSocket_Input s)
+        {
+            if (connectedSockets.Contains(s))
+                connectedSockets.Remove(s);
         }
     }
 
