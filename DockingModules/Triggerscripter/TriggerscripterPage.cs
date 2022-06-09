@@ -391,6 +391,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"LaunchCinematicEff", "Game|UI/Input"},
             {"LaunchProjectileEff", "Game|World"},
             {"LaunchScriptEff", "Special"},
+            {"TriggerActivateEff", "Special"},
+            {"TriggerDeactivateEff", "Special"},
             {"LerpIntEff", "Math"},
             {"LerpLocationEff", "Math"},
             {"LerpPercentEff", "Math"},

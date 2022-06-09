@@ -115,7 +115,6 @@ class ScriptComb
 
                                 if (!effects.ContainsKey(e.name) &&
                                     !e.name.Contains("(") &&
-                                    !e.name.Contains("Trigger") &&
                                     e.name != "")
                                 {
                                     effects.Add(e.name, e);

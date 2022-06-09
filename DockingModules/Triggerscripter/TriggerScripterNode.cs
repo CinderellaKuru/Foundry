@@ -206,8 +206,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
             else
             {
-                offsX = 0;
-                offsY = 0;
+                offsX = mx - x;
+                offsY = my - y;
                 return false;
             }
         }
@@ -221,10 +221,17 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
             else
             {
-                offsX = 0;
-                offsY = 0;
+                offsX = mx - x;
+                offsY = my - y;
                 return false;
             }
+        }
+        public bool IsIn(int rx, int ry, int rwidth, int rheight)
+        {
+            Rectangle r1 = new Rectangle(x, y, width, height);
+            Rectangle r2 = new Rectangle(rx, ry, rwidth, rheight);
+
+            return r1.IntersectsWith(r2);
         }
 
         public virtual void Selected()
@@ -368,6 +375,17 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public void OnNameChange(object o, EventArgs e)
         {
             nodeTitle = nameProperty.tb.Text;
+        }
+    }
+    public class TriggerScripterNode_TriggerActivate : TriggerscripterNode
+    {
+        public TriggerScripterNode_TriggerActivate(TriggerscripterControl control, int px, int py) : base(control, px, py)
+        {
+
+        }
+        public override void Draw(PaintEventArgs e)
+        {
+            base.Draw(e);
         }
     }
 }

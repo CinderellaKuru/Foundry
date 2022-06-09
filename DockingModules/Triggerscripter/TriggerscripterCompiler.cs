@@ -12,6 +12,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
     public class TriggerscripterCompiler
     {
         List<int> varIds = new List<int>();
+        Dictionary<int, int> triggerVarLinks = new Dictionary<int, int>();
         Dictionary<int, string> varSources = new Dictionary<int, string>();
         int varId = -1;
         void AddVar(int id, string type, string name, bool isNull, string value, string sourceName, XElement varX)
@@ -37,7 +38,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 varIds.Add(id);
             }
         }
-        void AddEffect(TriggerscripterNode n, string triggerName, XElement triggerTF, XElement varX)
+        void AddEffect(TriggerscripterNode n, string triggerName, XElement triggerTF, XElement varX, int triggerValueOverride)
         {
             if (n.handleAs != "Effect") return;
 
@@ -47,77 +48,89 @@ namespace SMHEditor.DockingModules.Triggerscripter
             eff.Add(new XAttribute("DBID", ((Effect)n.data).dbid));
             eff.Add(new XAttribute("Version", ((Effect)n.data).version));
             eff.Add(new XAttribute("CommentOut", false));
-            
-            foreach(Input i in ((Effect)n.data).inputs)
+
+            if (!n.nodeTitle.Contains("Trigger"))
             {
-                int id;
-                if(n.sockets[i.name].connectedSockets.Count > 0)
+                foreach (Input i in ((Effect)n.data).inputs)
                 {
-                    TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
-                    AddVar(
-                        v.id,
-                        v.typeTitle,
-                        v.nameProperty.tb.Text,
-                        false,
-                        v.valueProperty.tb.Text,
-                        triggerName + "::" + n.nodeTitle,
-                        varX);
-                    id = v.id;
+                    int id;
+                    if (n.sockets[i.name].connectedSockets.Count > 0)
+                    {
+                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
+                        AddVar(
+                            v.id,
+                            v.typeTitle,
+                            v.nameProperty.tb.Text,
+                            false,
+                            v.valueProperty.tb.Text,
+                            triggerName + "::" + n.nodeTitle,
+                            varX);
+                        id = v.id;
+                    }
+                    else
+                    {
+                        AddVar(
+                            varId,
+                            n.sockets[i.name].valueType,
+                            "null" + n.sockets[i.name].valueType,
+                            true,
+                            null,
+                            triggerName + "::" + n.nodeTitle,
+                            varX);
+                        id = varId;
+                        varId++;
+                    }
+                    XElement input = new XElement("Input");
+                    input.Add(new XAttribute("Name", n.sockets[i.name].text));
+                    input.Add(new XAttribute("SigID", i.sigId));
+                    input.Add(new XAttribute("Optional", i.optional));
+                    input.Value = id.ToString();
+                    eff.Add(input);
                 }
-                else
+                foreach (Output o in ((Effect)n.data).outputs)
                 {
-                    AddVar(
-                        varId,
-                        n.sockets[i.name].valueType,
-                        "null" + n.sockets[i.name].valueType,
-                        true,
-                        null,
-                        triggerName + "::" + n.nodeTitle,
-                        varX);
-                    id = varId;
-                    varId++;
+                    int id;
+                    if (n.sockets[o.name].connectedSockets.Count > 0)
+                    {
+                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
+                        AddVar(
+                            v.id,
+                            v.typeTitle,
+                            v.nameProperty.tb.Text,
+                            false,
+                            v.valueProperty.tb.Text,
+                            triggerName + "::" + n.nodeTitle,
+                            varX);
+                        id = v.id;
+                    }
+                    else
+                    {
+                        AddVar(
+                            varId,
+                            n.sockets[o.name].valueType,
+                            "null" + n.sockets[o.name].valueType,
+                            true,
+                            null,
+                            triggerName + "::" + n.nodeTitle,
+                            varX);
+                        id = varId;
+                        varId++;
+                    }
+                    XElement output = new XElement("Output");
+                    output.Add(new XAttribute("Name", n.sockets[o.name].text));
+                    output.Add(new XAttribute("SigID", o.sigId));
+                    output.Add(new XAttribute("Optional", o.optional));
+                    output.Value = id.ToString();
+                    eff.Add(output);
                 }
-                XElement input = new XElement("Input");
-                input.Add(new XAttribute("Name", n.sockets[i.name].text));
-                input.Add(new XAttribute("SigID", i.sigId));
-                input.Add(new XAttribute("Optional", i.optional));
-                input.Value = id.ToString();
-                eff.Add(input);
             }
-            foreach (Output o in ((Effect)n.data).outputs)
+            else
             {
-                int id;
-                if (n.sockets[o.name].connectedSockets.Count > 0)
-                {
-                    TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
-                    AddVar(
-                        v.id,
-                        v.typeTitle,
-                        v.nameProperty.tb.Text,
-                        false,
-                        v.valueProperty.tb.Text,
-                        triggerName + "::" + n.nodeTitle,
-                        varX);
-                    id = v.id;
-                }
-                else
-                {
-                    AddVar(
-                        varId,
-                        n.sockets[o.name].valueType,
-                        "null" + n.sockets[o.name].valueType,
-                        true,
-                        null,
-                        triggerName + "::" + n.nodeTitle,
-                        varX);
-                    id = varId;
-                    varId++;
-                }
-                XElement output = new XElement("Output");
-                output.Add(new XAttribute("Name", n.sockets[o.name].text));
-                output.Add(new XAttribute("SigID", o.sigId));
-                output.Add(new XAttribute("Optional", o.optional));
-                output.Value = id.ToString();
+                XElement output = new XElement("Input");
+                output.Add(new XAttribute("Name", "Trigger"));
+                output.Add(new XAttribute("SigID", 1));
+                output.Add(new XAttribute("Optional", false));
+                output.Value = triggerValueOverride.ToString();
                 eff.Add(output);
             }
 
@@ -212,6 +225,104 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             triggerCnd.Add(cnd);
         }
+        int AddTrigger(TriggerscripterNode n, XElement triggers, XElement triggerVars)
+        {
+            if (triggerVarLinks.ContainsKey(n.id)) return triggerVarLinks[n.id];
+            else
+            {
+                XElement trigger = new XElement("Trigger");
+                trigger.Add(new XAttribute("ID", ((TriggerscripterNode_Trigger)n).id));
+                trigger.Add(new XAttribute("Name", ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text));
+                trigger.Add(new XAttribute("Active", ((TriggerscripterNode_Trigger)n).activeProperty.state));
+                trigger.Add(new XAttribute("EvaluateFrequency", 0));
+                trigger.Add(new XAttribute("EvalLimit", 0));
+                trigger.Add(new XAttribute("CommentOut", false));
+                trigger.Add(new XAttribute("ConditionalTrigger", false));
+                trigger.Add(new XAttribute("X", n.x));
+                trigger.Add(new XAttribute("Y", n.y));
+                trigger.Add(new XAttribute("GroupID", -1));
+                trigger.Add(new XAttribute("TemplateID", -1));
+                XElement triggerCnd = new XElement("TriggerConditions");
+                XElement triggerT = new XElement("TriggerEffectsOnTrue");
+                XElement triggerF = new XElement("TriggerEffectsOnFalse");
+                trigger.Add(triggerCnd);
+                trigger.Add(triggerT);
+                trigger.Add(triggerF);
+
+                TriggerscripterNode_Trigger t = (TriggerscripterNode_Trigger)n;
+
+                //triggerVars.Add(new XComment("==Trigger: " + ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text + "=="));
+
+                XElement cndElement;
+                if (t.conditionalTypeProperty.state == false)
+                    cndElement = new XElement("And");
+                else
+                    cndElement = new XElement("Or");
+
+                triggerCnd.Add(cndElement);
+
+                if (t.sockets["Conditions"].connectedSockets.Count > 0)
+                {
+                    foreach (TriggerscripterSocket s in t.sockets["Conditions"].connectedSockets)
+                    {
+                        //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + s.node.nodeTitle + " (Condition)"));
+                        AddCondition(s.node, t.nodeTitle, cndElement, triggerVars);
+                    }
+                }
+
+                if (t.sockets["Call On True"].connectedSockets.Count > 0)
+                {
+                    TriggerscripterNode last = t.sockets["Call On True"].connectedSockets[0].node;
+                    while (last != null)
+                    {
+                        //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + last.nodeTitle + " (Effect)"));
+                        if (!last.nodeTitle.Contains("Trigger"))
+                        {
+                            AddEffect(last, t.nodeTitle, triggerT, triggerVars, 0);
+                        }
+                        else
+                        {
+                            if (last.sockets["Trigger"].connectedSockets.Count > 0)
+                            {
+                                AddTrigger(last.sockets["Trigger"].connectedSockets[0].node, triggers, triggerVars);
+                                AddEffect(last, t.nodeTitle, triggerT, triggerVars, triggerVarLinks[last.sockets["Trigger"].connectedSockets[0].node.id]);
+                            }
+                        }
+
+                        if (last.sockets["Call"].connectedSockets.Count > 0) last = last.sockets["Call"].connectedSockets[0].node;
+                        else last = null;
+                    }
+                }
+
+                if (t.sockets["Call On False"].connectedSockets.Count > 0)
+                {
+                    TriggerscripterNode last = t.sockets["Call On False"].connectedSockets[0].node;
+                    while (last != null)
+                    {
+                        //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + last.nodeTitle + " (Effect)"));
+                        //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + last.nodeTitle + " (Effect)"));
+                        if (!last.nodeTitle.Contains("Trigger"))
+                        {
+                            AddEffect(last, t.nodeTitle, triggerF, triggerVars, 0);
+                        }
+                        else
+                        {
+                            if (last.sockets["Trigger"].connectedSockets.Count > 0)
+                            {
+                                AddTrigger(last.sockets["Trigger"].connectedSockets[0].node, triggers, triggerVars);
+                                AddEffect(last, t.nodeTitle, triggerF, triggerVars, triggerVarLinks[last.sockets["Trigger"].connectedSockets[0].node.id]);
+                            }
+                        }
+                    }
+                }
+
+                triggers.Add(trigger);
+                AddVar(varId, "Trigger", n.nodeTitle, false, n.id.ToString(), n.nodeTitle, triggerVars);
+                triggerVarLinks.Add(n.id, varId);
+                varId++;
+                return triggerVarLinks[n.id];
+            }
+        }
 
         public void Compile(List<TriggerscripterNode> nodes, int lastVarId, string outPath)
         {
@@ -245,72 +356,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 {
                     if(((TriggerscripterNode_Trigger)n).activeProperty.state)
                     {
-                        XElement trigger = new XElement("Trigger");
-                        trigger.Add(new XAttribute("ID", ((TriggerscripterNode_Trigger)n).id));
-                        trigger.Add(new XAttribute("Name", ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text));
-                        trigger.Add(new XAttribute("Active", ((TriggerscripterNode_Trigger)n).activeProperty.state));
-                        trigger.Add(new XAttribute("EvaluateFrequency", 0));
-                        trigger.Add(new XAttribute("EvalLimit", 0));
-                        trigger.Add(new XAttribute("CommentOut", false));
-                        trigger.Add(new XAttribute("ConditionalTrigger", false));
-                        trigger.Add(new XAttribute("X", n.x));
-                        trigger.Add(new XAttribute("Y", n.y));
-                        trigger.Add(new XAttribute("GroupID", -1));
-                        trigger.Add(new XAttribute("TemplateID", -1));
-                        XElement triggerCnd = new XElement("TriggerConditions");
-                        XElement triggerT = new XElement("TriggerEffectsOnTrue");
-                        XElement triggerF = new XElement("TriggerEffectsOnFalse");
-                        trigger.Add(triggerCnd);
-                        trigger.Add(triggerT);
-                        trigger.Add(triggerF);
-
-                        TriggerscripterNode_Trigger t = (TriggerscripterNode_Trigger)n;
-
-                        //triggerVars.Add(new XComment("==Trigger: " + ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text + "=="));
-
-                        XElement cndElement;
-                        if (t.conditionalTypeProperty.state == false)
-                            cndElement = new XElement("And");
-                        else
-                            cndElement = new XElement("Or");
-
-                        triggerCnd.Add(cndElement);
-
-                        if (t.sockets["Conditions"].connectedSockets.Count > 0)
-                        {
-                            foreach(TriggerscripterSocket s in t.sockets["Conditions"].connectedSockets)
-                            {
-                                //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + s.node.nodeTitle + " (Condition)"));
-                                AddCondition(s.node, t.nodeTitle, cndElement, triggerVars);
-                            }
-                        }
-
-                        if(t.sockets["Call On True"].connectedSockets.Count > 0)
-                        {
-                            TriggerscripterNode last = t.sockets["Call On True"].connectedSockets[0].node;
-                            while(last != null)
-                            {
-                                //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + last.nodeTitle + " (Effect)"));
-                                AddEffect(last, t.nodeTitle, triggerT, triggerVars);
-                                if (last.sockets["Call"].connectedSockets.Count > 0) last = last.sockets["Call"].connectedSockets[0].node;
-                                else last = null;
-                            }
-                        }
-                        
-                        if (t.sockets["Call On False"].connectedSockets.Count > 0)
-                        {
-                            TriggerscripterNode last = t.sockets["Call On False"].connectedSockets[0].node;
-                            while (last != null)
-                            {
-                                //triggerVars.Add(new XComment("-" + t.nodeTitle + "::" + last.nodeTitle + " (Effect)"));
-                                AddEffect(last, t.nodeTitle, triggerF, triggerVars);
-                                if (last.sockets["Call"].connectedSockets.Count > 0) last = last.sockets["Call"].connectedSockets[0].node;
-                                else last = null;
-                            }
-                        }
-
-
-                        triggers.Add(trigger);
+                        AddTrigger(n, triggers, triggerVars);
                     }
                 }
             }
