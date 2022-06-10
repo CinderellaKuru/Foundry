@@ -196,18 +196,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 return null;
             }
         }
-        public bool PointIsIn(int mx, int my, out int offsX, out int offsY)
+        public bool PointIsIn(int mx, int my)
         {
             if (mx >= x && mx <= x + width && my >= y && my <= y + height)
             {
-                offsX = mx - x;
-                offsY = my - y;
                 return true;
             }
             else
             {
-                offsX = mx - x;
-                offsY = my - y;
                 return false;
             }
         }
@@ -226,12 +222,17 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 return false;
             }
         }
-        public bool IsIn(int rx, int ry, int rwidth, int rheight)
+        public bool IsInRect(int rx, int ry, int rwidth, int rheight)
         {
             Rectangle r1 = new Rectangle(x, y, width, height);
             Rectangle r2 = new Rectangle(rx, ry, rwidth, rheight);
 
             return r1.IntersectsWith(r2);
+        }
+        public void GetPointOffset(int mx, int my, out int ox, out int oy)
+        {
+            ox = mx - x;
+            oy = my - y;
         }
 
         public virtual void Selected()

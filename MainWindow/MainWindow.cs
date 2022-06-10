@@ -25,13 +25,15 @@ namespace SMHEditor
         public MainWindow()
         {
             InitializeComponent();
-#if HALFD
-            project = new ModProject("C:/Users/halfd/Downloads/testproj/testproj/project.hwproj");
-#endif
-#if STUMPY
+#if DEBUG
             project = new ModProject(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\testproj/project.hwproj");
-#endif
             project.Save();
+#else
+            FileDialog fd = new SaveFileDialog();
+            fd.Filter = "Halo Wars Project|*.hwproj";
+            fd.ShowDialog();
+            project = new ModProject(fd.FileName);
+#endif
         }
 
         //Project stuff

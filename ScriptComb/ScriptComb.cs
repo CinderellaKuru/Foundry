@@ -64,7 +64,7 @@ class ScriptComb
                     vars.Add(int.Parse(variables.ChildNodes[i].Attributes[0].Value), variables.ChildNodes[i].Attributes[1].Value);
                     varValues.Add(int.Parse(variables.ChildNodes[i].Attributes[0].Value), variables.ChildNodes[i].InnerText);
                 }
-
+                
                 //effects & conditons
                 XmlNode triggers = root.ChildNodes[2];
                 for (int i = 0; i < triggers.ChildNodes.Count; i++)
@@ -75,13 +75,11 @@ class ScriptComb
                     {
                         for (int z = 0; z < triggers.ChildNodes[i].ChildNodes[inOut].ChildNodes.Count; z++)
                         {
-                            if (triggers.ChildNodes[i].ChildNodes[1].ChildNodes.Count > 0) { effect = triggers.ChildNodes[i].ChildNodes[inOut].ChildNodes[z]; }
-                            else continue;
+                            effect = triggers.ChildNodes[i].ChildNodes[inOut].ChildNodes[z];
                             Effect e = new Effect();
                             e.name = effect.Attributes[1].Value;
                             int.TryParse(effect.Attributes[2].Value, out e.dbid);
                             int.TryParse(effect.Attributes[3].Value, out e.version);
-
 
                             for (int j = 0; j < effect.ChildNodes.Count; j++)
                             {
@@ -113,16 +111,16 @@ class ScriptComb
                                     varTypes.Add(vars[int.Parse(effect.ChildNodes[j].InnerText)]);
                                 }
 
-                                if (!effects.ContainsKey(e.name) &&
-                                    !e.name.Contains("(") &&
-                                    e.name != "")
-                                {
-                                    effects.Add(e.name, e);
-                                }
                                 //if (!effects[e.name].sources.Contains(s.Substring(4)))
                                 //{
                                 //    effects[e.name].sources.Add(s.Substring(4));
                                 //}
+                            }
+                            if (!effects.ContainsKey(e.name) &&
+                                !e.name.Contains("(") &&
+                                e.name != "")
+                            {
+                                effects.Add(e.name, e);
                             }
                         }
                     }

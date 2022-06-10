@@ -121,6 +121,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     }
                 }
             }
+
+#if DEBUG
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.L))
             {
                 //TriggerscripterCompiler.Compile(nodes, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.triggerscript");
@@ -134,7 +136,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 TriggerscripterCompiler c = new TriggerscripterCompiler();
                 c.Compile(nodes, varID, "D:\\StumpyHWDEMod\\SMEditorTests\\data\\triggerscripts\\test.triggerscript");
             }
-
+#endif
         }
 
         public void AddNode(TriggerscripterNode n)
@@ -219,7 +221,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     pos[0]);
             }
             //draw marquee
-            if(marqueeActive)
+            if(mouseState == CurrentMouseState.DraggingMarquee)
             {
                 e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, 10, 10, 10)),
                     Math.Min(marqueeX1, marqueeX2), 
@@ -243,21 +245,20 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
 
         TriggerscripterSocket selectedSocket = null;
-        TriggerscripterNode selectedNode = null;
         bool lastClicked = false, suspendInput = false;
         float lastX = 0, lastY = 0, lastM = 0;
-        enum MouseState
+        enum CurrentMouseState
         {
             None,
             NodesSelected,
             DraggingMarquee,
-            DraggingNodes
+            DraggingSocket
         }
-
-        bool marqueeActive;
+        
         int marqueeX1, marqueeY1;
         int marqueeX2, marqueeY2;
 
+        CurrentMouseState mouseState;
         void PollMouse(MouseState m)
         {
             Point min = PointToScreen(new Point(0, 0));
@@ -275,7 +276,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
                     {
                         OnClick(p[0].X, p[0].Y);
-                        Console.WriteLine("Q");
                         lastClicked = true;
                     }
                     else lastClicked = false;
@@ -284,50 +284,21 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 {
                     OnMouseHeld(p[0].X, p[0].Y);
                 }
-                else
+                if(lastClicked && m.LeftButton == OpenTK.Input.ButtonState.Released)
+                {
+                    OnMouseReleased(p[0].X, p[0].Y);
+                }
+                if (m.LeftButton == OpenTK.Input.ButtonState.Released)
                 {
                     lastClicked = false;
-                    marqueeActive = false;
-
-                    if (selectedSocket != null)
-                    {
-                        foreach (TriggerscripterNode n in nodes)
-                        {
-                            foreach (TriggerscripterSocket s in n.sockets.Values)
-                            {
-                                if (s.PointIsIn(p[0].X, p[0].Y))
-                                {
-                                    if (selectedSocket.node != s.node && (
-                                         (selectedSocket is TriggerscripterSocket_Input && s is TriggerscripterSocket_Output) ||
-                                         (selectedSocket is TriggerscripterSocket_Output && s is TriggerscripterSocket_Input))
-                                        )
-                                    {
-                                        TriggerscripterSocket_Output outSocket;
-                                        if (selectedSocket is TriggerscripterSocket_Output)
-                                        {
-                                            outSocket = selectedSocket as TriggerscripterSocket_Output;
-                                            outSocket.Connect(s as TriggerscripterSocket_Input);
-                                        }
-                                        if (s is TriggerscripterSocket_Output)
-                                        {
-                                            outSocket = s as TriggerscripterSocket_Output;
-                                            outSocket.Connect(selectedSocket as TriggerscripterSocket_Input);
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    selectedSocket = null;
                 }
 
+                //zoom
                 if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
                 {
                     x += (m.X - (int)lastX) * 1 / zoom;
                     y += (m.Y - (int)lastY) * 1 / zoom;
                 }
-
                 zoom += (m.Scroll.Y - lastM) / 100;
                 zoom = zoom < zoomMin ? zoomMin : zoom;
                 zoom = zoom > zoomMax ? zoomMax : zoom;
@@ -342,56 +313,121 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     suspendInput = false;
             }
         }
-        void OnClick(int x, int y)
+        void OnClick(int mx, int my)
         {
-            marqueeX1 = x;
-            marqueeY1 = y;
-            marqueeX2 = x;
-            marqueeY2 = y;
-            marqueeActive = true;
+            marqueeX1 = mx;
+            marqueeY1 = my;
+            marqueeX2 = mx;
+            marqueeY2 = my;
 
-            selectedNode = null;
-            bool nodeWasSelected = false;
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
-            foreach (TriggerscripterNode n in nodesReversed)
-            {
 
+            if (mouseState == CurrentMouseState.None)
+            {
+                foreach (TriggerscripterNode n in nodesReversed)
+                {
+                    if (n.PointIsIn(mx, my))
+                    {
+                        int ox, oy;
+                        n.GetPointOffset(mx, my, out ox, out oy);
+                        n.selectedX = ox;
+                        n.selectedY = oy;
+                        n.selected = true;
+                        mouseState = CurrentMouseState.NodesSelected;
+                        break;
+                    }
+                    
+                }
             }
+
+            if (mouseState == CurrentMouseState.NodesSelected)
+            {
+                bool somethingUnderMouse = false;
+                foreach (TriggerscripterNode n in nodes)
+                {
+                    int ox, oy;
+                    n.GetPointOffset(mx, my, out ox, out oy);
+                    n.selectedX = ox;
+                    n.selectedY = oy;
+                    if (!n.selected && n.PointIsIn(mx, my))
+                    {
+                        foreach (TriggerscripterNode n2 in nodes)
+                        {
+                            n2.selected = false;
+                        }
+                        n.selected = true;
+                    }
+                    if (n.PointIsIn(mx, my))
+                        somethingUnderMouse = true;
+                }
+                if (!somethingUnderMouse)
+                {
+                    foreach (TriggerscripterNode n in nodes)
+                        n.selected = false;
+                    mouseState = CurrentMouseState.None;
+                }
+            }
+
+            if(mouseState == CurrentMouseState.None)
+            {
+                foreach (TriggerscripterNode n in nodes)
+                    n.selected = false;
+
+                mouseState = CurrentMouseState.DraggingMarquee;
+                marqueeX1 = mx;
+                marqueeY1 = my;
+            }
+
         }
         void OnMouseHeld(int mx, int my)
         {
-            if (marqueeActive) marqueeActive = true;
-            marqueeX2 = mx;
-            marqueeY2 = my;
-            if (marqueeActive)
+            if (mouseState == CurrentMouseState.NodesSelected)
             {
-                foreach (TriggerscripterNode n in nodes)
+                foreach(TriggerscripterNode n in nodes)
                 {
-                    if (n.IsIn(
-                        Math.Min(marqueeX1, marqueeX2),
-                        Math.Min(marqueeY1, marqueeY2),
-                        Math.Abs(marqueeX2 - marqueeX1),
-                        Math.Abs(marqueeY2 - marqueeY1)))
-                    {
-                        n.selected = true;
-                        int ox, oy;
-                        n.PointIsIn(mx, my, out ox, out oy);
-                        n.selectedX = ox;
-                        n.selectedY = oy;
-                    }
-                    else n.selected = false;
-                }
-            }
-            else
-            {
-                foreach (TriggerscripterNode n in nodes)
-                {
-                    if (n.selected)
+                    if(n.selected)
                     {
                         n.SetPos(mx - n.selectedX, my - n.selectedY);
                     }
                 }
+            }
+            if (mouseState == CurrentMouseState.DraggingMarquee)
+            {
+                marqueeX2 = mx;
+                marqueeY2 = my;
+                foreach (TriggerscripterNode n in nodes)
+                {
+                    if (n.IsInRect(
+                    Math.Min(marqueeX1, marqueeX2),
+                    Math.Min(marqueeY1, marqueeY2),
+                    Math.Abs(marqueeX2 - marqueeX1),
+                    Math.Abs(marqueeY2 - marqueeY1)))
+                    {
+                        n.selected = true;
+                    }
+                }
+            }
+
+
+        }
+        void OnMouseReleased(int mx, int my)
+        {
+            if (mouseState == CurrentMouseState.DraggingMarquee)
+            {
+                foreach (TriggerscripterNode n in nodes)
+                {
+                    if (n.IsInRect(
+                    Math.Min(marqueeX1, marqueeX2),
+                    Math.Min(marqueeY1, marqueeY2),
+                    Math.Abs(marqueeX2 - marqueeX1),
+                    Math.Abs(marqueeY2 - marqueeY1)))
+                    {
+                        mouseState = CurrentMouseState.NodesSelected;
+                    }
+                }
+                if (mouseState != CurrentMouseState.NodesSelected)
+                    mouseState = CurrentMouseState.None;
             }
         }
 
@@ -414,8 +450,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
             Console.WriteLine(nodeAddLocation[0]);
         }
 
-        int trgID = 0; int varID = 0;
-        int cndID = 0; int effID = 0;
+        public int trgID = 0, varID = 0;
+        public int cndID = 0, effID = 0;
 
         public void CreateNewTriggerPressed(object o, EventArgs e)
         {
@@ -663,7 +699,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             return sts;
         }
 
-        void SaveToFile(string path)
+        public void SaveToFile(string path)
         {
             JsonSerializerSettings s = new JsonSerializerSettings()
             {
@@ -672,7 +708,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             };
             File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedGraph(), s));
         }
-        void LoadFromFile(string path)
+        public void LoadFromFile(string path)
         {
             nodes.Clear();
             Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();

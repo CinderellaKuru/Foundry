@@ -393,6 +393,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"LaunchScriptEff", "Special"},
             {"TriggerActivateEff", "Special"},
             {"TriggerDeactivateEff", "Special"},
+            {"ShutdownEff", "Special"},
+            {"ClearBlackMapEff", "Misc"},
+            {"ResetBlackMapEff", "Misc"},
             {"LerpIntEff", "Math"},
             {"LerpLocationEff", "Math"},
             {"LerpPercentEff", "Math"},
@@ -478,6 +481,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {"SetCameraEff", "Game|Player"},
             {"setCTFCountEff", "Game|Scenario|DLC"},
             {"SetCTFFlagEff", "Game|Scenario|DLC"},
+            {"ClearCTFFlagOrCarrierEff", "Game|Scenario|DLC"},
             {"SetDirectionEff", "Game|World"},
             {"SetGarrisonedCountEff", "Game|Units|Set"},
             {"SetIgnoreUserInputEff", "Game|UI/Input"},
@@ -710,6 +714,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
             c.Dock = System.Windows.Forms.DockStyle.Fill;
             Controls.Add(c);
 
+            MenuStrip ms = new MenuStrip();
+            Controls.Add(ms);
+            ms.Items.Add("Save", null, CompileClicked);
+            ms.Items.Add("Open", null, OpenProject);
+            ms.Items.Add("Compile", null, SaveAs);
+
             ContextMenu cm = new ContextMenu();
             ContextMenu = cm;
             cm.Popup += c.CaptureMousePos;
@@ -816,6 +826,33 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 varItem.Click += c.CreateNewVarPressed;
                 last.MenuItems.Add(varItem);
             }
+        }
+ 
+        void CompileClicked(object o, EventArgs e)
+        {
+            TriggerscripterCompiler comp = new TriggerscripterCompiler();
+
+            SaveFileDialog svd = new SaveFileDialog();
+            svd.ShowDialog();
+            svd.Filter = "Triggerscript (.triggerscript)|*.triggerscript";
+
+            comp.Compile(c.nodes, c.varID, svd.FileName);
+        }
+        void SaveAs(object o, EventArgs e)
+        {
+            SaveFileDialog svd = new SaveFileDialog();
+            svd.ShowDialog();
+            svd.Filter = "Triggerscript Project (.tsp)|*.tsp";
+
+            c.SaveToFile(svd.FileName);
+        }
+        void OpenProject(object o, EventArgs e)
+        {
+            OpenFileDialog svd = new OpenFileDialog();
+            svd.ShowDialog();
+            svd.Filter = "Triggerscript Project (.tsp)|*.tsp";
+
+            c.SaveToFile(svd.FileName);
         }
     }
 }
