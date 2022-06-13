@@ -99,7 +99,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                             if (s is TriggerscripterSocket_Input)
                             {
                                 //foreach output connected to this input
-                                foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).connectedSockets)
+                                foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).connectedSockets.ToArray())
                                 {
                                     //disconnect this input from the output
                                     ((TriggerscripterSocket_Output)cs).Disconnect((TriggerscripterSocket_Input)s);
@@ -138,7 +138,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
 #endif
         }
-
         public void AddNode(TriggerscripterNode n)
         {
             nodes.Add(n);
@@ -209,7 +208,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             //draw temp connection
             Point[] pos = new Point[] { PointToClient(new Point((int)lastX, (int)lastY)) };
             transformInv.TransformPoints(pos);
-            if (selectedSocket != null)
+            if (mouseState == CurrentMouseState.DraggingSocket)
             {
                 e.Graphics.DrawLine(new Pen(selectedSocket.color, 5.0f), new Point(
                     selectedSocket.node.x + selectedSocket.rect.X + selectedSocket.rect.Width / 2,
@@ -315,6 +314,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnClick(int mx, int my)
         {
+            MainWindow.propertyEditor.control.Clear();
+            MainWindow.propertyEditor.control.FinishLayout();
+
             marqueeX1 = mx;
             marqueeY1 = my;
             marqueeX2 = mx;
@@ -322,6 +324,38 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
+
+            foreach (TriggerscripterNode n in nodesReversed)
+            {
+                foreach (TriggerscripterSocket s in n.sockets.Values)
+                {
+                    if (s.PointIsIn(mx, my))
+                    {
+                        mouseState = CurrentMouseState.DraggingSocket;
+                        if (!s.multiConnection)
+                        {
+                            if (s.connectedSockets.Count > 0)
+                            {
+                                selectedSocket = s.connectedSockets[0];
+                                if (s is TriggerscripterSocket_Input)
+                                {
+                                    ((TriggerscripterSocket_Output)s.connectedSockets[0]).Disconnect((TriggerscripterSocket_Input)s);
+                                }
+                                else
+                                {
+                                    ((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)s.connectedSockets[0]);
+                                }
+                                return;
+                            }
+                        }
+
+                        foreach (TriggerscripterNode n2 in nodesReversed)
+                            n2.selected = false;
+                        selectedSocket = s;
+                        return;
+                    }
+                }
+            }
 
             if (mouseState == CurrentMouseState.None)
             {
@@ -333,18 +367,28 @@ namespace SMHEditor.DockingModules.Triggerscripter
                         n.GetPointOffset(mx, my, out ox, out oy);
                         n.selectedX = ox;
                         n.selectedY = oy;
+                        nodes.Remove(n);
+                        nodes.Add(n);
+
+                        foreach (TriggerscripterNode n2 in nodesReversed)
+                            n2.selected = false;
                         n.selected = true;
+
                         mouseState = CurrentMouseState.NodesSelected;
-                        break;
+
+                        MainWindow.propertyEditor.control.Clear();
+                        n.Selected();
+                        MainWindow.propertyEditor.control.FinishLayout();
+
+                        return;
                     }
-                    
                 }
             }
 
             if (mouseState == CurrentMouseState.NodesSelected)
             {
                 bool somethingUnderMouse = false;
-                foreach (TriggerscripterNode n in nodes)
+                foreach (TriggerscripterNode n in nodesReversed)
                 {
                     int ox, oy;
                     n.GetPointOffset(mx, my, out ox, out oy);
@@ -352,11 +396,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     n.selectedY = oy;
                     if (!n.selected && n.PointIsIn(mx, my))
                     {
-                        foreach (TriggerscripterNode n2 in nodes)
+                        foreach (TriggerscripterNode n2 in nodesReversed)
                         {
                             n2.selected = false;
                         }
                         n.selected = true;
+                        nodes.Remove(n);
+                        nodes.Add(n);
                     }
                     if (n.PointIsIn(mx, my))
                         somethingUnderMouse = true;
@@ -369,7 +415,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 }
             }
 
-            if(mouseState == CurrentMouseState.None)
+            if (mouseState == CurrentMouseState.None)
             {
                 foreach (TriggerscripterNode n in nodes)
                     n.selected = false;
@@ -382,9 +428,12 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void OnMouseHeld(int mx, int my)
         {
+            var nodesReversed = nodes.ToList();
+            nodesReversed.Reverse();
+
             if (mouseState == CurrentMouseState.NodesSelected)
             {
-                foreach(TriggerscripterNode n in nodes)
+                foreach (TriggerscripterNode n in nodesReversed)
                 {
                     if(n.selected)
                     {
@@ -394,9 +443,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
             if (mouseState == CurrentMouseState.DraggingMarquee)
             {
+                MainWindow.propertyEditor.control.Clear();
                 marqueeX2 = mx;
                 marqueeY2 = my;
-                foreach (TriggerscripterNode n in nodes)
+                foreach (TriggerscripterNode n in nodesReversed)
                 {
                     if (n.IsInRect(
                     Math.Min(marqueeX1, marqueeX2),
@@ -405,11 +455,11 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     Math.Abs(marqueeY2 - marqueeY1)))
                     {
                         n.selected = true;
+                        nodes.Remove(n);
+                        nodes.Add(n);
                     }
                 }
             }
-
-
         }
         void OnMouseReleased(int mx, int my)
         {
@@ -429,14 +479,46 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 if (mouseState != CurrentMouseState.NodesSelected)
                     mouseState = CurrentMouseState.None;
             }
+            if (mouseState == CurrentMouseState.DraggingSocket)
+            {
+                foreach(TriggerscripterNode n in nodes)
+                {
+                    foreach(TriggerscripterSocket s in n.sockets.Values)
+                    {
+                        if (s == selectedSocket) break;
+                        if (s.PointIsIn(mx,my))
+                        {
+                            if(selectedSocket is TriggerscripterSocket_Output)
+                            {
+                                if (s is TriggerscripterSocket_Input)
+                                {
+                                    ((TriggerscripterSocket_Output)selectedSocket).Connect(s as TriggerscripterSocket_Input);
+                                    goto DraggingSocketFinish;
+                                }
+                            }
+                            else
+                            {
+                                if (s is TriggerscripterSocket_Output)
+                                {
+                                    ((TriggerscripterSocket_Output)s).Connect(selectedSocket as TriggerscripterSocket_Input);
+                                    goto DraggingSocketFinish;
+                                }
+                            }
+                        }
+                    }
+                }
+DraggingSocketFinish:
+                mouseState = CurrentMouseState.None;
+                selectedSocket = null;
+            }
         }
 
 
-        public static Color requiredVarColor = Color.ForestGreen;
-        public static Color optionalVarColor = Color.Green;
-        public static Color cndColor = Color.Maroon;
-        public static Color trgColor = Color.Blue;
-        public static Color effColor = Color.DeepPink;
+        public static Color requiredVarColor = Color.FromArgb(255, 64, 130, 64);
+        public static Color optionalVarColor = Color.FromArgb(255, 122, 130, 64);
+        public static Color cndColor = Color.FromArgb(255, 130, 64, 64);
+        public static Color trgColor = Color.FromArgb(255, 64, 117, 130);
+        public static Color effColor = Color.FromArgb(255, 130, 64, 106);
 
 
         Point[] nodeAddLocation = new Point[] { new Point() };
@@ -463,6 +545,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, int x, int y)
         {
             TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, x, y);
+            n.headerColor = trgColor;
 
             n.id = id;
             n.data = t;
@@ -492,6 +575,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, int x, int y)
         {
             TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, x, y);
+            n.headerColor = requiredVarColor;
 
             n.data = v;
             n.id = id;
@@ -517,6 +601,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public TriggerscripterNode CreateEffectNode(Effect e, int id, int x, int y)
         {
             TriggerscripterNode n = new TriggerscripterNode(this, x, y);
+            n.headerColor = effColor;
 
             n.data = e;
             n.id = id;
@@ -524,25 +609,25 @@ namespace SMHEditor.DockingModules.Triggerscripter
             n.nodeTitle = e.name;
             n.typeTitle = "Effect";
             n.handleAs = "Effect";
-            n.AddSocket(true, "Caller", "EFF", effColor, false);
-            n.AddSocket(false, "Call", "EFF", effColor, false);
+            n.AddSocket(true, "Caller", "EFF", effColor, false, false);
+            n.AddSocket(false, "Call", "EFF", effColor, false, false);
 
             if (!e.name.Contains("Trigger"))
             {
                 foreach (Input i in e.inputs)
                 {
                     Color color = i.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(true, i.name, i.valueType, color);
+                    n.AddSocket(true, i.name, i.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
                 }
                 foreach (Output ou in e.outputs)
                 {
                     Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(false, ou.name, ou.valueType, color);
+                    n.AddSocket(false, ou.name, ou.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
                 }
             }
             else
             {
-                n.AddSocket(false, "Trigger", "TRG", trgColor, false);
+                n.AddSocket(false, "Trigger", "TRG", trgColor, false, false);
             }
 
             AddNode(n);
@@ -556,27 +641,26 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         public TriggerscripterNode CreateConditionNode(Condition c, int id, int x, int y)
         {
-            TriggerscripterNode n = new TriggerscripterNode(this, x, y);
+            TriggerscripterNode_Condition n = new TriggerscripterNode_Condition(this, x, y);
+            n.headerColor = cndColor;
 
             n.data = c;
             n.id = id;
 
             n.id = cndID;
             n.nodeTitle = c.name;
-            n.typeTitle = "Condition";
-            n.handleAs = "Condition";
 
-            n.AddSocket(false, "Result", "CND", cndColor, false);
+            n.AddSocket(false, "Result", "CND", cndColor, false, false);
 
             foreach (Input i in c.inputs)
             {
                 Color color = i.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(true, i.name, i.valueType, color);
+                n.AddSocket(true, i.name, i.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
             }
             foreach (Output ou in c.outputs)
             {
                 Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(false, ou.name, ou.valueType, color);
+                n.AddSocket(false, ou.name, ou.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
             }
 
             AddNode(n);

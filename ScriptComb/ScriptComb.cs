@@ -110,17 +110,13 @@ class ScriptComb
                                 {
                                     varTypes.Add(vars[int.Parse(effect.ChildNodes[j].InnerText)]);
                                 }
-
-                                //if (!effects[e.name].sources.Contains(s.Substring(4)))
-                                //{
-                                //    effects[e.name].sources.Add(s.Substring(4));
-                                //}
                             }
                             if (!effects.ContainsKey(e.name) &&
                                 !e.name.Contains("(") &&
                                 e.name != "")
                             {
                                 effects.Add(e.name, e);
+                                //if (e.name.ToLower() == "triggeractivate") throw new Exception();
                             }
                         }
                     }

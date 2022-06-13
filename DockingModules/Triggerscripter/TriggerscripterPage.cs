@@ -716,9 +716,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
             MenuStrip ms = new MenuStrip();
             Controls.Add(ms);
-            ms.Items.Add("Save", null, CompileClicked);
+            ms.Items.Add("Save", null, SaveAs);
             ms.Items.Add("Open", null, OpenProject);
-            ms.Items.Add("Compile", null, SaveAs);
+            ms.Items.Add("Compile", null, Compile);
 
             ContextMenu cm = new ContextMenu();
             ContextMenu = cm;
@@ -827,32 +827,32 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 last.MenuItems.Add(varItem);
             }
         }
- 
-        void CompileClicked(object o, EventArgs e)
+
+        void Compile(object o, EventArgs e)
         {
             TriggerscripterCompiler comp = new TriggerscripterCompiler();
 
-            SaveFileDialog svd = new SaveFileDialog();
-            svd.ShowDialog();
-            svd.Filter = "Triggerscript (.triggerscript)|*.triggerscript";
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Triggerscript|*.triggerscript";
+            if (sfd.ShowDialog() == DialogResult.OK)
+                comp.Compile(c.nodes, c.varID, sfd.FileName);
 
-            comp.Compile(c.nodes, c.varID, svd.FileName);
         }
         void SaveAs(object o, EventArgs e)
         {
-            SaveFileDialog svd = new SaveFileDialog();
-            svd.ShowDialog();
-            svd.Filter = "Triggerscript Project (.tsp)|*.tsp";
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Triggerscript Project|*.tsp";
 
-            c.SaveToFile(svd.FileName);
+            if (sfd.ShowDialog() == DialogResult.OK)
+                c.SaveToFile(sfd.FileName);
         }
         void OpenProject(object o, EventArgs e)
         {
-            OpenFileDialog svd = new OpenFileDialog();
-            svd.ShowDialog();
-            svd.Filter = "Triggerscript Project (.tsp)|*.tsp";
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Triggerscript Project|*.tsp";
 
-            c.SaveToFile(svd.FileName);
+            if (ofd.ShowDialog() == DialogResult.OK)
+                c.LoadFromFile(ofd.FileName);
         }
     }
 }

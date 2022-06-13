@@ -146,7 +146,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             cnd.Add(new XAttribute("DBID", ((Condition)n.data).dbid));
             cnd.Add(new XAttribute("Version", ((Condition)n.data).version));
             cnd.Add(new XAttribute("CommentOut", false));
-            cnd.Add(new XAttribute("Invert", false));
+            cnd.Add(new XAttribute("Invert", ((TriggerscripterNode_Condition)n).invertedProperty.state));
             cnd.Add(new XAttribute("Async", false));
             cnd.Add(new XAttribute("AsyncParameterKey", 0));
 
@@ -237,7 +237,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 trigger.Add(new XAttribute("EvaluateFrequency", 0));
                 trigger.Add(new XAttribute("EvalLimit", 0));
                 trigger.Add(new XAttribute("CommentOut", false));
-                trigger.Add(new XAttribute("ConditionalTrigger", false));
+                trigger.Add(new XAttribute("ConditionalTrigger", ((TriggerscripterNode_Trigger)n).conditionalTriggerProperty.state));
                 trigger.Add(new XAttribute("X", n.x));
                 trigger.Add(new XAttribute("Y", n.y));
                 trigger.Add(new XAttribute("GroupID", -1));

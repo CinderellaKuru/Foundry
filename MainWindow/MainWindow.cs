@@ -31,8 +31,9 @@ namespace SMHEditor
 #else
             FileDialog fd = new SaveFileDialog();
             fd.Filter = "Halo Wars Project|*.hwproj";
-            fd.ShowDialog();
-            project = new ModProject(fd.FileName);
+            if (fd.ShowDialog() == DialogResult.OK)
+                project = new ModProject(fd.FileName);
+            else Close();
 #endif
         }
 
