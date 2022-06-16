@@ -53,6 +53,11 @@ namespace SMHEditor
         //Code to execute directly after the main window is loaded.
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            statusBar.BackColor = Program.window.darkmode.GetBackColor1(
+                ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1,
+                ComponentFactory.Krypton.Toolkit.PaletteState.Normal);
+            label.ForeColor = Color.White;
+
             KryptonDockingWorkspace w = dockingManager.ManageWorkspace(WORKSPACE_NAME, dockableWorkspace);
             dockingManager.ManageControl(DOCKINGCONTROLLER_NAME, kryptonPanel, w);
             dockingManager.ManageFloating(FLOATING_NAME, this);

@@ -60,6 +60,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
     {
         Timer t = new Timer();
         public List<TriggerscripterNode> nodes = new List<TriggerscripterNode>();
+        bool copyPastePressed;
 
         public TriggerscripterControl()
         {
@@ -75,7 +76,14 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
         void Tick(object o, EventArgs e)
         {
+            if (!Focused)
+            {
+                Invalidate();
+                return;
+            }
+
             MouseState mouse = Mouse.GetCursorState();
+            KeyboardState keyboard = Keyboard.GetState();
 
             UpdateMatrices();
 
@@ -121,6 +129,25 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     }
                 }
             }
+            if (keyboard.IsKeyDown(Key.ControlLeft) && keyboard.IsKeyDown(Key.C))
+            {
+                if (!copyPastePressed)
+                {
+                    CopyGraph();
+                }
+                copyPastePressed = true;
+            }
+            else if (keyboard.IsKeyDown(Key.ControlLeft) && keyboard.IsKeyDown(Key.V))
+            {
+                if (!copyPastePressed)
+                {
+                    PasteGraph();
+                }
+                copyPastePressed = true;
+            }
+            else
+                copyPastePressed = false;
+
 
 #if DEBUG
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.L))
@@ -131,12 +158,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
             if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.K))
                 SaveToFile(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test.tsp");
-            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.C))
+            if (OpenTK.Input.Keyboard.GetState().IsKeyDown(Key.J))
             {
                 TriggerscripterCompiler c = new TriggerscripterCompiler();
                 c.Compile(nodes, varID, "D:\\StumpyHWDEMod\\SMEditorTests\\data\\triggerscripts\\test.triggerscript");
             }
 #endif
+
         }
         public void AddNode(TriggerscripterNode n)
         {
@@ -144,8 +172,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
         }
 
 
-        Pen gridPen = new Pen(Color.DimGray);
-        public int majorGridSpace = 150;
+        Pen gridPen = new Pen(Color.FromArgb(255, 70, 70, 70));
+        public int majorGridSpace = 100;
         public float zoom = .25f;
         float x = 0, y = 0;
         float zoomMax = 1.5f, zoomMin = .025f;
@@ -154,6 +182,8 @@ namespace SMHEditor.DockingModules.Triggerscripter
         void DrawControl(object o, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.High;
             g.Transform = transform;
             g.Clear(Program.window.darkmode.GetBackColor1(
                 ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelClient,
@@ -183,17 +213,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             {
                 g.DrawLine(gridPen, left, y, right, y);
             }
-
-            //draw nodes
-            foreach (TriggerscripterNode n in nodes)
-            {
-                n.Draw(e);
-                //draw sockets
-                foreach (TriggerscripterSocket s in n.sockets.Values)
-                {
-                    s.Draw(e);
-                }
-            }
             //draw connections
             foreach (TriggerscripterNode n in nodes)
             {
@@ -218,6 +237,16 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     selectedSocket.node.x + selectedSocket.rect.X + selectedSocket.rect.Width / 2,
                     selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
                     pos[0]);
+            }
+            //draw nodes
+            foreach (TriggerscripterNode n in nodes)
+            {
+                n.Draw(e);
+                //draw sockets
+                foreach (TriggerscripterSocket s in n.sockets.Values)
+                {
+                    s.Draw(e);
+                }
             }
             //draw marquee
             if(mouseState == CurrentMouseState.DraggingMarquee)
@@ -325,6 +354,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
 
+            //dragging socket
             foreach (TriggerscripterNode n in nodesReversed)
             {
                 foreach (TriggerscripterSocket s in n.sockets.Values)
@@ -357,6 +387,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 }
             }
 
+            //none
             if (mouseState == CurrentMouseState.None)
             {
                 foreach (TriggerscripterNode n in nodesReversed)
@@ -388,13 +419,18 @@ namespace SMHEditor.DockingModules.Triggerscripter
             if (mouseState == CurrentMouseState.NodesSelected)
             {
                 bool somethingUnderMouse = false;
+                bool selectedUnderMouse = false;
                 foreach (TriggerscripterNode n in nodesReversed)
                 {
                     int ox, oy;
                     n.GetPointOffset(mx, my, out ox, out oy);
                     n.selectedX = ox;
                     n.selectedY = oy;
-                    if (!n.selected && n.PointIsIn(mx, my))
+
+                    if(n.selected && n.PointIsIn(mx, my))
+                        selectedUnderMouse = true;
+
+                    if (!n.selected && n.PointIsIn(mx, my) && !selectedUnderMouse)
                     {
                         foreach (TriggerscripterNode n2 in nodesReversed)
                         {
@@ -617,12 +653,12 @@ DraggingSocketFinish:
                 foreach (Input i in e.inputs)
                 {
                     Color color = i.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(true, i.name, i.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
+                    n.AddSocket(true, i.name, i.valueType, color, true, false);
                 }
                 foreach (Output ou in e.outputs)
                 {
                     Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(false, ou.name, ou.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
+                    n.AddSocket(false, ou.name, ou.valueType, color, true, false);
                 }
             }
             else
@@ -655,12 +691,12 @@ DraggingSocketFinish:
             foreach (Input i in c.inputs)
             {
                 Color color = i.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(true, i.name, i.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
+                n.AddSocket(true, i.name, i.valueType, color, true, false);
             }
             foreach (Output ou in c.outputs)
             {
                 Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(false, ou.name, ou.valueType, color, true, false, typeof(TriggerscripterNode_Variable));
+                n.AddSocket(false, ou.name, ou.valueType, color, true, false);
             }
 
             AddNode(n);
@@ -695,6 +731,7 @@ DraggingSocketFinish:
             public int id;
             public int x, y;
             public string handleAs;
+            public bool selected;
             public SerializedTrigger trigger;
             public SerializedVariable variable;
             public Effect effect;
@@ -713,6 +750,7 @@ DraggingSocketFinish:
             {
                 SerializableNode sn = new SerializableNode();
                 sn.handleAs = n.handleAs;
+                sn.selected = n.selected;
                 if (n.handleAs == "Trigger")
                 {
                     SerializedTrigger t = new SerializedTrigger();
@@ -802,21 +840,29 @@ DraggingSocketFinish:
             SerializedTriggerscripter sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(File.ReadAllText(path));
             foreach (SerializableNode n in sts.nodes)
             {
-                if (n.handleAs == "Trigger")
+                try
                 {
-                    triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
+                    if (n.handleAs == "Trigger")
+                    {
+                        triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Variable")
+                    {
+                        variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Effect")
+                    {
+                        effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Condition")
+                    {
+                        conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
+                    }
                 }
-                if (n.handleAs == "Variable")
+                catch(Exception e)
                 {
-                    variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
-                }
-                if (n.handleAs == "Effect")
-                {
-                    effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
-                }
-                if (n.handleAs == "Condition")
-                {
-                    conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
+                    Program.window.label.Text = "Paste error. See log.";
+                    Console.WriteLine(e.Message);
                 }
             }
             foreach (SerializedNodeLink l in sts.links)
@@ -839,6 +885,9 @@ DraggingSocketFinish:
                         case "Effect":
                             ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
                             break;
+                        case "Condition":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                            break;
                         case "Variable":
                             ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
                             break;
@@ -853,6 +902,9 @@ DraggingSocketFinish:
                 {
                     switch (l.targetType)
                     {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
                         case "Trigger":
                             ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
                             break;
@@ -883,6 +935,140 @@ DraggingSocketFinish:
             varID = sts.lastVar;
             effID = sts.lastEff;
             cndID = sts.lastCnd;
+        }
+
+        int pasteOffset = 50;
+        SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
+        public void CopyGraph()
+        {
+            copyBuffer = GetSerializedGraph();
+        }
+        public void PasteGraph()
+        {
+            foreach (TriggerscripterNode n in nodes)
+                n.selected = false;
+
+            Dictionary<int, TriggerscripterNode> trgMap = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> effMap = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> varMap = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> cndMap = new Dictionary<int, TriggerscripterNode>();
+            foreach (SerializableNode sn in copyBuffer.nodes)
+            {
+                if(sn.selected)
+                {
+                    if(sn.handleAs == "Trigger")
+                    {
+                        TriggerscripterNode n = CreateTriggerNode(sn.trigger, trgID, sn.x - pasteOffset, sn.y - pasteOffset);
+                        n.selected = true;
+                        trgMap.Add(sn.id, n);
+                        trgID++;
+                    }
+                    if(sn.handleAs == "Effect")
+                    {
+                        TriggerscripterNode n = CreateEffectNode(sn.effect, effID, sn.x - pasteOffset, sn.y - pasteOffset);
+                        n.selected = true;
+                        effMap.Add(sn.id, n);
+                        effID++;
+                    }
+                    if (sn.handleAs == "Condition")
+                    {
+                        TriggerscripterNode n = CreateConditionNode(sn.condition, cndID, sn.x - pasteOffset, sn.y - pasteOffset);
+                        n.selected = true;
+                        cndMap.Add(sn.id, n);
+                        cndID++;
+                    }
+                    if (sn.handleAs == "Variable")
+                    {
+                        TriggerscripterNode n = CreateVarNode(sn.variable, varID, sn.x - pasteOffset, sn.y - pasteOffset);
+                        n.selected = true;
+                        varMap.Add(sn.id, n);
+                        varID++;
+                    }
+                }
+            }
+            foreach(SerializedNodeLink sl in copyBuffer.links)
+            {
+                if(sl.sourceType == "Trigger")
+                {
+                    if(sl.targetType == "Effect")
+                    {
+                        ((TriggerscripterSocket_Output)trgMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                }
+
+                if(sl.sourceType == "Effect")
+                {
+                    if(sl.targetType == "Variable")
+                    {
+                        ((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Effect")
+                    {
+                        ((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Condition")
+                    {
+                        ((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Trigger")
+                    {
+                        ((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                }
+
+                if(sl.sourceType == "Condition")
+                {
+                    if (sl.targetType == "Variable")
+                    {
+                        ((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Effect")
+                    {
+                        ((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Condition")
+                    {
+                        ((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Trigger")
+                    {
+                        ((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                }
+
+                if(sl.sourceType == "Variable")
+                {
+                    if (sl.targetType == "Effect")
+                    {
+                        ((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                    if (sl.targetType == "Condition")
+                    {
+                        ((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+                            (TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+                    }
+                }
+            }
+
+            mouseState = CurrentMouseState.NodesSelected;
+        }
+
+        public void ImportScript(string file)
+        {
+            XDocument doc = XDocument.Load(file);
+            XElement vars = doc.Element("TriggerSystem").Element("TriggerVars");
+            XElement triggers = doc.Element("TriggerSystem").Element("Trigger");
+
         }
     }
 }

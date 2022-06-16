@@ -13,6 +13,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
     {
         List<int> varIds = new List<int>();
         Dictionary<int, int> triggerVarLinks = new Dictionary<int, int>();
+        Dictionary<TriggerscripterSocket_Output, int> linkedVars = new Dictionary<TriggerscripterSocket_Output, int>();
         Dictionary<int, string> varSources = new Dictionary<int, string>();
         int varId = -1;
         void AddVar(int id, string type, string name, bool isNull, string value, string sourceName, XElement varX)
@@ -56,16 +57,40 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     int id;
                     if (n.sockets[i.name].connectedSockets.Count > 0)
                     {
-                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
-                        AddVar(
-                            v.id,
-                            v.typeTitle,
-                            v.nameProperty.tb.Text,
-                            false,
-                            v.valueProperty.tb.Text,
-                            triggerName + "::" + n.nodeTitle,
-                            varX);
-                        id = v.id;
+                        if (n.sockets[i.name].connectedSockets[0].node is TriggerscripterNode_Variable)
+                        {
+                            TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
+                            AddVar(
+                                v.id,
+                                v.typeTitle,
+                                v.nameProperty.tb.Text,
+                                false,
+                                v.valueProperty.tb.Text,
+                                triggerName + "::" + n.nodeTitle,
+                                varX);
+                            id = v.id;
+                        }
+                        else
+                        {
+                            if(linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]))
+                            {
+                                id = linkedVars[(TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]];
+                            }
+                            else
+                            {
+                                AddVar(
+                                    varId,
+                                    i.valueType,
+                                    "linked" + i.valueType,
+                                    false,
+                                    null,
+                                    triggerName + "::" + n.nodeTitle,
+                                    varX);
+                                id = varId;
+                                linkedVars.Add((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0], varId);
+                                varId++;
+                            }
+                        }
                     }
                     else
                     {
@@ -92,23 +117,47 @@ namespace SMHEditor.DockingModules.Triggerscripter
                     int id;
                     if (n.sockets[o.name].connectedSockets.Count > 0)
                     {
-                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
-                        AddVar(
-                            v.id,
-                            v.typeTitle,
-                            v.nameProperty.tb.Text,
-                            false,
-                            v.valueProperty.tb.Text,
-                            triggerName + "::" + n.nodeTitle,
-                            varX);
-                        id = v.id;
+                        if (n.sockets[o.name].connectedSockets[0].node is TriggerscripterNode_Variable)
+                        {
+                            TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
+                            AddVar(
+                                v.id,
+                                v.typeTitle,
+                                v.nameProperty.tb.Text,
+                                false,
+                                v.valueProperty.tb.Text,
+                                triggerName + "::" + n.nodeTitle,
+                                varX);
+                            id = v.id;
+                        }
+                        else
+                        {
+                            if(linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[o.name]))
+                            {
+                                id = linkedVars[(TriggerscripterSocket_Output)n.sockets[o.name]];
+                            }
+                            else
+                            {
+                                AddVar(
+                                    varId,
+                                    o.valueType,
+                                    "linked" + o.valueType,
+                                    false,
+                                    null,
+                                    triggerName + "::" + n.nodeTitle,
+                                    varX);
+                                id = varId;
+                                linkedVars.Add((TriggerscripterSocket_Output)n.sockets[o.name], varId);
+                                varId++;
+                            }
+                        }
                     }
                     else
                     {
                         AddVar(
                             varId,
-                            n.sockets[o.name].valueType,
-                            "null" + n.sockets[o.name].valueType,
+                            o.valueType,
+                            "null" + o.valueType,
                             true,
                             null,
                             triggerName + "::" + n.nodeTitle,
@@ -155,8 +204,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 int id;
                 if (n.sockets[i.name].connectedSockets.Count > 0)
                 {
-                    TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
-                    AddVar(
+                    if (n.sockets[i.name].connectedSockets[0].node is TriggerscripterNode_Variable)
+                    {
+                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
+                        AddVar(
                         v.id,
                         v.typeTitle,
                         v.nameProperty.tb.Text,
@@ -164,7 +215,29 @@ namespace SMHEditor.DockingModules.Triggerscripter
                         v.valueProperty.tb.Text,
                         triggerName + "::" + n.nodeTitle,
                         varX);
-                    id = v.id;
+                        id = v.id;
+                    }
+                    else
+                    {
+                        if (linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]))
+                        {
+                            id = linkedVars[(TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]];
+                        }
+                        else
+                        {
+                            AddVar(
+                                varId,
+                                i.valueType,
+                                "linked" + i.valueType,
+                                false,
+                                null,
+                                triggerName + "::" + n.nodeTitle,
+                                varX);
+                            id = varId;
+                            linkedVars.Add((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0], varId);
+                            varId++;
+                        }
+                    }
                 }
                 else
                 {
@@ -191,8 +264,10 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 int id;
                 if (n.sockets[o.name].connectedSockets.Count > 0)
                 {
-                    TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
-                    AddVar(
+                    if (n.sockets[o.name].connectedSockets[0].node is TriggerscripterNode_Variable)
+                    {
+                        TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
+                        AddVar(
                         v.id,
                         v.typeTitle,
                         v.nameProperty.tb.Text,
@@ -200,7 +275,30 @@ namespace SMHEditor.DockingModules.Triggerscripter
                         v.valueProperty.tb.Text,
                         triggerName + "::" + n.nodeTitle,
                         varX);
-                    id = v.id;
+                        id = v.id;
+                    }
+                    else
+                    {
+                        if (linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[o.name]))
+                        {
+                            id = linkedVars[(TriggerscripterSocket_Output)n.sockets[o.name]];
+                        }
+                        else
+                        {
+                            AddVar(
+                                varId,
+                                o.valueType,
+                                "linked" + o.valueType,
+                                false,
+                                null,
+                                triggerName + "::" + n.nodeTitle,
+                                varX);
+                            id = varId;
+                            linkedVars.Add((TriggerscripterSocket_Output)n.sockets[o.name], varId);
+                            varId++;
+
+                        }
+                    }
                 }
                 else
                 {

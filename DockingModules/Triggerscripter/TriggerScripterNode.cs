@@ -48,7 +48,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             Rectangle nodePlusOffs = new Rectangle(node.x + rect.X, node.y + rect.Y, rect.Width, rect.Height);
             e.Graphics.FillRectangle(new SolidBrush(color), nodePlusOffs);
-            e.Graphics.DrawRectangle(new Pen(Color.Black), nodePlusOffs);
+            e.Graphics.DrawRectangle(new Pen(Color.Black, 2.0f), nodePlusOffs);
         }
     }
 
@@ -290,7 +290,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
 
         static int socketSpacing = 65;
         static int headerHeight = 70;
-        static Brush backBrush = new SolidBrush(Color.FromArgb(255, 40, 40, 40));
+        public static Brush backBrush = new SolidBrush(Color.FromArgb(255, 40, 40, 40));
         public string TrunicateString(Graphics g, Font f, string s, int width)
         {
             string ts = s;
@@ -328,7 +328,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             DrawStringOnNode(e.Graphics, fr, TrunicateString(e.Graphics, fr, typeTitle, width - 60), Color.White, 3, 29);
 
             Color borderColor = selected ? Color.White : Color.Black;
-            e.Graphics.DrawRectangle(new Pen(borderColor), x, y, width, height + bottomPadding);
+            e.Graphics.DrawRectangle(new Pen(borderColor, 2.0f), x, y, width, height + bottomPadding);
 
             foreach (var socket in sockets)
             {
@@ -336,7 +336,6 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
         }
     }
-
     public class TriggerscripterNode_Trigger : TriggerscripterNode
     {
         public PropertyItem_String nameProperty;
@@ -380,12 +379,18 @@ namespace SMHEditor.DockingModules.Triggerscripter
         {
             base.Draw(e);
 
-            if(activeProperty.state == true)
+            if(activeProperty.state)
                 e.Graphics.FillEllipse(new SolidBrush(Color.Green), x + width - 30, y + 10, 20, 20);
             else
                 e.Graphics.FillEllipse(new SolidBrush(Color.Red), x + width - 30, y + 10, 20, 20);
 
-            e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 1), x + width - 30, y + 10, 20, 20);
+            if (!conditionalTriggerProperty.state)
+                e.Graphics.FillEllipse(backBrush, x + width - 60, y + 10, 20, 20);
+            else
+                e.Graphics.FillEllipse(new SolidBrush(Color.FromArgb(205, 170, 0)), x + width - 60, y + 10, 20, 20);
+            e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 2.0f), x + width - 60, y + 10, 20, 20);
+
+            e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 2.0f), x + width - 30, y + 10, 20, 20);
         }
     }
     public class TriggerscripterNode_Variable: TriggerscripterNode
@@ -445,8 +450,13 @@ namespace SMHEditor.DockingModules.Triggerscripter
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
-            Font f = new Font("Arial", 16, FontStyle.Regular);
-            e.Graphics.DrawString("⇉", f, new SolidBrush(Color.White), x + width - 10, y + 10);
+            Font f = new Font("Arial", 27, FontStyle.Regular);
+
+            if (!invertedProperty.state)
+                e.Graphics.FillEllipse(backBrush, x + width - 30, y + 10, 20, 20);
+            else
+                e.Graphics.FillEllipse(new SolidBrush(Color.FromArgb(205,170,0)), x + width - 30, y + 10, 20, 20);
+            e.Graphics.DrawEllipse(new Pen(new SolidBrush(Color.Black), 2.0f), x + width - 30, y + 10, 20, 20);
         }
     }
 }

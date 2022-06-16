@@ -34,9 +34,12 @@
             this.darkmode = new ComponentFactory.Krypton.Toolkit.KryptonPalette(this.components);
             this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.dockableWorkspace = new ComponentFactory.Krypton.Docking.KryptonDockableWorkspace();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.label = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
             this.kryptonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dockableWorkspace)).BeginInit();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonManager
@@ -131,12 +134,30 @@
             this.dockableWorkspace.TabIndex = 0;
             this.dockableWorkspace.TabStop = true;
             // 
+            // statusBar
+            // 
+            this.statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.label});
+            this.statusBar.Location = new System.Drawing.Point(0, 425);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(800, 25);
+            this.statusBar.TabIndex = 1;
+            this.statusBar.Text = "statusBar";
+            // 
+            // label
+            // 
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(53, 20);
+            this.label.Text = "Ready.";
+            // 
             // MainWindow
             // 
             this.AllowFormChrome = false;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.kryptonPanel);
             this.Name = "MainWindow";
             this.Text = "MainWindow";
@@ -144,7 +165,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).EndInit();
             this.kryptonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dockableWorkspace)).EndInit();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -154,5 +178,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
         private ComponentFactory.Krypton.Docking.KryptonDockableWorkspace dockableWorkspace;
         public ComponentFactory.Krypton.Toolkit.KryptonPalette darkmode;
+        private System.Windows.Forms.StatusStrip statusBar;
+        public System.Windows.Forms.ToolStripStatusLabel label;
     }
 }

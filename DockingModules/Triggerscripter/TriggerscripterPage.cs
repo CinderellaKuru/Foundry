@@ -719,6 +719,9 @@ namespace SMHEditor.DockingModules.Triggerscripter
             ms.Items.Add("Save", null, SaveAs);
             ms.Items.Add("Open", null, OpenProject);
             ms.Items.Add("Compile", null, Compile);
+            ms.BackColor = Program.window.darkmode.GetBackColor1(
+                ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1,
+                ComponentFactory.Krypton.Toolkit.PaletteState.Normal);
 
             ContextMenu cm = new ContextMenu();
             ContextMenu = cm;
@@ -727,75 +730,83 @@ namespace SMHEditor.DockingModules.Triggerscripter
             trg.Click += c.CreateNewTriggerPressed;
             cm.MenuItems.Add(trg);
 
+            MenuItem cndMI = new MenuItem("Conditions");
             MenuItem effMI = new MenuItem("Effects");
-            MenuItem cndMI = new MenuItem("Conditionals");
             MenuItem varMI = new MenuItem("Variables");
-            cm.MenuItems.Add(effMI);
             cm.MenuItems.Add(cndMI);
+            cm.MenuItems.Add(effMI);
             cm.MenuItems.Add(varMI);
 
             Dictionary<string, MenuItem> hierarchy = new Dictionary<string, MenuItem>() {
-                { "eff|", effMI },
                 { "cnd|", cndMI },
+                { "eff|", effMI },
                 { "var|", varMI }
             };
 
+            List<Tuple<Effect, string>> effsSorted = new List<Tuple<Effect, string>>();
             foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(SMHEditor.Properties.Resources.eff))
+                effsSorted.Add(new Tuple<Effect, string>(e, nodeSubCategories[e.name + "Eff"]));
+            effsSorted = effsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
+
+            foreach (var v in effsSorted)
             {
-                string s = nodeSubCategories[e.name + "Eff"];
-                string[] h = s.Split('|');
-                MenuItem last = effMI;
                 string concat = "eff|";
-                foreach (string n in h)
+                string[] split = v.Item2.Split('|');
+                MenuItem last = hierarchy[concat];
+                foreach(string s in split)
                 {
-                    concat += n + "|";
-                    if (hierarchy.Keys.Contains(concat))
+                    concat += s + "|";
+                    MenuItem item;
+                    if (hierarchy.ContainsKey(concat))
                     {
-                        last = hierarchy[concat];
+                        item = hierarchy[concat];
                     }
                     else
                     {
-                        MenuItem i = new MenuItem(n);
+                        MenuItem i = new MenuItem(s);
                         hierarchy.Add(concat, i);
-                        last.MenuItems.Add(i);
-                        last = i;
+                        item = i;
                     }
+                    last.MenuItems.Add(item);
+                    last = item;
                 }
-
-                MenuItem effectItem = new MenuItem(e.name);
-                effectItem.Tag = e;
-                effectItem.Click += c.CreateNewEffectPressed;
-                last.MenuItems.Add(effectItem);
+                MenuItem effI = new MenuItem(v.Item1.name);
+                effI.Tag = v.Item1;
+                effI.Click += c.CreateNewEffectPressed;
+                last.MenuItems.Add(effI);
             }
 
-            List<Condition> cs = JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd);
-            foreach (Condition cnd in cs)
+            List<Tuple<Condition, string>> cndsSorted = new List<Tuple<Condition, string>>();
+            foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd))
+                cndsSorted.Add(new Tuple<Condition, string>(c, nodeSubCategories[c.name + "Cnd"]));
+            cndsSorted = cndsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
+
+            foreach (var v in cndsSorted)
             {
-                string s = nodeSubCategories[cnd.name + "Cnd"];
-                string[] h = s.Split('|');
-                MenuItem last = cndMI;
                 string concat = "cnd|";
-                foreach (string n in h)
+                string[] split = v.Item2.Split('|');
+                MenuItem last = hierarchy[concat];
+                foreach (string s in split)
                 {
-                    concat += n + "|";
-                    if (hierarchy.Keys.Contains(concat))
+                    concat += s + "|";
+                    MenuItem item;
+                    if (hierarchy.ContainsKey(concat))
                     {
-                        last = hierarchy[concat];
+                        item = hierarchy[concat];
                     }
                     else
                     {
-                        MenuItem i = new MenuItem(n);
+                        MenuItem i = new MenuItem(s);
                         hierarchy.Add(concat, i);
-                        last.MenuItems.Add(i);
-                        last = i;
+                        item = i;
                     }
+                    last.MenuItems.Add(item);
+                    last = item;
                 }
-
-                MenuItem cndItem = new MenuItem(cnd.name);
-                cndItem.Tag = cnd;
-                cndItem.Click += c.CreateNewConditionPressed;
-                last.MenuItems.Add(cndItem);
-
+                MenuItem cndI = new MenuItem(v.Item1.name);
+                cndI.Tag = v.Item1;
+                cndI.Click += c.CreateNewConditionPressed;
+                last.MenuItems.Add(cndI);
             }
 
             List<string> vs = JsonConvert.DeserializeObject<List<string>>(SMHEditor.Properties.Resources.var);
