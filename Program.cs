@@ -9,16 +9,16 @@ namespace SMHEditor
 {
     internal static class Program
     {
-        public static MainWindow window;
+        public static Foundry window;
 
         [STAThread]
         static void Main()
         {
-            ProjectExplorerControl.InitImageList();
+            ProjectExplorer.InitImageList();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            window = new MainWindow();
+            window = new Foundry();
             Application.Run(window);
         }
     }

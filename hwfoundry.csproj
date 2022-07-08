@@ -51,17 +51,21 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Demo|AnyCPU'">
-    <OutputPath>bin\Demo\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTest|AnyCPU'">
+    <OutputPath>bin\ReleaseTest\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aga.Controls, Version=1.7.0.0, Culture=neutral, PublicKeyToken=fcc90fbf924463a3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ext\treeviewadv\Aga.Controls\bin\Debug\Aga.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="AnySerializer, Version=1.1.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
     </Reference>
@@ -89,11 +93,17 @@
     <Reference Include="ComponentFactory.Krypton.Workspace">
       <HintPath>ext\SMH-Krypton\out\ComponentFactory.Krypton.Workspace.dll</HintPath>
     </Reference>
+    <Reference Include="DarkUI">
+      <HintPath>ext\hwf-darkui\DarkUI\bin\Debug\DarkUI.dll</HintPath>
+    </Reference>
     <Reference Include="DirectXTexNet">
       <HintPath>ext\DXTexNet\DirectXTexNet.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="FileBrowser">
+      <HintPath>ext\FileBrowser\bin\Debug\FileBrowser.dll</HintPath>
     </Reference>
     <Reference Include="geometry3">
       <HintPath>ext\SMH-geometry3Sharp\out\geometry3.dll</HintPath>
@@ -111,19 +121,20 @@
     <Reference Include="NodeEditor">
       <HintPath>ext\NodeEditorWinforms\NodeEditor.dll</HintPath>
     </Reference>
+    <Reference Include="ObjectListView">
+      <HintPath>ext\ObjectListView\ObjectListView\bin\Debug\ObjectListView.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Diagram.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Diagram.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
@@ -153,138 +164,142 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+    </Reference>
     <Reference Include="YAXLib, Version=3.0.0.0, Culture=neutral, PublicKeyToken=15c43682c986900f, processorArchitecture=MSIL">
       <HintPath>packages\YAXLib.3.0.1\lib\net461\YAXLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DockingModules\EditorPage.cs" />
-    <Compile Include="DockingModules\MapEditor\Camera.cs" />
-    <Compile Include="DockingModules\MapEditor\HelperObjects.cs" />
-    <Compile Include="DockingModules\MapEditor\TerrainModifier.cs" />
-    <Compile Include="DockingModules\MapEditor\ViewportPage.cs" />
-    <Compile Include="DockingModules\MapEditor\ViewportControl.cs">
+    <Compile Include="Project\DockingModules\MapEditor\Camera.cs" />
+    <Compile Include="Project\DockingModules\MapEditor\HelperObjects.cs" />
+    <Compile Include="Project\DockingModules\MapEditor\TerrainModifier.cs" />
+    <Compile Include="Project\DockingModules\MapEditor\ViewportPage.cs" />
+    <Compile Include="Project\DockingModules\MapEditor\ViewportControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\MapEditor\ViewportControl.Designer.cs">
+    <Compile Include="Project\DockingModules\MapEditor\ViewportControl.Designer.cs">
       <DependentUpon>ViewportControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\MapEditor\MapEditorScene.cs" />
-    <Compile Include="DockingModules\MapEditor\Transform.cs" />
-    <Compile Include="DockingModules\ObjectEditor\Commands\CommandControl.cs">
+    <Compile Include="Project\DockingModules\MapEditor\MapEditorScene.cs" />
+    <Compile Include="Project\DockingModules\MapEditor\Transform.cs" />
+    <Compile Include="Project\DockingModules\ObjectEditor\Commands\CommandControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Commands\CommandControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Commands\CommandControl.Designer.cs">
       <DependentUpon>CommandControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Commands\CommandsControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Commands\CommandsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Commands\CommandsControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Commands\CommandsControl.Designer.cs">
       <DependentUpon>CommandsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Flags\FlagControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Flags\FlagControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Flags\FlagControl.Designer.cs">
       <DependentUpon>FlagControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Flags\FlagsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Flags\FlagsControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Flags\FlagsControl.Designer.cs">
       <DependentUpon>FlagsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointControl.Designer.cs">
       <DependentUpon>HardpointControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointsControl.Designer.cs">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildControl.Designer.cs">
       <DependentUpon>ObjectChildControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.Designer.cs">
       <DependentUpon>ObjectChildsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypeControl.Designer.cs">
       <DependentUpon>ObjectTypeControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypesControl.Designer.cs">
       <DependentUpon>ObjectTypesControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\ObjectEditorControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\ObjectEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\ObjectEditorControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\ObjectEditorControl.Designer.cs">
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\ObjectEditorPage.cs" />
-    <Compile Include="DockingModules\ObjectEditor\GeneralControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\ObjectEditorPage.cs" />
+    <Compile Include="Project\DockingModules\ObjectEditor\GeneralControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\GeneralControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\GeneralControl.Designer.cs">
       <DependentUpon>GeneralControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\UIControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\UIControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\UIControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\UIControl.Designer.cs">
       <DependentUpon>UIControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancyControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancyControl.Designer.cs">
       <DependentUpon>VeterancyControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancysControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.Designer.cs">
+    <Compile Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancysControl.Designer.cs">
       <DependentUpon>VeterancysControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerControl.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Project\DockingModules\ProjectExplorer\ProjectExplorer.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerControl.Designer.cs">
-      <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
+    <Compile Include="Project\DockingModules\ProjectExplorer\ProjectExplorer.Designer.cs">
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\ProjectExplorer\ProjectExplorerPage.cs" />
-    <Compile Include="DockingModules\PropertyEditor\PropertyEditorControl.cs" />
-    <Compile Include="DockingModules\PropertyEditor\PropertyEditorControl.Designer.cs">
-      <DependentUpon>PropertyEditorControl.cs</DependentUpon>
+    <None Include="Project\DockingModules\PropertyEditor\PropertyEditorControl.cs.old" />
+    <Compile Include="Project\DockingModules\PropertyEditor\PropertyEditorControl.Designer.cs">
+      <DependentUpon>PropertyEditorControl.cs.old</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\PropertyEditor\PropertyEditorPage.cs" />
-    <Compile Include="DockingModules\Triggerscripter\TriggerscripterCompiler.cs" />
-    <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.cs" />
-    <Compile Include="DockingModules\Triggerscripter\TriggerscripterControl.Designer.cs">
-      <DependentUpon>TriggerscripterControl.cs</DependentUpon>
+    <Compile Include="Project\DockingModules\PropertyEditor\PropertyEditorPage.cs" />
+    <Compile Include="Project\DockingModules\Triggerscripter\TriggerscripterCompiler.cs" />
+    <Compile Include="Project\DockingModules\Triggerscripter\TriggerscripterPage.cs" />
+    <Compile Include="Project\DockingModules\Triggerscripter\TriggerscripterPage.Designer.cs">
+      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="DockingModules\Triggerscripter\TriggerScripterNode.cs" />
-    <Compile Include="DockingModules\Triggerscripter\TriggerscripterPage.cs" />
+    <Compile Include="Project\DockingModules\Triggerscripter\TriggerScripterNode.cs" />
     <Compile Include="ECF\ECF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project\FileTypes\ObjectFile.cs" />
     <Compile Include="Project\FileTypes\Maps\TerrainFile.cs" />
+    <Compile Include="Project\FileTypes\Scripts\TriggerscripterContentFile.cs" />
     <Compile Include="Project\FileTypes\SquadFile.cs" />
     <Compile Include="Project\ModProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -300,62 +315,62 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
-    <EmbeddedResource Include="DockingModules\MapEditor\ViewportControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\MapEditor\ViewportControl.resx">
       <DependentUpon>ViewportControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Commands\CommandControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Commands\CommandControl.resx">
       <DependentUpon>CommandControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Commands\CommandsControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Commands\CommandsControl.resx">
       <DependentUpon>CommandsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Flags\FlagControl.resx">
       <DependentUpon>FlagControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Flags\FlagsControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Flags\FlagsControl.resx">
       <DependentUpon>FlagsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointControl.resx">
       <DependentUpon>HardpointControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Hardpoints\HardpointsControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Hardpoints\HardpointsControl.resx">
       <DependentUpon>HardpointsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildControl.resx">
       <DependentUpon>ObjectChildControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Object Childs\ObjectChildsControl.resx">
       <DependentUpon>ObjectChildsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Types\ObjectTypeControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypeControl.resx">
       <DependentUpon>ObjectTypeControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Object Types\ObjectTypesControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Object Types\ObjectTypesControl.resx">
       <DependentUpon>ObjectTypesControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\ObjectEditorControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\ObjectEditorControl.resx">
       <DependentUpon>ObjectEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\GeneralControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\GeneralControl.resx">
       <DependentUpon>GeneralControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\UIControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\UIControl.resx">
       <DependentUpon>UIControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancyControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancyControl.resx">
       <DependentUpon>VeterancyControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ObjectEditor\Veterancy\VeterancysControl.resx">
+    <EmbeddedResource Include="Project\DockingModules\ObjectEditor\Veterancy\VeterancysControl.resx">
       <DependentUpon>VeterancysControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\ProjectExplorer\ProjectExplorerControl.resx">
-      <DependentUpon>ProjectExplorerControl.cs</DependentUpon>
+    <EmbeddedResource Include="Project\DockingModules\ProjectExplorer\ProjectExplorer.resx">
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\PropertyEditor\PropertyEditorControl.resx">
-      <DependentUpon>PropertyEditorControl.cs</DependentUpon>
+    <EmbeddedResource Include="Project\DockingModules\PropertyEditor\PropertyEditorControl.resx">
+      <DependentUpon>PropertyEditorControl.cs.old</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DockingModules\Triggerscripter\TriggerscripterControl.resx">
-      <DependentUpon>TriggerscripterControl.cs</DependentUpon>
+    <EmbeddedResource Include="Project\DockingModules\Triggerscripter\TriggerscripterPage.resx">
+      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -455,7 +470,7 @@
       <Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="xcopy /Y &quot;$(TargetDir)\*&quot; &quot;$(TargetDir)..\hwfoundry-%(AssemblyInfo.Version)\&quot;" />
-    <Exec Command="&quot;C:\Program Files\WinRAR\rar.exe&quot; a -r -ep1 &quot;$(ProjectDir)0builds\hwfoundry-%(AssemblyInfo.Version).rar&quot; &quot;$(TargetDir)..\hwfoundry-%(AssemblyInfo.Version)&quot;" />
+    <Exec Command="&quot;C:\Program Files\WinRAR\rar.exe&quot; a -r -ep1 &quot;$(ProjectDir)builds\hwfoundry-%(AssemblyInfo.Version).rar&quot; &quot;$(TargetDir)..\hwfoundry-%(AssemblyInfo.Version)&quot;" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>

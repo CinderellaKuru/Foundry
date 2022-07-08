@@ -1,6 +1,9 @@
-﻿namespace SMHEditor
+﻿using System.Drawing;
+using WeifenLuo.WinFormsUI.Docking;
+
+namespace SMHEditor
 {
-    partial class MainWindow
+    partial class Foundry
     {
         /// <summary>
         /// Required designer variable.
@@ -28,157 +31,169 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.dockingManager = new ComponentFactory.Krypton.Docking.KryptonDockingManager();
-            this.kryptonManager = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
-            this.darkmode = new ComponentFactory.Krypton.Toolkit.KryptonPalette(this.components);
-            this.kryptonPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.dockableWorkspace = new ComponentFactory.Krypton.Docking.KryptonDockableWorkspace();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Foundry));
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.label = new System.Windows.Forms.ToolStripStatusLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).BeginInit();
-            this.kryptonPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dockableWorkspace)).BeginInit();
+            this.versionReadout = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileTSMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.newProjectTMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.openProjectTMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveTMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsTMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewWindowTMI = new System.Windows.Forms.ToolStripMenuItem();
+            this.workspace = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusBar.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // kryptonManager
-            // 
-            this.kryptonManager.GlobalPalette = this.darkmode;
-            this.kryptonManager.GlobalPaletteMode = ComponentFactory.Krypton.Toolkit.PaletteModeManager.Custom;
-            // 
-            // darkmode
-            // 
-            this.darkmode.AllowFormChrome = ComponentFactory.Krypton.Toolkit.InheritBool.False;
-            this.darkmode.BasePaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.Office2010Black;
-            this.darkmode.Common.StateCommon.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.darkmode.Common.StateCommon.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.darkmode.Common.StateCommon.Border.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(62)))), ((int)(((byte)(66)))));
-            this.darkmode.Common.StateCommon.Border.DrawBorders = ((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders)((((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Top | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Bottom) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Left) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Right)));
-            this.darkmode.Common.StateCommon.Content.LongText.Color1 = System.Drawing.Color.White;
-            this.darkmode.Common.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.White;
-            this.darkmode.ContextMenu.StateCommon.ControlInner.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(36)))));
-            this.darkmode.ContextMenu.StateCommon.ControlInner.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.ContextMenu.StateCommon.ControlInner.Border.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.ContextMenu.StateCommon.ControlInner.Border.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.ContextMenu.StateCommon.ControlInner.Border.DrawBorders = ((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders)((((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Top | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Bottom) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Left) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Right)));
-            this.darkmode.ContextMenu.StateCommon.ControlOuter.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.ContextMenu.StateCommon.ControlOuter.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(117)))), ((int)(((byte)(81)))));
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(117)))), ((int)(((byte)(81)))));
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Border.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Border.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.ContextMenu.StateHighlight.ItemHighlight.Border.DrawBorders = ((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders)((((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Top | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Bottom) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Left) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Right)));
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(97)))), ((int)(((byte)(73)))));
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(97)))), ((int)(((byte)(73)))));
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Border.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Border.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Border.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.HeaderStyles.HeaderDockActive.StateCommon.Border.DrawBorders = ((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders)((((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Top | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Bottom) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Left) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Right)));
-            this.darkmode.HeaderStyles.HeaderDockInactive.StateCommon.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.HeaderStyles.HeaderDockInactive.StateCommon.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.darkmode.PanelStyles.PanelCommon.StateCommon.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.darkmode.PanelStyles.PanelCommon.StateCommon.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.darkmode.PanelStyles.PanelCustom1.StateCommon.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(38)))));
-            this.darkmode.PanelStyles.PanelCustom1.StateCommon.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(38)))));
-            this.darkmode.TabStyles.TabCommon.StateCommon.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.darkmode.TabStyles.TabCommon.StateCommon.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.darkmode.TabStyles.TabCommon.StatePressed.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(120)))), ((int)(((byte)(77)))));
-            this.darkmode.TabStyles.TabCommon.StatePressed.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(120)))), ((int)(((byte)(77)))));
-            this.darkmode.TabStyles.TabCommon.StatePressed.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            this.darkmode.TabStyles.TabCommon.StateSelected.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(97)))), ((int)(((byte)(73)))));
-            this.darkmode.TabStyles.TabCommon.StateSelected.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(97)))), ((int)(((byte)(73)))));
-            this.darkmode.TabStyles.TabCommon.StateSelected.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.SolidInside;
-            this.darkmode.TabStyles.TabCommon.StateSelected.Border.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(64)))));
-            this.darkmode.TabStyles.TabCommon.StateSelected.Border.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(64)))));
-            this.darkmode.TabStyles.TabCommon.StateSelected.Border.DrawBorders = ((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders)((((ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Top | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Bottom) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Left) 
-            | ComponentFactory.Krypton.Toolkit.PaletteDrawBorders.Right)));
-            this.darkmode.TabStyles.TabCommon.StateTracking.Back.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(80)))), ((int)(((byte)(57)))));
-            this.darkmode.TabStyles.TabCommon.StateTracking.Back.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(80)))), ((int)(((byte)(57)))));
-            this.darkmode.TabStyles.TabCommon.StateTracking.Back.ColorStyle = ComponentFactory.Krypton.Toolkit.PaletteColorStyle.Solid;
-            // 
-            // kryptonPanel
-            // 
-            this.kryptonPanel.Controls.Add(this.dockableWorkspace);
-            this.kryptonPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonPanel.Location = new System.Drawing.Point(0, 0);
-            this.kryptonPanel.Name = "kryptonPanel";
-            this.kryptonPanel.Size = new System.Drawing.Size(800, 450);
-            this.kryptonPanel.TabIndex = 0;
-            // 
-            // dockableWorkspace
-            // 
-            this.dockableWorkspace.AutoHiddenHost = false;
-            this.dockableWorkspace.CompactFlags = ((ComponentFactory.Krypton.Workspace.CompactFlags)(((ComponentFactory.Krypton.Workspace.CompactFlags.RemoveEmptyCells | ComponentFactory.Krypton.Workspace.CompactFlags.RemoveEmptySequences) 
-            | ComponentFactory.Krypton.Workspace.CompactFlags.PromoteLeafs)));
-            this.dockableWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dockableWorkspace.Location = new System.Drawing.Point(0, 0);
-            this.dockableWorkspace.Name = "dockableWorkspace";
-            // 
-            // 
-            // 
-            this.dockableWorkspace.Root.UniqueName = "6F66E8854D3D484E3E920DE6F433C814";
-            this.dockableWorkspace.Root.WorkspaceControl = this.dockableWorkspace;
-            this.dockableWorkspace.ShowMaximizeButton = false;
-            this.dockableWorkspace.Size = new System.Drawing.Size(800, 450);
-            this.dockableWorkspace.TabIndex = 0;
-            this.dockableWorkspace.TabStop = true;
             // 
             // statusBar
             // 
             this.statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.label});
-            this.statusBar.Location = new System.Drawing.Point(0, 425);
+            this.label,
+            this.versionReadout});
+            this.statusBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.statusBar.Location = new System.Drawing.Point(0, 659);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(800, 25);
+            this.statusBar.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusBar.Size = new System.Drawing.Size(1264, 22);
             this.statusBar.TabIndex = 1;
             this.statusBar.Text = "statusBar";
             // 
             // label
             // 
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(53, 20);
-            this.label.Text = "Ready.";
+            this.label.Size = new System.Drawing.Size(105, 17);
+            this.label.Text = "No project loaded.";
             // 
-            // MainWindow
+            // versionReadout
+            // 
+            this.versionReadout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.versionReadout.ForeColor = System.Drawing.Color.White;
+            this.versionReadout.Name = "versionReadout";
+            this.versionReadout.Size = new System.Drawing.Size(45, 17);
+            this.versionReadout.Text = "version";
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileTSMI,
+            this.windowToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(1264, 24);
+            this.menuStrip.TabIndex = 2;
+            this.menuStrip.Text = "menuStrip";
+            // 
+            // fileTSMI
+            // 
+            this.fileTSMI.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newProjectTMI,
+            this.openProjectTMI,
+            this.toolStripSeparator1,
+            this.saveTMI,
+            this.saveAsTMI});
+            this.fileTSMI.Name = "fileTSMI";
+            this.fileTSMI.Size = new System.Drawing.Size(37, 20);
+            this.fileTSMI.Text = "File";
+            // 
+            // newProjectTMI
+            // 
+            this.newProjectTMI.Name = "newProjectTMI";
+            this.newProjectTMI.Size = new System.Drawing.Size(123, 22);
+            this.newProjectTMI.Text = "New";
+            // 
+            // openProjectTMI
+            // 
+            this.openProjectTMI.Name = "openProjectTMI";
+            this.openProjectTMI.Size = new System.Drawing.Size(123, 22);
+            this.openProjectTMI.Text = "Open...";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.toolStripSeparator1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(120, 6);
+            // 
+            // saveTMI
+            // 
+            this.saveTMI.Name = "saveTMI";
+            this.saveTMI.Size = new System.Drawing.Size(123, 22);
+            this.saveTMI.Text = "Save";
+            // 
+            // saveAsTMI
+            // 
+            this.saveAsTMI.Name = "saveAsTMI";
+            this.saveAsTMI.Size = new System.Drawing.Size(123, 22);
+            this.saveAsTMI.Text = "Save As...";
+            // 
+            // windowToolStripMenuItem
+            // 
+            this.windowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addNewWindowTMI});
+            this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
+            this.windowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.windowToolStripMenuItem.Text = "Window";
+            // 
+            // addNewWindowTMI
+            // 
+            this.addNewWindowTMI.Name = "addNewWindowTMI";
+            this.addNewWindowTMI.Size = new System.Drawing.Size(170, 22);
+            this.addNewWindowTMI.Text = "Add New Window";
+            // 
+            // workspace
+            // 
+            this.workspace.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.workspace.Location = new System.Drawing.Point(0, 27);
+            this.workspace.Name = "workspace";
+            this.workspace.Size = new System.Drawing.Size(1264, 629);
+            this.workspace.TabIndex = 3;
+            this.workspace.Theme = new VS2015LightTheme();
+            // 
+            // Foundry
             // 
             this.AllowFormChrome = false;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.workspace);
             this.Controls.Add(this.statusBar);
-            this.Controls.Add(this.kryptonPanel);
-            this.Name = "MainWindow";
-            this.Text = "MainWindow";
+            this.Controls.Add(this.menuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Foundry";
+            this.Text = "Foundry";
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel)).EndInit();
-            this.kryptonPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dockableWorkspace)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        public ComponentFactory.Krypton.Docking.KryptonDockingManager dockingManager;
-        private ComponentFactory.Krypton.Toolkit.KryptonManager kryptonManager;
-        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel;
-        private ComponentFactory.Krypton.Docking.KryptonDockableWorkspace dockableWorkspace;
-        public ComponentFactory.Krypton.Toolkit.KryptonPalette darkmode;
         private System.Windows.Forms.StatusStrip statusBar;
         public System.Windows.Forms.ToolStripStatusLabel label;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem fileTSMI;
+        private System.Windows.Forms.ToolStripMenuItem openProjectTMI;
+        private System.Windows.Forms.ToolStripMenuItem saveTMI;
+        private System.Windows.Forms.ToolStripMenuItem saveAsTMI;
+        private System.Windows.Forms.ToolStripMenuItem newProjectTMI;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripStatusLabel versionReadout;
+        public ComponentFactory.Krypton.Docking.KryptonDockableWorkspace dockableWorkspace;
+        private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addNewWindowTMI;
+        private DockPanel workspace;
     }
 }

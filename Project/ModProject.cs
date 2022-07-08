@@ -15,6 +15,13 @@ using SMHEditor.DockingModules;
 using YAXLib.Options;
 using ComponentFactory.Krypton.Workspace;
 using SMHEditor.DockingModules.MapEditor;
+using SMHEditor.Project.FileTypes.Scripts;
+using System.Windows.Forms;
+using DarkUI.Controls;
+using System.Drawing;
+using DarkUI.Collections;
+using Aga.Controls.Tree;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace SMHEditor.Project
 {
@@ -45,51 +52,33 @@ namespace SMHEditor.Project
         [YAXSerializeAs("FolderData")]
         public Dictionary<string, FolderData> folderData { get; set; }
     }
-
     public class ModProject
     {
-        public enum FileType
-        {
-            ROOT,
-            FOLDER,
-            OBJECT,
-            SQUAD,
-            TACTICS,
-            TERRAIN
-        };
-        public static Dictionary<string, FileType> extToType = new Dictionary<string, FileType>()
-        {
-            {".obj", FileType.OBJECT },
-            {".sqd", FileType.SQUAD },
-            {".tct", FileType.TACTICS },
-            {".trn", FileType.TERRAIN },
-        };
-        public static Dictionary<FileType, string> typeToExt = new Dictionary<FileType, string>()
-        {
-            {FileType.OBJECT, ".obj" },
-            {FileType.SQUAD, ".sqd" },
-            {FileType.TACTICS, ".tct" },
-            {FileType.TERRAIN, ".trn" }
-        };
-        public static Dictionary<FileType, string> typeToImage = new Dictionary<FileType, string>()
-        {
-            {FileType.FOLDER, "folder" },
-            {FileType.OBJECT, "object" },
-            {FileType.SQUAD, "squad" },
-            {FileType.TACTICS, "tactics" },
-            {FileType.TERRAIN, "scenario" } //fix string name
-        };
-        public static string PROJ_EXT = ".hwproj";
-        public static string DATA_DIR = "\\data";
-        public static string ART_DIR = "\\art";
+        public static string PROJ_EXT                   = ".hwfp";
 
-        // Project
+        public static string DATA_DIR                   = "\\data";
+        public static string DATA_SCRIPTS_DIR           = "\\data\\triggerscripts";
+        public static string DATA_PREFABS_DIR           = "\\data\\triggerscripts\\prefabs";
+        
+        public static string ART_DIR                    = "\\art";
+
+        public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>()
+        {
+            {"FILE", Properties.Resources.page_white},
+            {"FOLDER", Properties.Resources.folder},
+        };
+
+        #region Project
         private string openedDir;
         private string openedFile;
-        public ModProjectData projectData;
-        
+        private ModProjectData projectData;
+        private ModProjectContentFile activeFile;
+
         public ModProject(string file)
         {
+            explorer = new ProjectExplorer(this);
+            explorer.Show(Program.window.Workspace(), DockState.DockLeft);
+
             if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
 
             openedDir = Path.GetDirectoryName(file);
@@ -114,225 +103,180 @@ namespace SMHEditor.Project
                 }
             }
 
-            if (!Directory.Exists(openedDir + DATA_DIR))
-                Directory.CreateDirectory(openedDir + DATA_DIR);
-            if (!Directory.Exists(openedDir + ART_DIR))
-                Directory.CreateDirectory(openedDir + ART_DIR);
+            explorer.UpdateHierarchy(DirGetNodeGraph());
         }
         public void Save()
         { 
             YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
             ser.SerializeToFile(projectData, openedDir +"\\"+ projectData.name + PROJ_EXT);
         }
-
-        //Explorer
-        public KryptonTreeNode GetTreeView(string fromDir, string name)
+        
+        public void SetActiveFile(ModProjectContentFile file)
         {
-            KryptonTreeNode root = new KryptonTreeNode();
-            root.Text = name;
-            root.Name = fromDir;
-            root.ImageIndex = ProjectExplorerControl.ImageIndex[fromDir];
-            root.SelectedImageIndex = ProjectExplorerControl.ImageIndex[fromDir];
-            root.Tag = FileType.ROOT;
+            activeFile = file;
+        }
+        public void SaveActiveFile()
+        {
+            if(activeFile != null)
+                activeFile.SaveFile();
+        }
+        #endregion
 
-            Dictionary<string, KryptonTreeNode> nodes = new Dictionary<string, KryptonTreeNode>();
-
-            if (!projectData.folderData.Keys.Contains(fromDir))
-                projectData.folderData.Add(fromDir, new ModProjectData.FolderData());
-
-            //Folders
-            foreach (var p in Directory.GetDirectories(openedDir + fromDir))
+        #region Explorer
+        public abstract class ModProjectContentFile
+        {
+            public string fileName;
+            public ModProjectContentFile(string fileName)
             {
-                string local = p.Substring((openedDir + fromDir).Length);
-                string[] spl = local.Split('\\').Where(e => e != "").ToArray();
+                this.fileName = fileName;
+            }
+            protected abstract void DoSave();
+            protected abstract void DoOpen(string subName);
+            protected abstract void DoEdited();
+            public    abstract EntryNodeData GetRootNode();
 
-                string concat = fromDir;
-                KryptonTreeNode last = root;
-                foreach (string s in spl)
+            private bool edited = false;
+            public void MarkEdited()
+            {
+                DoEdited();
+                edited = true;
+            }
+            public void SaveFile()
+            {
+                DoSave();
+                edited = false;
+            }
+            public void OpenFile(string subName)
+            {
+                DoOpen(subName);
+            }
+        }
+        public class UnknownContentFile : ModProjectContentFile
+        {
+            public UnknownContentFile(string fileName) : base(fileName) { }
+
+            public override EntryNodeData GetRootNode()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void DoEdited()
+            {
+            }
+
+            protected override void DoOpen(string subName)
+            {
+            }
+
+            protected override void DoSave()
+            {
+            }
+        }
+
+        public class EntryNodeData : Node
+        {
+            private string _fullPath;
+            public string FullPath
+            {
+                get { return _fullPath; }
+                set { _fullPath = value; }
+            }
+
+            private string _subName;
+            public string SubName
+            {
+                get { return _subName; }
+                set { _subName = value; }
+            }
+        }
+
+        ProjectExplorer explorer;
+
+        private Dictionary<string, ModProjectContentFile>    allFiles            = new Dictionary<string, ModProjectContentFile>();
+        private Dictionary<string, TriggerscriptContentFile> triggerscriptFiles  = new Dictionary<string, TriggerscriptContentFile>();
+        private EntryNodeData LoadContentFile(string dir)
+        {
+            if (!File.Exists(dir)) return new EntryNodeData();
+            
+            ModProjectContentFile cf;
+
+            switch(Path.GetExtension(dir))
+            {
+                case ".tsp":
+                    cf = new TriggerscriptContentFile(dir);
+                    triggerscriptFiles.Add(dir, (TriggerscriptContentFile)cf);
+                    allFiles.Add(dir, cf);
+                    break;
+                default:
+                    cf = new UnknownContentFile(dir);
+                    allFiles.Add(dir, cf);
+                    break;
+            }
+
+            return cf.GetRootNode();
+        }
+        
+        public IEnumerable<EntryNodeData>   DirGetNodeGraph()
+        {
+            List<EntryNodeData> roots = new List<EntryNodeData>();
+            Dictionary<string, EntryNodeData> folders = new Dictionary<string, EntryNodeData>();
+
+            foreach (string path in Directory.EnumerateDirectories(openedDir, "*", SearchOption.AllDirectories))
+            {
+                string[] entries = path.Substring(openedDir.Length + 1).Split('\\');
+
+                string concat = "";
+                EntryNodeData last = null;
+
+                foreach (string e in entries)
                 {
-                    concat += "\\" + s;
+                    concat += "\\" + e;
 
-                    //get existing or create a new node for the next part of the path.
-                    if (nodes.Keys.Contains(concat))
+                    if (!folders.ContainsKey(concat))
                     {
-                        if (!last.Nodes.Contains(nodes[concat]))
-                        {
-                            last.Nodes.Add(nodes[concat]);
-                        }
-
-                        //fold or unfold?
-                        if (projectData.folderData[concat].folded) nodes[concat].Expand();
-                        else nodes[concat].Collapse();
-
-                        last = nodes[concat];
+                        EntryNodeData n = new EntryNodeData();
+                        n.Text = e;
+                        n.Image = images["FOLDER"];
+                        n.FullPath = concat;
+                        if (last != null) last.Nodes.Add(n);
+                        else roots.Add(n);
+                        folders.Add(concat, n);
+                        last = n;
                     }
                     else
                     {
-                        KryptonTreeNode newNode = new KryptonTreeNode();
-                        newNode.Name = concat;
-                        newNode.Text = s;
-                        nodes.Add(concat, newNode);
-                        newNode.Tag = FileType.FOLDER;
-                        newNode.ImageIndex = ProjectExplorerControl.ImageIndex["folder"];
-                        newNode.SelectedImageIndex = ProjectExplorerControl.ImageIndex["folder"];
-                        newNode.Expand();
-
-                        if (!projectData.folderData.Keys.Contains(concat))
-                            projectData.folderData.Add(concat, new ModProjectData.FolderData());
-
-                        //fold or unfold?
-                        if (projectData.folderData[concat].folded) nodes[concat].Expand();
-                        else nodes[concat].Collapse();
-
-                        last.Nodes.Add(newNode);
-                        last = newNode;
+                        last = folders[concat];
                     }
                 }
             }
-
-            //files
-            foreach (var f in Directory.GetFiles(openedDir + fromDir, "*", SearchOption.AllDirectories))
+            foreach (var v in folders)
             {
-                string parent = Path.GetDirectoryName(f).Substring((openedDir + fromDir).Length);
-                KryptonTreeNode fn = new KryptonTreeNode(Path.GetFileName(f));
-
-                string ext = Path.GetExtension(f);
-                if (extToType.Keys.Contains(ext))
+                foreach(var f in Directory.EnumerateFiles(openedDir + v.Key))
                 {
-                    fn.Tag = extToType[ext];
-                }
-                else continue;
-
-                fn.Name = fromDir + parent + "\\" + fn.Text;
-                fn.ImageIndex = ProjectExplorerControl.ImageIndex[typeToImage[(FileType)fn.Tag]];
-                fn.SelectedImageIndex = ProjectExplorerControl.ImageIndex[typeToImage[(FileType)fn.Tag]];
-
-                nodes[fromDir + parent].Nodes.Add(fn);
-            }
-            return root;
-        }
-
-        public void OpenFile(string fileDir)
-        {
-            string ext = Path.GetExtension(fileDir);
-            if (!extToType.Keys.Contains(ext)) return; //is not a recognized file type.
-
-            string name = Path.GetFileNameWithoutExtension(fileDir);
-
-            //special case -- TODO: make this not special
-            if (ext == typeToExt[FileType.TERRAIN])
-            {
-                try
-                {
-                    TerrainFile trn;
-                    var op = new SerializerOptions();
-                    op.SerializationOptions = YAXSerializationOptions.DontSerializeNullObjects;
-                    YAXSerializer ser = new YAXSerializer(typeof(TerrainFile), op);
-                    trn = (TerrainFile)ser.DeserializeFromFile(openedDir + fileDir);
-
-                    MapEditorScene scn = new MapEditorScene();
-                    scn.LoadFile(trn);
-                    MainWindow.vp.SetScene(scn);
-
-                    return;
-                }
-                catch
-                {
-                    Console.WriteLine("Could not deserialize " + fileDir + ".");
-                    return;
+                    v.Value.Nodes.Add(LoadContentFile(f));
                 }
             }
 
-                EditorPage page;
-
-            // already open
-            if (openPages.Keys.Contains(fileDir))
-            {
-                page = openPages[fileDir];
-            }
-
-            // not open, open it
-            else
-            {
-                if (ext == typeToExt[FileType.OBJECT])
-                {
-                    ObjectFile obj;
-                    try
-                    {
-                        var op = new SerializerOptions();
-                        op.SerializationOptions = YAXSerializationOptions.DontSerializeNullObjects;
-                        YAXSerializer ser = new YAXSerializer(typeof(ObjectFile), op);
-                        obj = (ObjectFile)ser.DeserializeFromFile(openedDir + fileDir);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Could not deserialize " + fileDir + ".");
-                        return;
-                    }
-                    page = new ObjectEditorPage(obj, fileDir, name);
-                    Program.window.dockingManager.AddToWorkspace(MainWindow.WORKSPACE_NAME,
-                        new ComponentFactory.Krypton.Navigator.KryptonPage[] { page });
-                }
-                else page = null;
-            }
-
-            // set focus on this file
-            if (page.KryptonParentContainer is KryptonWorkspaceCell)
-            {
-                if (!page.Visible) page.Visible = true;
-                ((KryptonWorkspaceCell)page.KryptonParentContainer).SelectedPage = page;
-            }
-            // parent was not a cell. what could it be?
-            else throw new Exception("Look into this.");
+            return roots;
         }
-        public void SaveFile(string fileDir)
+        public void                         DirAddFolder(string localDirLeadingSlash)
+        {
+            string fullPath = openedDir + localDirLeadingSlash;
+
+            if (!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+        }
+        public void                         DirAddFile  (ModProjectContentFile mpcf)
         {
 
         }
-
-        public void Create(string folderDir, string nameNoExt, FileType type)
+        public void                         DirOpenFile (string fileDir, string subName)
         {
-            if(type == FileType.FOLDER)
-            {
-                Directory.CreateDirectory(folderDir + "\\" + nameNoExt);
-            }
-
-            if(type == FileType.OBJECT)
-            {
-                //File.Create()
-            }
+            if (allFiles.ContainsKey(fileDir))
+                allFiles[fileDir].OpenFile(subName);
         }
-
-        private void RenameNodeRecursive(KryptonTreeNode n, string prevPath, string newPath)
-        {
-            string suffix = n.Name.Substring(n.Name.IndexOf(prevPath) + prevPath.Length);
-            string newName = newPath + suffix;
-            n.Name = newName;
-
-            foreach(KryptonTreeNode tn in n.Nodes)
-            {
-                RenameNodeRecursive(tn, prevPath, newPath);
-            }
-        }
-        public  void RenameNode(KryptonTreeNode n, string newLabel)
-        {
-            string prevName = n.Name;
-            string parentName = n.Name.Substring(0, n.Name.LastIndexOf("\\") + 1);
-
-            if((FileType)n.Tag == FileType.FOLDER)
-            {
-                RenameNodeRecursive(n, prevName, parentName + newLabel);
-                n.Text = newLabel;
-                Directory.Move(openedDir + prevName, openedDir + n.Name);
-            }
-            else
-            {
-                File.Move(openedDir + prevName, openedDir + n.Name);
-            }
-        }
-
-        //Workspace
-        public Dictionary<string, EditorPage> openPages = new Dictionary<string, EditorPage>();
-        public EditorPage activePage;
+        #endregion
     }
 }

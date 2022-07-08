@@ -46,7 +46,7 @@ namespace ComponentFactory.Krypton.Docking
 
             // Use timer to ensure we do not update the display too quickly which then causes tearing
             _moveTimer = new Timer();
-            _moveTimer.Interval = 10;
+            _moveTimer.Interval = 1;
             _moveTimer.Tick += new EventHandler(OnFloatingWindowMove);
         }
 

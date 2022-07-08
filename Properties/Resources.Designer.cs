@@ -79,22 +79,23 @@ namespace SMHEditor.Properties {
         ///        &quot;name&quot;: &quot;FilterPlayer&quot;,
         ///        &quot;valueType&quot;: &quot;Player&quot;,
         ///        &quot;optional&quot;: true,
-        ///        &quot;sigId&quot;: &quot;3&quot;
+        ///        &quot;sigId&quot;: 3
         ///      },
         ///      {
         ///        &quot;name&quot;: &quot;FilterPlayerList&quot;,
         ///        &quot;valueType&quot;: &quot;PlayerList&quot;,
         ///        &quot;optional&quot;: true,
-        ///        &quot;sigId&quot;: &quot;10&quot;
+        ///        &quot;sigId&quot;: 10
         ///      },
         ///      {
         ///        &quot;name&quot;: &quot;FilterObjectType&quot;,
         ///        &quot;valueType&quot;: &quot;ObjectType&quot;,
         ///        &quot;optional&quot;: true,
-        ///        &quot;sigId&quot;: &quot;4&quot;
+        ///        &quot;sigId&quot;: 4
         ///      },
         ///      {
-        ///        &quot;name&quot;: &quot;FilterLocation&quot;,        /// [rest of string was truncated]&quot;;.
+        ///        &quot;name&quot;: &quot;FilterLocation&quot;,
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
         public static string cnd {
             get {
@@ -115,33 +116,34 @@ namespace SMHEditor.Properties {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///  {
+        ///    &quot;name&quot;: &quot;TriggerActivate&quot;,
+        ///    &quot;inputs&quot;: [
+        ///      {
+        ///        &quot;name&quot;: &quot;Trigger&quot;,
+        ///        &quot;valueType&quot;: &quot;Trigger&quot;,
+        ///        &quot;optional&quot;: false,
+        ///        &quot;sigId&quot;: 1
+        ///      }
+        ///    ],
+        ///    &quot;outputs&quot;: [],
+        ///    &quot;sources&quot;: [],
+        ///    &quot;dbid&quot;: 31,
+        ///    &quot;version&quot;: 1
+        ///  },
+        ///  {
         ///    &quot;name&quot;: &quot;CopyBool&quot;,
         ///    &quot;inputs&quot;: [
         ///      {
         ///        &quot;name&quot;: &quot;BoolSource&quot;,
         ///        &quot;valueType&quot;: &quot;Bool&quot;,
         ///        &quot;optional&quot;: false,
-        ///        &quot;sigId&quot;: &quot;1&quot;
+        ///        &quot;sigId&quot;: 1
         ///      }
         ///    ],
         ///    &quot;outputs&quot;: [
         ///      {
         ///        &quot;name&quot;: &quot;BoolCopy&quot;,
-        ///        &quot;valueType&quot;: &quot;Bool&quot;,
-        ///        &quot;optional&quot;: false,
-        ///        &quot;sigId&quot;: &quot;2&quot;
-        ///      }
-        ///    ],
-        ///    &quot;sources&quot;: [],
-        ///    &quot;dbid&quot;: &quot;102&quot;,
-        ///    &quot;version&quot;: &quot;1&quot;
-        ///  },
-        ///  {
-        ///    &quot;name&quot;: &quot;CopyFloat&quot;,
-        ///    &quot;inputs&quot;: [
-        ///      {
-        ///        &quot;name&quot;: &quot;FloatSource&quot;,
-        ///        &quot;valueTyp [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string eff {
             get {
@@ -251,7 +253,6 @@ namespace SMHEditor.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to [
-        ///  &quot;Trigger&quot;,
         ///  &quot;Bool&quot;,
         ///  &quot;Float&quot;,
         ///  &quot;Squad&quot;,
@@ -284,7 +285,8 @@ namespace SMHEditor.Properties {
         ///  &quot;DataScalar&quot;,
         ///  &quot;Object&quot;,
         ///  &quot;ObjectList&quot;,
-        ///  &quot;Vector [rest of string was truncated]&quot;;.
+        ///  &quot;VectorList&quot;,
+        ///  &quot;Cin [rest of string was truncated]&quot;;.
         /// </summary>
         public static string var {
             get {

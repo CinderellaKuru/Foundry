@@ -17,32 +17,26 @@ using SMHEditor.DockingModules.ProjectExplorer;
 using SMHEditor.DockingModules.Triggerscripter;
 using SMHEditor.Project;
 using SMHEditor.Project.FileTypes;
+using System.Reflection;
+using DarkUI.Win32;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace SMHEditor
 {
-    public partial class MainWindow : KryptonForm
+    public partial class Foundry : KryptonForm
     {
-        public MainWindow()
+        public Foundry()
         {
             InitializeComponent();
-#if DEBUG
-            project = new ModProject(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\testproj/project.hwproj");
-            project.Save();
-#else
-            FileDialog fd = new SaveFileDialog();
-            fd.Filter = "Halo Wars Project|*.hwproj";
-            if (fd.ShowDialog() == DialogResult.OK)
-                project = new ModProject(fd.FileName);
-            else Close();
-#endif
+            versionReadout.Text = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.ToString();
         }
 
         //Project stuff
         public static ModProject project;
         public static ViewportPage vp;
-        public static TriggerScripterPage ts;
+        public static TriggerscripterPage ts;
         public static PropertyEditorPage propertyEditor;
-
+        public static ProjectExplorer projectExplorer;
 
         //Docking stuff
         //Krypton name strings, global.
@@ -53,37 +47,59 @@ namespace SMHEditor
         //Code to execute directly after the main window is loaded.
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            statusBar.BackColor = Program.window.darkmode.GetBackColor1(
-                ComponentFactory.Krypton.Toolkit.PaletteBackStyle.PanelCustom1,
-                ComponentFactory.Krypton.Toolkit.PaletteState.Normal);
-            label.ForeColor = Color.White;
-
-            KryptonDockingWorkspace w = dockingManager.ManageWorkspace(WORKSPACE_NAME, dockableWorkspace);
-            dockingManager.ManageControl(DOCKINGCONTROLLER_NAME, kryptonPanel, w);
-            dockingManager.ManageFloating(FLOATING_NAME, this);
-
-            // static triggerscripter page.
-            ts = new TriggerScripterPage();
-            // static map editor page.
-            vp = new ViewportPage();
-            // static property editor
-            propertyEditor = new PropertyEditorPage();
-
-            dockingManager.AddToWorkspace(WORKSPACE_NAME, new KryptonPage[] { ts });
-
-            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Left, new KryptonPage[] {
-                new ProjectExplorerPage("\\data", "Data"),
-                new ProjectExplorerPage("\\art",  "Art") });
-
-            dockingManager.AddDockspace(DOCKINGCONTROLLER_NAME, DockingEdge.Right, new KryptonPage[] { propertyEditor });
-
-            //TerrainFile t = TerrainFile.Create(TerrainFile.TerrainSize.Medium1024);
-            //YAXLib.YAXSerializer s = new YAXLib.YAXSerializer(typeof(TerrainFile));
-            //s.SerializeToFile(t, "C:\\Users\\jaken\\Desktop\\testproj\\data\\MyMap\\map.trn");
-            //MapEditorScene scn = new MapEditorScene();
-            //scn.LoadFile(t);
-            //vp.SetScene(scn);
-            //scn.ExportXTD("C:\\Users\\jaken\\Desktop\\out.xtd");
+            newProjectTMI.Click                 += new EventHandler(NewProjectPressed);
+            openProjectTMI.Click                += new EventHandler(OpenProjectPressed);
+            saveTMI.Click                       += new EventHandler(SavePressed);
+            saveAsTMI.Click                     += new EventHandler(SaveAsPressed);
+            
+#if DEBUG
+            InitProject("C:\\users\\jake\\desktop\\testproj2\\project.hwfp");
+#endif
         }
+
+
+        private void InitProject(string file)
+        {
+            project = new ModProject(file);
+        }
+
+        private void NewProjectPressed(object o, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Foundry Project|*.hwfp";
+
+            if(sfd.ShowDialog() == DialogResult.OK)
+            {
+                InitProject(sfd.FileName);
+            }
+
+        }
+        private void OpenProjectPressed(object o, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Foundry Project|*.hwfp";
+            ofd.Multiselect = false;
+
+            if(ofd.ShowDialog() == DialogResult.OK)
+            {
+                InitProject(ofd.FileName);
+            }
+        }
+        private void SavePressed(object o, EventArgs e)
+        {
+            project.SaveActiveFile();
+        }
+        private void SaveAsPressed(object o, EventArgs e)
+        {
+
+        }
+
+
+        #region GetSet
+        public DockPanel Workspace()
+        {
+            return workspace;
+        }
+        #endregion
     }
 }

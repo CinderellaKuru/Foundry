@@ -111,11 +111,11 @@ class ScriptComb
                                     varTypes.Add(vars[int.Parse(effect.ChildNodes[j].InnerText)]);
                                 }
                             }
-                            if (!effects.ContainsKey(e.name) &&
+                            if (!effects.ContainsKey(e.name + "V" + e.version) &&
                                 !e.name.Contains("(") &&
                                 e.name != "")
                             {
-                                effects.Add(e.name, e);
+                                effects.Add(e.name + "V" + e.version, e);
                                 //if (e.name.ToLower() == "triggeractivate") throw new Exception();
                             }
                         }
@@ -158,8 +158,8 @@ class ScriptComb
                                 c.outputs.Add(output);
                             }
                         }
-                        if (!conditions.ContainsKey(c.name) &&
-                            c.name != "") conditions.Add(c.name, c);
+                        if (!conditions.ContainsKey(c.name + "V" + c.version) &&
+                            c.name != "") conditions.Add(c.name + "V" + c.version, c);
                     }
 
                     #endregion
