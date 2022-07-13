@@ -1,1 +1,0 @@
-powershell -file release.ps1
