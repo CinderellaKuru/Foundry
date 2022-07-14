@@ -11,19 +11,14 @@ using System.Drawing.Drawing2D;
 using OpenTK;
 using OpenTK.Input;
 using Newtonsoft.Json;
-using ComponentFactory.Krypton.Toolkit;
-using ComponentFactory.Krypton.Docking;
-using ComponentFactory.Krypton.Navigator;
-using ComponentFactory.Krypton.Ribbon;
-using ComponentFactory.Krypton.Workspace;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using SMHEditor.Project.FileTypes.Scripts;
+using Foundry.Project.FileTypes.Scripts;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace SMHEditor.DockingModules.Triggerscripter
+namespace Foundry.DockingModules.Triggerscripter
 {
     public class Input
     {
@@ -786,7 +781,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             };
 
             List<Tuple<Effect, string>> effsSorted = new List<Tuple<Effect, string>>();
-            foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(SMHEditor.Properties.Resources.eff))
+            foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(Foundry.Properties.Resources.eff))
                 effsSorted.Add(new Tuple<Effect, string>(e, nodeSubCategories[e.name + "Eff"]));
             effsSorted = effsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
 
@@ -819,7 +814,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
             }
 
             List<Tuple<Condition, string>> cndsSorted = new List<Tuple<Condition, string>>();
-            foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(SMHEditor.Properties.Resources.cnd))
+            foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(Foundry.Properties.Resources.cnd))
                 cndsSorted.Add(new Tuple<Condition, string>(c, nodeSubCategories[c.name + "Cnd"]));
             cndsSorted = cndsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
 
@@ -851,7 +846,7 @@ namespace SMHEditor.DockingModules.Triggerscripter
                 last.MenuItems.Add(cndI);
             }
 
-            List<string> vs = JsonConvert.DeserializeObject<List<string>>(SMHEditor.Properties.Resources.var);
+            List<string> vs = JsonConvert.DeserializeObject<List<string>>(Foundry.Properties.Resources.var);
             vs.Sort();
             foreach (string v in vs)
             {

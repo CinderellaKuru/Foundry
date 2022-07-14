@@ -1,4 +1,4 @@
-﻿using SMHEditor.DockingModules.PropertyEditor;
+﻿using Foundry.DockingModules.PropertyEditor;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SMHEditor.DockingModules.Triggerscripter
+namespace Foundry.DockingModules.Triggerscripter
 {
     public class TriggerscripterSocket
     {

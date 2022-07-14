@@ -1,28 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using ComponentFactory.Krypton.Toolkit;
-using SMHEditor.DockingModules.ProjectExplorer;
-using System.Runtime.Serialization;
-using System.Xml;
 using YAXLib;
 using YAXLib.Attributes;
 using YAXLib.Enums;
-using SMHEditor.DockingModules.ObjectEditor;
-using SMHEditor.Project.FileTypes;
-using SMHEditor.DockingModules;
-using YAXLib.Options;
-using ComponentFactory.Krypton.Workspace;
-using SMHEditor.DockingModules.MapEditor;
-using SMHEditor.Project.FileTypes.Scripts;
-using System.Windows.Forms;
 using System.Drawing;
 using Aga.Controls.Tree;
-using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
+using Foundry.Project.Modules.Triggerscripter;
 
-namespace SMHEditor.Project
+namespace Foundry.Project
 {
     public class ModProjectData
     {
@@ -73,33 +60,41 @@ namespace SMHEditor.Project
         private ModProjectData projectData;
         private ModProjectContentFile activeFile;
 
-        public ModProject(string file)
+        private ModProject() { }
+        public static ModProject Create(string file)
         {
+            ModProject mp = new ModProject();
+            
             if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
 
-            openedDir = Path.GetDirectoryName(file);
-            openedFile = file;
+            mp.projectData = new ModProjectData();
 
-            if (!File.Exists(file))
+            mp.Save();
+
+            return mp;
+        }
+        public static ModProject Open(string file)
+        {
+            ModProject mp = new ModProject();
+
+            if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
+
+            mp.openedDir = Path.GetDirectoryName(file);
+            mp.openedFile = file;
+
+            try
             {
-                projectData = new ModProjectData();
-                projectData.name = Path.GetFileNameWithoutExtension(file);
-                Save();
+                YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
+                mp.projectData = (ModProjectData)ser.DeserializeFromFile(file);
             }
-            else
+            catch
             {
-                try
-                {
-                    YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
-                    projectData = (ModProjectData)ser.DeserializeFromFile(file);
-                }
-                catch
-                {
-                    throw new Exception("Failed to parse project file.");
-                }
+                throw new Exception("Failed to parse project file.");
             }
 
-            Program.window.projectExplorer.UpdateHierarchy(DirGetNodeGraph());
+            Program.window.projectExplorer.UpdateHierarchy(mp.DirGetNodeGraph());
+
+            return mp;
         }
         public void Save()
         { 
@@ -119,6 +114,22 @@ namespace SMHEditor.Project
         #endregion
 
         #region Explorer
+        public class EntryNodeData : Node
+        {
+            private string _fullPath;
+            public string FullPath
+            {
+                get { return _fullPath; }
+                set { _fullPath = value; }
+            }
+
+            private string _subName;
+            public string SubName
+            {
+                get { return _subName; }
+                set { _subName = value; }
+            }
+        }
         public class ModProjectContentFile
         {
             private string fileName;
@@ -164,22 +175,6 @@ namespace SMHEditor.Project
             public  void OpenFile(string subName)
             {
                 DoOpen(subName);
-            }
-        }
-        public class EntryNodeData : Node
-        {
-            private string _fullPath;
-            public string FullPath
-            {
-                get { return _fullPath; }
-                set { _fullPath = value; }
-            }
-
-            private string _subName;
-            public string SubName
-            {
-                get { return _subName; }
-                set { _subName = value; }
             }
         }
         

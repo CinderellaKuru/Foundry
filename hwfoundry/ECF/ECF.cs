@@ -1,12 +1,9 @@
-﻿using SMHEditor.Project.FileTypes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SMHEditor.ECF
+namespace Foundry.ECF
 {
     class ECFChunk
     {

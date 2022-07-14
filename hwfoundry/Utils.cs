@@ -8,7 +8,7 @@ using System.Drawing;
 using OpenTK;
 using Jitter.LinearMath;
 
-namespace SMHEditor
+namespace Foundry
 {
     static class Convert
     {

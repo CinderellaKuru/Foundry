@@ -1,4 +1,4 @@
-﻿namespace SMHEditor.DockingModules.Triggerscripter
+﻿namespace Foundry.DockingModules.Triggerscripter
 {
     partial class TriggerscripterPage
     {

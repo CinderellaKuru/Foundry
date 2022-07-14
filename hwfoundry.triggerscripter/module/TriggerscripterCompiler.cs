@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using static SMHEditor.DockingModules.Triggerscripter.TriggerscripterPage;
+using static Foundry.DockingModules.Triggerscripter.TriggerscripterPage;
 
-namespace SMHEditor.DockingModules.Triggerscripter
+namespace Foundry.DockingModules.Triggerscripter
 {
     public class TriggerscripterCompiler
     {
