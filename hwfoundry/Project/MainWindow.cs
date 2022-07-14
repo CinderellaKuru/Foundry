@@ -31,9 +31,14 @@ namespace Foundry
             propertyEditor.Show(workspace, DockState.DockRight);
         }
         
-        private void InitProject(string file)
+        public void OpenProject(string file)
         {
-
+            project = ModProject.Open(file);
+        }
+        public void CloseProject()
+        {
+            //project.Close();
+            project = null;
         }
 
         #region GetsSets

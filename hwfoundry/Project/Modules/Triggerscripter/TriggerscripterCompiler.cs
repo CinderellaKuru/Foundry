@@ -14,7 +14,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         Dictionary<int, int> triggerVarLinks = new Dictionary<int, int>();
         Dictionary<TriggerscripterSocket_Output, int> linkedVars = new Dictionary<TriggerscripterSocket_Output, int>();
         Dictionary<int, string> varSources = new Dictionary<int, string>();
-        int varId = -1;
+        int  varId = -1;
         void AddVar(int id, string type, string name, bool isNull, string value, string sourceName, XElement varX)
         {
             if (varIds.Contains(id))
@@ -321,7 +321,7 @@ namespace Foundry.Project.Modules.Triggerscripter
 
             triggerCnd.Add(cnd);
         }
-        int AddTrigger(TriggerscripterNode n, XElement triggers, XElement triggerVars)
+        int  AddTrigger(TriggerscripterNode n, XElement triggers, XElement triggerVars)
         {
             if (triggerVarLinks.ContainsKey(n.id))
             {

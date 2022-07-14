@@ -58,7 +58,8 @@ namespace Foundry.DockingModules.ProjectExplorer
         }
         private void OnClicked(object o, TreeNodeAdvMouseEventArgs e)
         {
-
+            EntryNodeData end = (EntryNodeData)e.Node.Tag;
+            Program.window.project.DirSelectFile(end.FullPath);
         }
         private void OnDoubleClicked(object o, TreeNodeAdvMouseEventArgs e)
         {

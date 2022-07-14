@@ -18,11 +18,7 @@ namespace Foundry.Project
             folderData = new Dictionary<string, FolderData>();
         }
 
-        // Project info
-        [YAXAttributeForClass]
-        public string name { get; set; }
-
-        // Folder data
+        //folder data
         public class FolderData
         {
             public FolderData()
@@ -32,12 +28,11 @@ namespace Foundry.Project
             [YAXSerializeAs("Folded")]
             public bool folded { get; set; }
         }
-        [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data",
-                   SerializeKeyAs = YAXNodeTypes.Attribute,
-                   SerializeValueAs = YAXNodeTypes.Element)]
+        [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
         [YAXSerializeAs("FolderData")]
         public Dictionary<string, FolderData> folderData { get; set; }
     }
+
     public class ModProject
     {
         public static string PROJ_EXT                   = ".hwfp";
@@ -68,6 +63,8 @@ namespace Foundry.Project
             if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
 
             mp.projectData = new ModProjectData();
+            mp.openedDir = Path.GetDirectoryName(file);
+            mp.openedFile = file;
 
             mp.Save();
 
@@ -99,7 +96,8 @@ namespace Foundry.Project
         public void Save()
         { 
             YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
-            ser.SerializeToFile(projectData, openedDir +"\\"+ projectData.name + PROJ_EXT);
+            string serStr = ser.Serialize(projectData);
+            File.WriteAllText(openedFile, serStr);
         }
         
         public void SetActiveFile(ModProjectContentFile file)
@@ -150,6 +148,7 @@ namespace Foundry.Project
 
             protected virtual void DoSave() { }
             protected virtual void DoOpen(string subName) { }
+            public    virtual void DoImport(string fileName) { }
             public    virtual EntryNodeData GetRootNode()
             {
                 EntryNodeData end = new EntryNodeData();
@@ -175,6 +174,10 @@ namespace Foundry.Project
             public  void OpenFile(string subName)
             {
                 DoOpen(subName);
+            }
+            public  void ImportFile(string fileName)
+            {
+                DoImport(fileName);
             }
         }
         
@@ -245,7 +248,7 @@ namespace Foundry.Project
 
             return roots;
         }
-        public void                         DirAddFolder(string localDirLeadingSlash)
+        public void                         DirAddFolder    (string localDirLeadingSlash)
         {
             string fullPath = openedDir + localDirLeadingSlash;
 
@@ -254,14 +257,19 @@ namespace Foundry.Project
                 Directory.CreateDirectory(fullPath);
             }
         }
-        public void                         DirAddFile  (ModProjectContentFile mpcf)
+        public void                         DirAddFile      (ModProjectContentFile mpcf)
         {
 
         }
-        public void                         DirOpenFile (string fileDir, string subName)
+        public void                         DirOpenFile     (string fileDir, string subName)
         {
             if (allFiles.ContainsKey(fileDir))
                 allFiles[fileDir].OpenFile(subName);
+        }
+        public void                         DirSelectFile   (string fileDir)
+        {
+            if (allFiles.ContainsKey(fileDir))
+                Program.window.propertyEditor.SetSelectedObject(allFiles[fileDir]);
         }
         #endregion
     }
