@@ -148,7 +148,7 @@ namespace Foundry.Project
 
             protected virtual void DoSave() { }
             protected virtual void DoOpen(string subName) { }
-            public    virtual void DoImport(string fileName) { }
+            protected virtual void DoImport(string fileName) { }
             public    virtual EntryNodeData GetRootNode()
             {
                 EntryNodeData end = new EntryNodeData();
