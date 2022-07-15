@@ -912,14 +912,14 @@ namespace Foundry.Project.Modules.Triggerscripter
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.InterpolationMode = InterpolationMode.High;
             g.Transform = transform;
-            g.Clear(Color.DarkGray);
 
+            g.Clear(Color.DarkGray);
+            
             PointF[] points = new PointF[]
             {
                 new PointF(e.ClipRectangle.Left, e.ClipRectangle.Top),
                 new PointF(e.ClipRectangle.Right, e.ClipRectangle.Bottom)
             };
-
             transformInv.TransformPoints(points);
 
             float left = points[0].X;
@@ -930,6 +930,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             int xOffs = (int)Math.Round(left / (float)majorGridSpace) * majorGridSpace;
             int yOffs = (int)Math.Round(top / (float)majorGridSpace) * majorGridSpace;
 
+            //draw grid lines
             for (int x = xOffs; x < right; x += majorGridSpace)
             {
                 g.DrawLine(gridPen, x, top, x, bottom);
@@ -1143,6 +1144,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             marqueeX2 = mx;
             marqueeY2 = my;
 
+            //reverse nodes so that the last to draw is on top
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
 
@@ -1171,6 +1173,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                             }
                         }
 
+                        //deselect all nodes and select the socket
                         foreach (TriggerscripterNode n2 in nodesReversed)
                             n2.selected = false;
                         selectedSocket = s;
@@ -1179,10 +1182,12 @@ namespace Foundry.Project.Modules.Triggerscripter
                 }
             }
             
+            //doing nothing
             if (mouseState == CurrentMouseState.None)
             {
                 foreach (TriggerscripterNode n in nodesReversed)
                 {
+                    //if mouse is in this node
                     if (n.PointIsIn(mx, my))
                     {
                         int ox, oy;
@@ -1195,6 +1200,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                         foreach (TriggerscripterNode n2 in nodesReversed)
                             n2.selected = false;
                         n.selected = true;
+                        OnNodeSelected(n);
                         
                         mouseState = CurrentMouseState.NodesSelected;
                         return;
@@ -1202,22 +1208,26 @@ namespace Foundry.Project.Modules.Triggerscripter
                 }
             }
 
+            //node(s) selected
             if (mouseState == CurrentMouseState.NodesSelected)
             {
                 bool somethingUnderMouse = false;
                 bool selectedUnderMouse = false;
                 foreach (TriggerscripterNode n in nodesReversed)
                 {
+                    //set select offset for this node
                     int ox, oy;
                     n.GetPointOffset(mx, my, out ox, out oy);
                     n.selectedX = ox;
                     n.selectedY = oy;
 
+                    //determine if a selected node is under the mouse
                     if(n.selected && n.PointIsIn(mx, my))
                     {
                         selectedUnderMouse = true;
                     }
 
+                    //if this node is not selected, but the mouse is inside the node, and the mouse is not in a selected node
                     if (!n.selected && n.PointIsIn(mx, my) && !selectedUnderMouse)
                     {
                         foreach (TriggerscripterNode n2 in nodesReversed)
@@ -1229,22 +1239,28 @@ namespace Foundry.Project.Modules.Triggerscripter
                         nodes.Remove(n);
                         nodes.Add(n);
                     }
+
+                    //determine if there is anything under the mouse
                     if (n.PointIsIn(mx, my))
                         somethingUnderMouse = true;
 
                     if(n.selected)
                     {
-                        n.Selected();
+                        //select the node
+                        OnNodeSelected(n);
                     }
                 }
+                //nothing was under the mouse, deselect all and set state
                 if (!somethingUnderMouse)
                 {
                     foreach (TriggerscripterNode n in nodes)
                         n.selected = false;
                     mouseState = CurrentMouseState.None;
+                    OnDeselect();
                 }
             }
 
+            //if there is no state still, start dragging marquee
             if (mouseState == CurrentMouseState.None)
             {
                 foreach (TriggerscripterNode n in nodes)
@@ -1253,6 +1269,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                 mouseState = CurrentMouseState.DraggingMarquee;
                 marqueeX1 = mx;
                 marqueeY1 = my;
+                OnDeselect();
             }
         }
         void OnMouseHeldL(int mx, int my)
@@ -1260,6 +1277,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
 
+            //nodes are selected, drag them
             if (mouseState == CurrentMouseState.NodesSelected)
             {
                 foreach (TriggerscripterNode n in nodesReversed)
@@ -1267,10 +1285,11 @@ namespace Foundry.Project.Modules.Triggerscripter
                     if(n.selected)
                     {
                         n.SetPos(mx - n.selectedX, my - n.selectedY);
-                        OnEdit(this, null);
+                        OnEdit?.Invoke(this, null);
                     }
                 }
             }
+            //marquee is dragging, update it
             if (mouseState == CurrentMouseState.DraggingMarquee)
             {
                 marqueeX2 = mx;
@@ -1292,6 +1311,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         }
         void OnMouseReleasedL(int mx, int my)
         {
+            //marquee was dragging. select nodes inside it
             if (mouseState == CurrentMouseState.DraggingMarquee)
             {
                 foreach (TriggerscripterNode n in nodes)
@@ -1308,17 +1328,23 @@ namespace Foundry.Project.Modules.Triggerscripter
                 if (mouseState != CurrentMouseState.NodesSelected)
                     mouseState = CurrentMouseState.None;
             }
+            //socket was dragging
             if (mouseState == CurrentMouseState.DraggingSocket)
             {
+                //foreach node
                 foreach(TriggerscripterNode n in nodes)
                 {
+                    //foreach socket in that node
                     foreach(TriggerscripterSocket s in n.sockets.Values)
                     {
                         if (s == selectedSocket) break;
+                        //if mouse was in that socket
                         if (s.PointIsIn(mx,my))
                         {
+                            //if selected socket is output
                             if(selectedSocket is TriggerscripterSocket_Output)
                             {
+                                //if this socket is input (compatible)
                                 if (s is TriggerscripterSocket_Input)
                                 {
                                     ((TriggerscripterSocket_Output)selectedSocket).Connect(s as TriggerscripterSocket_Input);
@@ -1326,8 +1352,10 @@ namespace Foundry.Project.Modules.Triggerscripter
                                     goto DraggingSocketFinish;
                                 }
                             }
+                            //selected socket is input
                             else
                             {
+                                //if this socket is output (compatible)
                                 if (s is TriggerscripterSocket_Output)
                                 {
                                     ((TriggerscripterSocket_Output)s).Connect(selectedSocket as TriggerscripterSocket_Input);
@@ -1347,6 +1375,14 @@ DraggingSocketFinish:
         {
         }
 
+        void OnNodeSelected(TriggerscripterNode n)
+        {
+            Program.window.propertyEditor.SetSelectedObject(n);
+        }
+        void OnDeselect()
+        {
+            Program.window.propertyEditor.SetSelectedObject(null);
+        }
 
         public static Color requiredVarColor = Color.FromArgb(255, 64, 130, 64);
         public static Color optionalVarColor = Color.FromArgb(255, 122, 130, 64);
@@ -1364,7 +1400,8 @@ DraggingSocketFinish:
             transformInv.TransformPoints(nodeAddLocation);
             Console.WriteLine(nodeAddLocation[0]);
         }
-
+        
+        //node id trackers
         public int trgID = 0, varID = 0;
         public int cndID = 0, effID = 0;
 
@@ -1702,6 +1739,7 @@ DraggingSocketFinish:
             }
         }
 
+        //copy/paste
         int pasteOffset = 50;
         SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
         public void CopyGraph()
@@ -1831,6 +1869,7 @@ DraggingSocketFinish:
             }
         }
 
+        //import from a .triggerscript
         public void ImportScript(string file)
         {
             XDocument doc = XDocument.Load(file);

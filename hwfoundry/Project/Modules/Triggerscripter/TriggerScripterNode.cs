@@ -164,13 +164,6 @@ namespace Foundry.Project.Modules.Triggerscripter
 
     public class TriggerscripterNode
     {
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
         public TriggerscripterPage owner;
         public int width = 350, height, bottomPadding = 0;
         public int x, y;
@@ -207,8 +200,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             y += my;
         }
         
-        public void AddSocket(
-            bool isInput, string text, string type, Color color, bool showType = true, bool multiConnection = true, Type limitType = null)
+        public void AddSocket(bool isInput, string text, string type, Color color, bool showType = true, bool multiConnection = true, Type limitType = null)
         {
             if(isInput)
             {
@@ -290,15 +282,6 @@ namespace Foundry.Project.Modules.Triggerscripter
             oy = my - y;
         }
 
-        public virtual void Selected()
-        {
-
-        }
-        public virtual void Deselected()
-        {
-
-        }
-
         static int socketSpacing = 65;
         static int headerHeight = 70;
         public static Brush backBrush = new SolidBrush(Color.FromArgb(255, 40, 40, 40));
@@ -349,6 +332,12 @@ namespace Foundry.Project.Modules.Triggerscripter
     }
     public class TriggerscripterNode_Trigger : TriggerscripterNode
     {
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
         private bool conditionalOr;
         public bool ConditionalOr
         {
@@ -377,14 +366,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             AddSocket(false, "Call On True", "EFF", TriggerscripterPage.effColor, false, false);
             AddSocket(false, "Call On False", "EFF", TriggerscripterPage.effColor, false, false);
         }
-
-        public override void Selected()
-        {
-        }
-        public override void Deselected()
-        {
-        }
-
+        
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
@@ -394,7 +376,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             else
                 e.Graphics.FillEllipse(new SolidBrush(Color.Red), x + width - 30, y + 10, 20, 20);
 
-            if (conditional)
+            if (!conditional)
                 e.Graphics.FillEllipse(backBrush, x + width - 60, y + 10, 20, 20);
             else
                 e.Graphics.FillEllipse(new SolidBrush(Color.FromArgb(205, 170, 0)), x + width - 60, y + 10, 20, 20);
@@ -405,6 +387,12 @@ namespace Foundry.Project.Modules.Triggerscripter
     }
     public class TriggerscripterNode_Variable: TriggerscripterNode
     {
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
         private string valueString;
         public string Value
         {
@@ -416,14 +404,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         {
             handleAs = "Variable";
         }
-
-        public override void Selected()
-        {
-        }
-        public override void Deselected()
-        {
-        }
-
+        
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
@@ -446,14 +427,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             handleAs = "Condition";
             typeTitle = "Condition";
         }
-
-        public override void Selected()
-        {
-        }
-        public override void Deselected()
-        {
-        }
-
+        
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);

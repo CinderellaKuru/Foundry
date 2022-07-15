@@ -145,37 +145,37 @@ namespace Foundry.Project
                 set { export = value; }
             }
 
+            private bool markedEdited = false;
 
             protected virtual void DoSave() { }
             protected virtual void DoOpen(string subName) { }
             protected virtual void DoImport(string fileName) { }
-            public    virtual EntryNodeData GetRootNode()
+
+            public ModProjectContentFile(string fileName)
+            {
+                this.fileName = fileName;
+            }
+            public virtual EntryNodeData GetRootNode()
             {
                 EntryNodeData end = new EntryNodeData();
                 end.Text = Path.GetFileName(fileName);
                 end.Image = ModProject.images["FILE"];
                 return end;
             }
-
-            public ModProjectContentFile(string fileName)
-            {
-                this.fileName = fileName;
-            }
-            private bool markedEdited = false;
-            public  void MarkEdited()
+            public void MarkEdited()
             {
                 markedEdited = true;
             }
-            public  void SaveFile()
+            public void SaveFile()
             {
                 if(markedEdited) DoSave();
                 markedEdited = false;
             }
-            public  void OpenFile(string subName)
+            public void OpenFile(string subName)
             {
                 DoOpen(subName);
             }
-            public  void ImportFile(string fileName)
+            public void ImportFile(string fileName)
             {
                 DoImport(fileName);
             }
@@ -248,7 +248,7 @@ namespace Foundry.Project
 
             return roots;
         }
-        public void                         DirAddFolder    (string localDirLeadingSlash)
+        public void                         DirAddFolder (string localDirLeadingSlash)
         {
             string fullPath = openedDir + localDirLeadingSlash;
 
@@ -257,16 +257,16 @@ namespace Foundry.Project
                 Directory.CreateDirectory(fullPath);
             }
         }
-        public void                         DirAddFile      (ModProjectContentFile mpcf)
+        public void                         DirAddFile   (ModProjectContentFile mpcf)
         {
 
         }
-        public void                         DirOpenFile     (string fileDir, string subName)
+        public void                         DirOpenFile  (string fileDir, string subName)
         {
             if (allFiles.ContainsKey(fileDir))
                 allFiles[fileDir].OpenFile(subName);
         }
-        public void                         DirSelectFile   (string fileDir)
+        public void                         DirSelectFile(string fileDir)
         {
             if (allFiles.ContainsKey(fileDir))
                 Program.window.propertyEditor.SetSelectedObject(allFiles[fileDir]);

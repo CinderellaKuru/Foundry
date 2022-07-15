@@ -14,16 +14,16 @@ namespace Foundry.Project.Modules.Triggerscripter
         Dictionary<int, int> triggerVarLinks = new Dictionary<int, int>();
         Dictionary<TriggerscripterSocket_Output, int> linkedVars = new Dictionary<TriggerscripterSocket_Output, int>();
         Dictionary<int, string> varSources = new Dictionary<int, string>();
+
         int  varId = -1;
         void AddVar(int id, string type, string name, bool isNull, string value, string sourceName, XElement varX)
         {
+            //if var already exists, return
             if (varIds.Contains(id))
             {
-                if (varSources[id] != sourceName)
-                {
-                }
                 return;
             }
+            //else create var node
             else
             {
                 XElement v = new XElement("TriggerVar");
@@ -48,13 +48,17 @@ namespace Foundry.Project.Modules.Triggerscripter
             eff.Add(new XAttribute("Version", ((Effect)n.data).version));
             eff.Add(new XAttribute("CommentOut", false));
 
+            //filter out TriggerActivate/Deactivate
             if (!n.nodeTitle.Contains("Trigger"))
             {
+                //inputs
                 foreach (Input i in ((Effect)n.data).inputs)
                 {
                     int id;
+                    //if socket has something attached
                     if (n.sockets[i.name].connectedSockets.Count > 0)
                     {
+                        //if attached node is a variable node, try adding the variable
                         if (n.sockets[i.name].connectedSockets[0].node is TriggerscripterNode_Variable)
                         {
                             TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
@@ -68,12 +72,15 @@ namespace Foundry.Project.Modules.Triggerscripter
                                 varX);
                             id = v.id;
                         }
+                        //attached node is not a variable
                         else
                         {
+                            //if there is already a linked var for this socket
                             if(linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]))
                             {
                                 id = linkedVars[(TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]];
                             }
+                            //there is not a linked var for this socket, add one
                             else
                             {
                                 AddVar(
@@ -90,6 +97,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                             }
                         }
                     }
+                    //socket is not attached to anything, create null var
                     else
                     {
                         AddVar(
@@ -187,6 +195,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         {
             if (n.handleAs != "Condition") return;
 
+            //root node
             XElement cnd = new XElement("Condition");
             cnd.Add(new XAttribute("ID", n.id));
             cnd.Add(new XAttribute("Type", n.nodeTitle));
@@ -197,13 +206,17 @@ namespace Foundry.Project.Modules.Triggerscripter
             cnd.Add(new XAttribute("Async", false));
             cnd.Add(new XAttribute("AsyncParameterKey", 0));
 
+            //inputs
             foreach (Input i in ((Condition)n.data).inputs)
             {
                 int id;
+                //if there are any nodes attached to this condition node
                 if (n.sockets[i.name].connectedSockets.Count > 0)
                 {
+                    //if attached node is an existing variable node
                     if (n.sockets[i.name].connectedSockets[0].node is TriggerscripterNode_Variable)
                     {
+                        //try to create variable from this var node
                         TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[i.name].connectedSockets[0].node;
                         AddVar(
                         v.id,
@@ -215,14 +228,17 @@ namespace Foundry.Project.Modules.Triggerscripter
                         varX);
                         id = v.id;
                     }
+                    //if the socket is something else
                     else
                     {
+                        //check if there is already an invisible linked variable node
                         if (linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]))
                         {
                             id = linkedVars[(TriggerscripterSocket_Output)n.sockets[i.name].connectedSockets[0]];
                         }
                         else
                         {
+                            //add linked var
                             AddVar(
                                 varId,
                                 i.valueType,
@@ -237,6 +253,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                         }
                     }
                 }
+                //socket is not attached to anything. add a null variable
                 else
                 {
                     AddVar(
@@ -257,13 +274,17 @@ namespace Foundry.Project.Modules.Triggerscripter
                 input.Value = id.ToString();
                 cnd.Add(input);
             }
+            //outputs
             foreach (Output o in ((Condition)n.data).outputs)
             {
                 int id;
+                //if the socket has something attached
                 if (n.sockets[o.name].connectedSockets.Count > 0)
                 {
+                    //if the socket is an existing variable node
                     if (n.sockets[o.name].connectedSockets[0].node is TriggerscripterNode_Variable)
                     {
+                        //try and add the var
                         TriggerscripterNode_Variable v = (TriggerscripterNode_Variable)n.sockets[o.name].connectedSockets[0].node;
                         AddVar(
                         v.id,
@@ -275,12 +296,15 @@ namespace Foundry.Project.Modules.Triggerscripter
                         varX);
                         id = v.id;
                     }
+                    //if the socket is something else
                     else
                     {
+                        //check if there is already an invisible linked var for this socket
                         if (linkedVars.ContainsKey((TriggerscripterSocket_Output)n.sockets[o.name]))
                         {
                             id = linkedVars[(TriggerscripterSocket_Output)n.sockets[o.name]];
                         }
+                        //try and add a linked var
                         else
                         {
                             AddVar(
@@ -298,6 +322,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                         }
                     }
                 }
+                //socket is not attached to anything. add a null variable
                 else
                 {
                     AddVar(
@@ -325,10 +350,12 @@ namespace Foundry.Project.Modules.Triggerscripter
         {
             if (triggerVarLinks.ContainsKey(n.id))
             {
+                //trigger has already been processed
                 return triggerVarLinks[n.id];
             }
             else
             {
+                //root node
                 XElement trigger = new XElement("Trigger");
                 trigger.Add(new XAttribute("ID", ((TriggerscripterNode_Trigger)n).id));
                 trigger.Add(new XAttribute("Name", ((TriggerscripterNode_Trigger)n).Name));
@@ -350,20 +377,24 @@ namespace Foundry.Project.Modules.Triggerscripter
 
                 TriggerscripterNode_Trigger t = (TriggerscripterNode_Trigger)n;
 
+                //wip commenting
                 //triggerVars.Add(new XComment("==Trigger: " + ((TriggerscripterNode_Trigger)n).nameProperty.tb.Text + "=="));
+
+                //add triger and create reference variable for it
                 triggers.Add(trigger);
                 AddVar(varId, "Trigger", n.nodeTitle, false, n.id.ToString(), n.nodeTitle, triggerVars);
                 triggerVarLinks.Add(n.id, varId);
                 varId++;
 
+                //write condition type
                 XElement cndElement;
                 if (t.Conditional == false)
                     cndElement = new XElement("And");
                 else
                     cndElement = new XElement("Or");
-
                 triggerCnd.Add(cndElement);
-                
+
+                //add all conditions
                 if (t.sockets["Conditions"].connectedSockets.Count > 0)
                 {
                     foreach (TriggerscripterSocket s in t.sockets["Conditions"].connectedSockets)
@@ -372,6 +403,8 @@ namespace Foundry.Project.Modules.Triggerscripter
                         AddCondition(s.node, t.nodeTitle, cndElement, triggerVars);
                     }
                 }
+
+                //add all effects on true
                 if (t.sockets["Call On True"].connectedSockets.Count > 0)
                 {
                     TriggerscripterNode last = t.sockets["Call On True"].connectedSockets[0].node;
@@ -395,6 +428,8 @@ namespace Foundry.Project.Modules.Triggerscripter
                         else last = null;
                     }
                 }
+
+                //add all effects on false
                 if (t.sockets["Call On False"].connectedSockets.Count > 0)
                 {
                     TriggerscripterNode last = t.sockets["Call On False"].connectedSockets[0].node;
@@ -427,8 +462,9 @@ namespace Foundry.Project.Modules.Triggerscripter
         public void Compile(List<TriggerscripterNode> nodes, int lastVarId, string outPath)
         {
             varId = lastVarId;
-
             XDocument x = new XDocument();
+
+            //root node
             XElement triggerSystem = new XElement("TriggerSystem");
             triggerSystem.Add(new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"));
             triggerSystem.Add(new XAttribute(XNamespace.Xmlns + "xsd", "http://www.w3.org/2001/XMLSchema"));
@@ -440,16 +476,16 @@ namespace Foundry.Project.Modules.Triggerscripter
             triggerSystem.Add(new XAttribute("NextEffectID", 9999));
             x.Add(triggerSystem);
 
+            //fixed child nodes
             XElement triggerGroups = new XElement("TriggerGroups");
             triggerSystem.Add(triggerGroups);
-
             XElement triggerVars = new XElement("TriggerVars");
             triggerSystem.Add(triggerVars);
-
             XElement triggers = new XElement("Triggers");
             triggerSystem.Add(triggers);
 
 
+            //compile from entry points (active triggers)
             foreach(TriggerscripterNode n in nodes)
             {
                 if(n.handleAs == "Trigger")
