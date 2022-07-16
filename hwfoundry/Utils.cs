@@ -11,17 +11,6 @@ namespace Foundry
 {
     static class Convert
     {
-        public static Vector3 ToTKVec3(BEPUutilities.Vector3 vector)
-        {
-            return new Vector3(
-                vector.X,
-                vector.Y,
-                vector.Z);
-        }
-        public static BEPUutilities.Vector3 ToBepuVec3(OpenTK.Vector3 v)
-        {
-            return new BEPUutilities.Vector3(v.X, v.Y, v.Z);
-        }
         public static List<float> GetFloats(this List<Vector3> v)
         {
             List<float> f = new List<float>(v.Count);
