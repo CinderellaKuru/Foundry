@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinNodeEditorDemo", "WinNod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hwFoundry", "hwFoundry\hwFoundry.csproj", "{B82DD1B7-9E7B-48D7-8AA9-45D01029D3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.Library.UI", "ST.Library.UI\ST.Library.UI.csproj", "{EFFCC270-4999-4077-A543-56CCCCE92147}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.Library.UI", "extlib\ST.Library.UI\ST.Library.UI.csproj", "{EFFCC270-4999-4077-A543-56CCCCE92147}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

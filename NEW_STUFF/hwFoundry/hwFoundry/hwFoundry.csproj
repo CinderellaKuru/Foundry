@@ -17,8 +17,7 @@
   <ItemGroup>
     <PackageReference Include="DockPanelSuite" Version="3.1.0" />
     <PackageReference Include="DockPanelSuite.ThemeVS2015" Version="3.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="protobuf-net" Version="3.1.22" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="TreeViewAdv" Version="1.7.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
@@ -26,12 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ST.Library.UI\ST.Library.UI.csproj" />
+    <ProjectReference Include="..\extlib\ST.Library.UI\ST.Library.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="FilteredPropertyGrid">
-      <HintPath>..\packages\FilteredPropertyGrid.dll</HintPath>
+      <HintPath>..\extlib\FilteredPropertyGrid.dll</HintPath>
     </Reference>
   </ItemGroup>
 
