@@ -1,25 +1,19 @@
-﻿using Foundry.DockingModules.ProjectExplorer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Foundry
+namespace hwFoundry
 {
     internal static class Program
     {
-        public static Foundry window;
+        public static GUI.MainWindow? mainWindow;
 
         [STAThread]
         static void Main()
         {
-            ProjectExplorer.InitImageList();
+            ApplicationConfiguration.Initialize();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            window = new Foundry();
-            Application.Run(window);
+
+            mainWindow = new();
+            Application.Run(mainWindow);
         }
     }
 }

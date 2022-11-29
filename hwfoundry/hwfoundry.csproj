@@ -1,258 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{79C6C234-04E5-4543-B0CC-A6DEB8F1FDF5}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Foundry</RootNamespace>
-    <AssemblyName>hwfoundry</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <Deterministic>false</Deterministic>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Debug\</OutputPath>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="AnySerializer, Version=1.1.46.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AnySerializer.1.1.46\lib\net47\AnySerializer.dll</HintPath>
-    </Reference>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscripterCompiler.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerScripterNode.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscripterPage.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscripterPage.Designer.cs">
-      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Project\Modules\ProjectExplorer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Project\Modules\ProjectExplorer.Designer.cs">
-      <DependentUpon>ProjectExplorer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Project\Modules\PropertyEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ECF\ECF.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscripterContentFile.cs" />
-    <Compile Include="Project\ModProject.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Project\MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Project\MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <PackageReference Include="DockPanelSuite" Version="3.1.0" />
+    <PackageReference Include="DockPanelSuite.ThemeVS2015" Version="3.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="TreeViewAdv" Version="1.7.0">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="YAXLib" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\extlib\ST.Library.UI\ST.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FilteredPropertyGrid">
+      <HintPath>..\extlib\FilteredPropertyGrid.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <EmbeddedResource Include="Project\Modules\Triggerscripter\TriggerscripterPage.resx">
-      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Project\Modules\ProjectExplorer.resx">
-      <DependentUpon>ProjectExplorer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="App.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="ScriptComb\bin\Debug\out\cnd.json" />
-    <None Include="ScriptComb\bin\Debug\out\eff.json" />
-    <None Include="ScriptComb\bin\Debug\out\var.json" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\box.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\page_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\cog.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\7.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\out.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\var.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\var.txt" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
-  </PropertyGroup>
-  <ItemGroup>
-    <AssembliesPath Include="R:\hwSuite\hwFoundry\hwfoundry\bin\x64\Debug\\hwfoundry.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\page.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\page_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DockPanelSuite">
-      <Version>3.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="DockPanelSuite.ThemeVS2015">
-      <Version>3.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="OpenTK.GLControl">
-      <Version>3.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="TreeViewAdv">
-      <Version>1.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="YAXLib">
-      <Version>3.0.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\7.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\var.txt" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+
 </Project>

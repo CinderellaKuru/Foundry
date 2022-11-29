@@ -1,0 +1,6 @@
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\bin\Debug\ST.Library.UI.dll
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\bin\Debug\ST.Library.UI.pdb
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Debug\ST.Library.UI.csproj.AssemblyReference.cache
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Debug\ST.Library.UI.csproj.CoreCompileInputs.cache
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Debug\ST.Library.UI.dll
+R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Debug\ST.Library.UI.pdb
