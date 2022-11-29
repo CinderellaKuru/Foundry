@@ -1,18 +1,18 @@
 {
   "version": 3,
   "targets": {
-    "net6.0-windows7.0": {
+    ".NETFramework,Version=v4.7.2": {
       "DockPanelSuite/3.1.0": {
         "type": "package",
+        "frameworkAssemblies": [
+          "System.Configuration"
+        ],
         "compile": {
-          "lib/netcoreapp3.1/WeifenLuo.WinFormsUI.Docking.dll": {}
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/WeifenLuo.WinFormsUI.Docking.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        }
       },
       "DockPanelSuite.ThemeVS2015/3.1.0": {
         "type": "package",
@@ -20,44 +20,91 @@
           "DockPanelSuite": "3.1.0"
         },
         "compile": {
-          "lib/netcoreapp3.1/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        }
+      },
+      "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.InteropServices.RuntimeInformation": "4.0.0"
         },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
+        "frameworkAssemblies": [
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        }
       },
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net6.0/Newtonsoft.Json.dll": {
+          "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/Newtonsoft.Json.dll": {
+          "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
           }
         }
       },
-      "System.Memory/4.5.5": {
+      "OpenTK/3.1.0": {
         "type": "package",
         "compile": {
-          "ref/netcoreapp2.1/_._": {}
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp2.1/_._": {}
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
-      "System.ValueTuple/4.5.0": {
+      "OpenTK.GLControl/3.1.0": {
         "type": "package",
+        "dependencies": {
+          "OpenTK": "3.1.0"
+        },
         "compile": {
-          "ref/netcoreapp2.0/_._": {}
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
         },
         "runtime": {
-          "lib/netcoreapp2.0/_._": {}
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
         }
       },
       "TreeViewAdv/1.7.0": {
@@ -69,30 +116,386 @@
           "lib/net/Aga.Controls.dll": {}
         }
       },
-      "YAXLib/4.0.0": {
+      "YAXLib/3.0.1": {
         "type": "package",
         "dependencies": {
-          "System.Memory": "4.5.5",
-          "System.ValueTuple": "4.5.0"
+          "Microsoft.DotNet.PlatformAbstractions": "3.1.6"
         },
         "compile": {
-          "lib/netstandard2.1/YAXLib.dll": {
+          "lib/net461/YAXLib.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.1/YAXLib.dll": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win": {
+      "DockPanelSuite/3.1.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Configuration"
+        ],
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        }
+      },
+      "DockPanelSuite.ThemeVS2015/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "DockPanelSuite": "3.1.0"
+        },
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        }
+      },
+      "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.InteropServices.RuntimeInformation": "4.0.0"
+        },
+        "frameworkAssemblies": [
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
             "related": ".xml"
           }
         }
       },
-      "ST/1.0.0": {
-        "type": "project",
+      "Newtonsoft.Json/13.0.2": {
+        "type": "package",
         "compile": {
-          "bin/placeholder/ST.dll": {}
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "bin/placeholder/ST.dll": {}
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenTK/3.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "OpenTK.GLControl/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK": "3.1.0"
+        },
+        "compile": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        }
+      },
+      "TreeViewAdv/1.7.0": {
+        "type": "package",
+        "compile": {
+          "lib/net/Aga.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/net/Aga.Controls.dll": {}
+        }
+      },
+      "YAXLib/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.DotNet.PlatformAbstractions": "3.1.6"
+        },
+        "compile": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x64": {
+      "DockPanelSuite/3.1.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Configuration"
+        ],
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        }
+      },
+      "DockPanelSuite.ThemeVS2015/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "DockPanelSuite": "3.1.0"
+        },
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        }
+      },
+      "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.InteropServices.RuntimeInformation": "4.0.0"
+        },
+        "frameworkAssemblies": [
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenTK/3.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "OpenTK.GLControl/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK": "3.1.0"
+        },
+        "compile": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        }
+      },
+      "TreeViewAdv/1.7.0": {
+        "type": "package",
+        "compile": {
+          "lib/net/Aga.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/net/Aga.Controls.dll": {}
+        }
+      },
+      "YAXLib/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.DotNet.PlatformAbstractions": "3.1.6"
+        },
+        "compile": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x86": {
+      "DockPanelSuite/3.1.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Configuration"
+        ],
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.dll": {}
+        }
+      },
+      "DockPanelSuite.ThemeVS2015/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "DockPanelSuite": "3.1.0"
+        },
+        "compile": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        },
+        "runtime": {
+          "lib/net40/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll": {}
+        }
+      },
+      "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.InteropServices.RuntimeInformation": "4.0.0"
+        },
+        "frameworkAssemblies": [
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenTK/3.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "OpenTK.GLControl/3.1.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK": "3.1.0"
+        },
+        "compile": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.GLControl.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        }
+      },
+      "TreeViewAdv/1.7.0": {
+        "type": "package",
+        "compile": {
+          "lib/net/Aga.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/net/Aga.Controls.dll": {}
+        }
+      },
+      "YAXLib/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.DotNet.PlatformAbstractions": "3.1.6"
+        },
+        "compile": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net461/YAXLib.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -126,6 +529,26 @@
         "lib/netcoreapp3.1/WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll"
       ]
     },
+    "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
+      "sha512": "jek4XYaQ/PGUwDKKhwR8K47Uh1189PFzMeLqO83mXrXQVIpARZCcfuDedH50YDTepBkfijCZN5U/vZi++erxtg==",
+      "type": "package",
+      "path": "microsoft.dotnet.platformabstractions/3.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll",
+        "lib/net45/Microsoft.DotNet.PlatformAbstractions.xml",
+        "lib/netstandard1.3/Microsoft.DotNet.PlatformAbstractions.dll",
+        "lib/netstandard1.3/Microsoft.DotNet.PlatformAbstractions.xml",
+        "lib/netstandard2.0/Microsoft.DotNet.PlatformAbstractions.dll",
+        "lib/netstandard2.0/Microsoft.DotNet.PlatformAbstractions.xml",
+        "microsoft.dotnet.platformabstractions.3.1.6.nupkg.sha512",
+        "microsoft.dotnet.platformabstractions.nuspec"
+      ]
+    },
     "Newtonsoft.Json/13.0.2": {
       "sha512": "R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
       "type": "package",
@@ -156,71 +579,66 @@
         "packageIcon.png"
       ]
     },
-    "System.Memory/4.5.5": {
-      "sha512": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+    "OpenTK/3.1.0": {
+      "sha512": "xoP5kb81lRSY5RzbntaFA9yXK+aGF5SLShhns55MyZtxtNafIxRH5KvRTFss/N653brTzE+AfepjKsbMexYlBQ==",
       "type": "package",
-      "path": "system.memory/4.5.5",
+      "path": "opentk/3.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Memory.dll",
-        "lib/net461/System.Memory.xml",
-        "lib/netcoreapp2.1/_._",
-        "lib/netstandard1.1/System.Memory.dll",
-        "lib/netstandard1.1/System.Memory.xml",
-        "lib/netstandard2.0/System.Memory.dll",
-        "lib/netstandard2.0/System.Memory.xml",
-        "ref/netcoreapp2.1/_._",
-        "system.memory.4.5.5.nupkg.sha512",
-        "system.memory.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
+        "content/OpenTK.dll.config",
+        "lib/net20/OpenTK.dll",
+        "lib/net20/OpenTK.pdb",
+        "lib/net20/OpenTK.xml",
+        "opentk.3.1.0.nupkg.sha512",
+        "opentk.nuspec"
       ]
     },
-    "System.ValueTuple/4.5.0": {
-      "sha512": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
+    "OpenTK.GLControl/3.1.0": {
+      "sha512": "BjDzF+MhJd2LaZYzkXmgkzzXgHAko/Iur4rGy6+DPdZA1Jcc0X6jXZ6QsUsjlLRNzgevO7uAj2h1TqX7sguaYg==",
       "type": "package",
-      "path": "system.valuetuple/4.5.0",
+      "path": "opentk.glcontrol/3.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net20/OpenTK.GLControl.dll",
+        "lib/net20/OpenTK.GLControl.pdb",
+        "lib/net20/OpenTK.GLControl.xml",
+        "opentk.glcontrol.3.1.0.nupkg.sha512",
+        "opentk.glcontrol.nuspec"
+      ]
+    },
+    "System.Runtime.InteropServices.RuntimeInformation/4.0.0": {
+      "sha512": "hWPhJxc453RCa8Z29O91EmfGeZIHX1ZH2A8L6lYQVSaKzku2DfArSfMEb1/MYYzPQRJZeu0c9dmYeJKxW5Fgng==",
+      "type": "package",
+      "path": "system.runtime.interopservices.runtimeinformation/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net461/System.ValueTuple.dll",
-        "lib/net461/System.ValueTuple.xml",
-        "lib/net47/System.ValueTuple.dll",
-        "lib/net47/System.ValueTuple.xml",
-        "lib/netcoreapp2.0/_._",
-        "lib/netstandard1.0/System.ValueTuple.dll",
-        "lib/netstandard1.0/System.ValueTuple.xml",
-        "lib/netstandard2.0/_._",
-        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
-        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.xml",
-        "lib/uap10.0.16299/_._",
+        "lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "lib/win8/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "lib/wpa81/System.Runtime.InteropServices.RuntimeInformation.dll",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
-        "ref/net461/System.ValueTuple.dll",
-        "ref/net47/System.ValueTuple.dll",
-        "ref/netcoreapp2.0/_._",
-        "ref/netstandard2.0/_._",
-        "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
-        "ref/uap10.0.16299/_._",
+        "ref/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._",
-        "system.valuetuple.4.5.0.nupkg.sha512",
-        "system.valuetuple.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
+        "runtimes/aot/lib/netcore50/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "runtimes/unix/lib/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "runtimes/win/lib/net45/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "runtimes/win/lib/netcore50/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "runtimes/win/lib/netstandard1.1/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "system.runtime.interopservices.runtimeinformation.4.0.0.nupkg.sha512",
+        "system.runtime.interopservices.runtimeinformation.nuspec"
       ]
     },
     "TreeViewAdv/1.7.0": {
@@ -235,10 +653,10 @@
         "treeviewadv.nuspec"
       ]
     },
-    "YAXLib/4.0.0": {
-      "sha512": "ZwxRgdNQWg6Rlpv7gc0708BHMGjG1twZrxDyjxo77dDfFHMpz31SxOWk8wZKyceU54qNXZM4XRonURza1Y6PRg==",
+    "YAXLib/3.0.1": {
+      "sha512": "mWVmm0bgcWXGK4b0moR05AmNi7noR+kcd19Ns8FUuaBwKPESSa1mjNIgByzrhOTWnMlzBKenz/7Lxl33eWzTEw==",
       "type": "package",
-      "path": "yaxlib/4.0.0",
+      "path": "yaxlib/3.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -247,26 +665,19 @@
         "lib/net461/YAXLib.xml",
         "lib/netstandard2.0/YAXLib.dll",
         "lib/netstandard2.0/YAXLib.xml",
-        "lib/netstandard2.1/YAXLib.dll",
-        "lib/netstandard2.1/YAXLib.xml",
-        "yaxlib.4.0.0.nupkg.sha512",
+        "yaxlib.3.0.1.nupkg.sha512",
         "yaxlib.nuspec"
       ]
-    },
-    "ST/1.0.0": {
-      "type": "project",
-      "path": "../extlib/ST.Library.UI/ST.csproj",
-      "msbuildProject": "../extlib/ST.Library.UI/ST.csproj"
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0-windows7.0": [
+    ".NETFramework,Version=v4.7.2": [
       "DockPanelSuite >= 3.1.0",
       "DockPanelSuite.ThemeVS2015 >= 3.1.0",
       "Newtonsoft.Json >= 13.0.2",
-      "ST >= 1.0.0",
+      "OpenTK.GLControl >= 3.1.0",
       "TreeViewAdv >= 1.7.0",
-      "YAXLib >= 4.0.0"
+      "YAXLib >= 3.0.1"
     ]
   },
   "packageFolders": {
@@ -275,42 +686,32 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "R:\\hwSuite\\hwFoundry\\hwFoundry\\hwFoundry.csproj",
-      "projectName": "hwFoundry",
-      "projectPath": "R:\\hwSuite\\hwFoundry\\hwFoundry\\hwFoundry.csproj",
+      "projectUniqueName": "R:\\hwSuite\\hwFoundry\\hwfoundry\\hwfoundry.csproj",
+      "projectName": "hwfoundry",
+      "projectPath": "R:\\hwSuite\\hwFoundry\\hwfoundry\\hwfoundry.csproj",
       "packagesPath": "C:\\Users\\Jake\\.nuget\\packages\\",
-      "outputPath": "R:\\hwSuite\\hwFoundry\\hwFoundry\\obj\\",
+      "outputPath": "R:\\hwSuite\\hwFoundry\\hwfoundry\\obj\\",
       "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
       "configFilePaths": [
         "C:\\Users\\Jake\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0-windows"
+        "net472"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0-windows7.0": {
-          "targetAlias": "net6.0-windows",
-          "projectReferences": {
-            "R:\\hwSuite\\hwFoundry\\extlib\\ST.Library.UI\\ST.csproj": {
-              "projectPath": "R:\\hwSuite\\hwFoundry\\extlib\\ST.Library.UI\\ST.csproj"
-            }
-          }
+        "net472": {
+          "projectReferences": {}
         }
-      },
-      "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
       }
     },
     "frameworks": {
-      "net6.0-windows7.0": {
-        "targetAlias": "net6.0-windows",
+      "net472": {
         "dependencies": {
           "DockPanelSuite": {
             "target": "Package",
@@ -324,38 +725,30 @@
             "target": "Package",
             "version": "[13.0.2, )"
           },
+          "OpenTK.GLControl": {
+            "target": "Package",
+            "version": "[3.1.0, )"
+          },
           "TreeViewAdv": {
             "target": "Package",
-            "version": "[1.7.0, )",
-            "noWarn": [
-              "NU1701"
-            ]
+            "version": "[1.7.0, )"
           },
           "YAXLib": {
             "target": "Package",
-            "version": "[4.0.0, )"
+            "version": "[3.0.1, )"
           }
-        },
-        "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48",
-          "net481"
-        ],
-        "assetTargetFallback": true,
-        "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          },
-          "Microsoft.WindowsDesktop.App.WindowsForms": {
-            "privateAssets": "none"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
       }
     }
   }

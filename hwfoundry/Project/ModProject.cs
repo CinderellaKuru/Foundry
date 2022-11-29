@@ -1,194 +1,276 @@
-﻿using Aga.Controls.Tree;
-using hwFoundry.Modules.TriggerScripter;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using YAXLib;
+using YAXLib.Attributes;
+using YAXLib.Enums;
+using System.Drawing;
+using Aga.Controls.Tree;
+using System.ComponentModel;
+using Foundry.Project.Modules.Triggerscripter;
 
-namespace hwFoundry.Project
+namespace Foundry.Project
 {
+    public class ModProjectData
+    {
+        public ModProjectData()
+        {
+            folderData = new Dictionary<string, FolderData>();
+        }
+
+        //folder data
+        public class FolderData
+        {
+            public FolderData()
+            {
+                folded = true;
+            }
+            [YAXSerializeAs("Folded")]
+            public bool folded { get; set; }
+        }
+        [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
+        [YAXSerializeAs("FolderData")]
+        public Dictionary<string, FolderData> folderData { get; set; }
+    }
+
     public class ModProject
     {
-        #region Constants
-        public static string PROJ_EXT = ".hwfp";
+        public static string PROJ_EXT                   = ".hwfp";
 
-        public static string ART_DIR = @"\art";
-        public static string DATA_DIR = @"\data";
-        public static string DATA_SCRIPTS_DIR = @$"{DATA_DIR}\triggerscripts";
-        public static string DATA_PREFABS_DIR = @$"{DATA_SCRIPTS_DIR}\prefabs";
-        #endregion
+        public static string DATA_DIR                   = "\\data";
+        public static string DATA_SCRIPTS_DIR           = "\\data\\triggerscripts";
+        public static string DATA_PREFABS_DIR           = "\\data\\triggerscripts\\prefabs";
+        
+        public static string ART_DIR                    = "\\art";
+
+        public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>()
+        {
+            {"FILE", Properties.Resources.page_white},
+            {"FOLDER", Properties.Resources.folder},
+        };
+
+        #region Project
+        private string openedDir;
+        private string openedFile;
+        private ModProjectData projectData;
+        private ModProjectContentFile activeFile;
 
         private ModProject() { }
-
-        #region Project Management
-        public ContentFile activeFile;
-        private string? openedDir, openedFile;
-        private SerializableModProject? projectData;
-        private Dictionary<string, ContentFile> allFiles = new();
-        private Dictionary<string, TriggerScriptFile> triggerScriptFiles = new();
-        
-        #region Project Management
-        public static ModProject OpenProject(string file)
+        public static ModProject Create(string file)
         {
-            // Secondary extension check
-            if (Path.GetExtension(file) != PROJ_EXT)
-                throw new Exception($"Selected path does not lead to a project file (*{PROJ_EXT}).");
+            ModProject mp = new ModProject();
+            
+            if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
 
-            // Make a new ModProject object and set directory data
-            ModProject modProject = new()
-            {
-                openedDir = Path.GetDirectoryName(file),
-                openedFile = file
-            };
+            mp.projectData = new ModProjectData();
+            mp.openedDir = Path.GetDirectoryName(file);
+            mp.openedFile = file;
 
-            // Try to deserialize the mod project
-            try
-            {
-                YAXSerializer ser = new(typeof(SerializableModProject));
-                modProject.projectData = (SerializableModProject)ser.DeserializeFromFile(file);
-            }
-            catch { throw new Exception("Failed to parse project file! Malformed project file!"); }
+            mp.Save();
 
-            // Populate the visual hierarchy with included items
-            Program.mainWindow.projectExplorer.UpdateProjectHierarchy(modProject.LoadProjectHierarchy());
-
-            return modProject;
-        }
-
-        public static ModProject CreateProject(string filePath)
-        {
-            // Check filepath extension
-            if (Path.GetExtension(filePath) != PROJ_EXT)
-                throw new Exception($"Selected path was not a {PROJ_EXT}.");
-
-            // Create the new project
-            ModProject mp = new()
-            {
-                projectData = new(),
-                openedDir = Path.GetDirectoryName(filePath),
-                openedFile = filePath
-            };
-
-            // Save the project
-            mp.SaveProject();
             return mp;
         }
-
-        public void SaveProject()
+        public static ModProject Open(string file)
         {
-            YAXSerializer ser = new(typeof(SerializableModProject));
+            ModProject mp = new ModProject();
+
+            if (Path.GetExtension(file) != PROJ_EXT) throw new Exception("Selected path was not a " + PROJ_EXT + ".");
+
+            mp.openedDir = Path.GetDirectoryName(file);
+            mp.openedFile = file;
+
+            try
+            {
+                YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
+                mp.projectData = (ModProjectData)ser.DeserializeFromFile(file);
+            }
+            catch
+            {
+                throw new Exception("Failed to parse project file.");
+            }
+
+            Program.window.projectExplorer.UpdateHierarchy(mp.DirGetNodeGraph());
+
+            return mp;
+        }
+        public void Save()
+        { 
+            YAXSerializer ser = new YAXSerializer(typeof(ModProjectData));
             string serStr = ser.Serialize(projectData);
             File.WriteAllText(openedFile, serStr);
         }
-        #endregion
-
-        #region Utility
-        private IEnumerable<EntryNode> LoadProjectHierarchy()
+        
+        public void SetActiveFile(ModProjectContentFile file)
         {
-            // Temporary Containers
-            List<EntryNode> roots = new();
-            Dictionary<string, EntryNode> folders = new();
-
-            // Go through all folders in project dir
-            foreach (string path in Directory.EnumerateDirectories(openedDir, "*", SearchOption.AllDirectories))
-            {
-                // Containers
-                StringBuilder concat = new();
-                EntryNode? lastNode = null;
-
-                // Split directory paths into substrings
-                string[] entries = path.Substring(openedDir.Length + 1).Split("\\");
-
-                // Go through each entry and add a
-                // new folder to the treeview if one doesn't exist
-                foreach (string entry in entries)
-                {
-                    // Append folder name and determine if
-                    // the new folder path needs to be made
-                    concat.Append($@"\{entry}");
-                    if (!folders.ContainsKey(concat.ToString()))
-                    {
-                        // The folder doesn't exist, add a new folder node
-                        EntryNode tempNode = new()
-                        {
-                            Text = entry,
-                            Image = Properties.Resources.folder,
-                            FullPath = concat.ToString()
-                        };
-
-                        // Check if this is the first folder of the directory tree
-                        if (lastNode != null) lastNode.Nodes.Add(tempNode);
-                        else roots.Add(tempNode);
-
-                        // Add the folder to the hierarchy, track the last appended folder
-                        folders.Add(concat.ToString(), tempNode);
-                        lastNode = tempNode;
-                        continue;
-                    }
-
-                    // The folder exists, don't add a new one
-                    lastNode = folders[concat.ToString()];
-                }
-            }
-
-            // Iterate through each folder found, load each file's content
-            foreach (var folder in folders)
-                foreach (string file in Directory.EnumerateFiles(openedDir + folder.Key))
-                    folder.Value.Nodes.Add(LoadContentFile(file));
-
-            // Return all roots of the directory tree
-            return roots;
+            activeFile = file;
         }
-
-        private EntryNode LoadContentFile(string filepath)
+        public void SaveActiveFile()
         {
-            // If an invalid directory is attempting to be loaded, return an empty EntryNodeData obj
-            if (!File.Exists(filepath))
-                return new EntryNode();
-
-            // Figure out what kind of content file we're reading
-            ContentFile cf;
-            switch (Path.GetExtension(filepath))
-            {
-                // Trigger Scripts
-                case ".tsp":
-                    cf = new TriggerScriptFile(filepath);
-                    triggerScriptFiles.Add(filepath, (TriggerScriptFile)cf);
-                    allFiles.Add(filepath, cf);
-                    break;
-
-                // All other files
-                default:
-                    cf = new ContentFile(filepath);
-                    allFiles.Add(filepath, cf);
-                    break;
-            }
-
-            // Return the root node 
-            return cf.GetRootNode();
-        }
-
-        internal void DirSelectFile(string fullPath)
-            => Program.mainWindow.propertyEditor.SetSelectedObject(allFiles.ContainsKey(fullPath) ? allFiles[fullPath] : null);
-
-        internal void DirOpenFile(string fullPath, string subName)
-        {
-            if (allFiles.ContainsKey(fullPath))
-                allFiles[fullPath].OpenFile(subName);
-        }
-
-        internal void SetActiveFile(TriggerScriptFile triggerScriptFile)
-            => activeFile = triggerScriptFile;
-
-        internal void SaveActiveFile()
-        {
-            if (activeFile != null)
+            if(activeFile != null)
                 activeFile.SaveFile();
         }
         #endregion
 
+        #region Explorer
+        public class EntryNodeData : Node
+        {
+            private string _fullPath;
+            public string FullPath
+            {
+                get { return _fullPath; }
+                set { _fullPath = value; }
+            }
+
+            private string _subName;
+            public string SubName
+            {
+                get { return _subName; }
+                set { _subName = value; }
+            }
+        }
+        public class ModProjectContentFile
+        {
+            private string fileName;
+            [Category("File"), Description("Location of the file on disk.")]
+            public string PathOnDisk
+            {
+                get { return fileName; }
+                set { fileName = value; }
+            }
+            private bool export;
+            [Category("File"), Description("Include this file in the project export.")]
+            public bool IncludeInExport
+            {
+                get { return export; }
+                set { export = value; }
+            }
+
+            private bool markedEdited = false;
+
+            protected virtual void DoSave() { }
+            protected virtual void DoOpen(string subName) { }
+            protected virtual void DoImport(string fileName) { }
+
+            public ModProjectContentFile(string fileName)
+            {
+                this.fileName = fileName;
+            }
+            public virtual EntryNodeData GetRootNode()
+            {
+                EntryNodeData end = new EntryNodeData();
+                end.Text = Path.GetFileName(fileName);
+                end.Image = ModProject.images["FILE"];
+                return end;
+            }
+            public void MarkEdited()
+            {
+                markedEdited = true;
+            }
+            public void SaveFile()
+            {
+                if(markedEdited) DoSave();
+                markedEdited = false;
+            }
+            public void OpenFile(string subName)
+            {
+                DoOpen(subName);
+            }
+            public void ImportFile(string fileName)
+            {
+                DoImport(fileName);
+            }
+        }
+        
+        private Dictionary<string, ModProjectContentFile>    allFiles            = new Dictionary<string, ModProjectContentFile>();
+        private Dictionary<string, TriggerscriptContentFile> triggerscriptFiles  = new Dictionary<string, TriggerscriptContentFile>();
+        private EntryNodeData LoadContentFile(string dir)
+        {
+            if (!File.Exists(dir)) return new EntryNodeData();
+            
+            ModProjectContentFile cf;
+
+            switch(Path.GetExtension(dir))
+            {
+                case ".tsp":
+                    cf = new TriggerscriptContentFile(dir);
+                    triggerscriptFiles.Add(dir, (TriggerscriptContentFile)cf);
+                    allFiles.Add(dir, cf);
+                    break;
+                default:
+                    cf = new ModProjectContentFile(dir);
+                    allFiles.Add(dir, cf);
+                    break;
+            }
+
+            return cf.GetRootNode();
+        }
+
+        public IEnumerable<EntryNodeData>   DirGetNodeGraph()
+        {
+            List<EntryNodeData> roots = new List<EntryNodeData>();
+            Dictionary<string, EntryNodeData> folders = new Dictionary<string, EntryNodeData>();
+
+            foreach (string path in Directory.EnumerateDirectories(openedDir, "*", SearchOption.AllDirectories))
+            {
+                string[] entries = path.Substring(openedDir.Length + 1).Split('\\');
+
+                string concat = "";
+                EntryNodeData last = null;
+
+                foreach (string e in entries)
+                {
+                    concat += "\\" + e;
+
+                    if (!folders.ContainsKey(concat))
+                    {
+                        EntryNodeData n = new EntryNodeData();
+                        n.Text = e;
+                        n.Image = images["FOLDER"];
+                        n.FullPath = concat;
+                        if (last != null) last.Nodes.Add(n);
+                        else roots.Add(n);
+                        folders.Add(concat, n);
+                        last = n;
+                    }
+                    else
+                    {
+                        last = folders[concat];
+                    }
+                }
+            }
+            foreach (var v in folders)
+            {
+                foreach(var f in Directory.EnumerateFiles(openedDir + v.Key))
+                {
+                    v.Value.Nodes.Add(LoadContentFile(f));
+                }
+            }
+
+            return roots;
+        }
+        public void                         DirAddFolder (string localDirLeadingSlash)
+        {
+            string fullPath = openedDir + localDirLeadingSlash;
+
+            if (!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+        }
+        public void                         DirAddFile   (ModProjectContentFile mpcf)
+        {
+
+        }
+        public void                         DirOpenFile  (string fileDir, string subName)
+        {
+            if (allFiles.ContainsKey(fileDir))
+                allFiles[fileDir].OpenFile(subName);
+        }
+        public void                         DirSelectFile(string fileDir)
+        {
+            if (allFiles.ContainsKey(fileDir))
+                Program.window.propertyEditor.SetSelectedObject(allFiles[fileDir]);
+        }
         #endregion
     }
 }

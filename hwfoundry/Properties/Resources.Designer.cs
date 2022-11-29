@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace hwFoundry.Properties {
+namespace Foundry.Properties {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace hwFoundry.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace hwFoundry.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("hwFoundry.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Foundry.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace hwFoundry.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -87,7 +87,7 @@ namespace hwFoundry.Properties {
         ///        &quot;name&quot;: &quot;FilterLocation&quot;,
         ///      [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string cnd {
+        public static string cnd {
             get {
                 return ResourceManager.GetString("cnd", resourceCulture);
             }
@@ -125,7 +125,7 @@ namespace hwFoundry.Properties {
         ///        &quot;name&quot;: &quot;BoolCopy&quot;,
         ///  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string eff {
+        public static string eff {
             get {
                 return ResourceManager.GetString("eff", resourceCulture);
             }
@@ -134,7 +134,7 @@ namespace hwFoundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder {
+        public static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -144,7 +144,7 @@ namespace hwFoundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_white {
+        public static System.Drawing.Bitmap page_white {
             get {
                 object obj = ResourceManager.GetObject("page_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -188,7 +188,7 @@ namespace hwFoundry.Properties {
         ///  &quot;VectorList&quot;,
         ///  &quot;Cin [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string var {
+        public static string var {
             get {
                 return ResourceManager.GetString("var", resourceCulture);
             }

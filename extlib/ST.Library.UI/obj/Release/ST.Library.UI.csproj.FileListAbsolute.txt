@@ -1,7 +1,0 @@
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\bin\Release\ST.Library.UI.XML
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\bin\Release\ST.Library.UI.dll
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\bin\Release\ST.Library.UI.pdb
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Release\ST.Library.UI.csproj.AssemblyReference.cache
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Release\ST.Library.UI.csproj.CoreCompileInputs.cache
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Release\ST.Library.UI.dll
-R:\hwSuite\hwFoundry\NEW_STUFF\hwFoundry\extlib\ST.Library.UI\obj\Release\ST.Library.UI.pdb

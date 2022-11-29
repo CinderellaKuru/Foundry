@@ -1,19 +1,25 @@
-namespace hwFoundry
+﻿using Foundry.DockingModules.ProjectExplorer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Foundry
 {
     internal static class Program
     {
-        public static GUI.MainWindow? mainWindow;
+        public static Foundry window;
 
         [STAThread]
         static void Main()
         {
-            ApplicationConfiguration.Initialize();
+            ProjectExplorer.InitImageList();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            mainWindow = new();
-            Application.Run(mainWindow);
+            window = new Foundry();
+            Application.Run(window);
         }
     }
 }
