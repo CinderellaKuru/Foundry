@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Collections.Generic;
-using static Foundry.Project.ModProject;
 using Newtonsoft.Json;
+using static Foundry.FoundryInstance;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Foundry.Project.Modules.Triggerscripter
 {
@@ -45,45 +46,31 @@ namespace Foundry.Project.Modules.Triggerscripter
         public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
     }
 
-    public class TriggerscriptContentFile : ModProjectContentFile
+    public class TriggerscriptContentFile : ContentFile
     {
         SerializedTriggerscripter sts;
         TriggerscripterPage page;
-        EntryNodeData node;
-        
-        public TriggerscriptContentFile(string fileName) : base(fileName)
+
+        public TriggerscriptContentFile(FoundryInstance i, string fileName) : base(i, fileName)
         {
             if (!File.Exists(fileName)) return;
-
-            node = new EntryNodeData();
-            node.Text = Path.GetFileName(fileName);
-            node.Image = ModProject.images["FILE"];
-            node.SubName = "";
-            node.FullPath = fileName;
         }
-
-        public override EntryNodeData GetRootNode()
+        protected override DockContent DoOpenFile()
         {
-            return node;
-        }
-        protected override void DoOpen(string subName)
-        {
-            page = new TriggerscripterPage();
-            page.Text = Path.GetFileName(PathOnDisk);
+            page = new TriggerscripterPage(Instance());
+            page.Text = Path.GetFileName(FileName());
 
-            page.Show(Program.window.Workspace(), WeifenLuo.WinFormsUI.Docking.DockState.Document);            
-
-            string file = File.ReadAllText(PathOnDisk);
+            string file = File.ReadAllText(FileName());
             sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(file);
-            page.LoadFromFile(sts);
+            page.Load(sts);
 
-            Program.window.project.SetActiveFile(this);
+            return page;
         }
-        protected override void DoSave()
+        protected override void DoSaveFile()
         {
-            page.Text = Path.GetFileName(PathOnDisk);
+            page.Text = Path.GetFileName(FileName());
             string file = JsonConvert.SerializeObject(page.GetSerializedGraph());
-            File.WriteAllText(PathOnDisk, file);
+            File.WriteAllText(FileName(), file);
         }
     }
 }

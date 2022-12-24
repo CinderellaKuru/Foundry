@@ -61,6 +61,36 @@ namespace Foundry.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap _lock {
+            get {
+                object obj = ResourceManager.GetObject("_lock", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap arrow_refresh_small {
+            get {
+                object obj = ResourceManager.GetObject("arrow_refresh_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap box {
+            get {
+                object obj = ResourceManager.GetObject("box", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///  {
         ///    &quot;name&quot;: &quot;CanGetUnits&quot;,
@@ -85,7 +115,7 @@ namespace Foundry.Properties {
         ///      },
         ///      {
         ///        &quot;name&quot;: &quot;FilterLocation&quot;,
-        ///      [rest of string was truncated]&quot;;.
+        ///        &quot;valueType&quot;: &quot;Vector&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string cnd {
             get {
@@ -123,6 +153,7 @@ namespace Foundry.Properties {
         ///    &quot;outputs&quot;: [
         ///      {
         ///        &quot;name&quot;: &quot;BoolCopy&quot;,
+        ///        &quot;valueType&quot;: &quot;Bool&quot;,
         ///  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string eff {
@@ -137,6 +168,26 @@ namespace Foundry.Properties {
         public static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap lock_open {
+            get {
+                object obj = ResourceManager.GetObject("lock_open", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap page {
+            get {
+                object obj = ResourceManager.GetObject("page", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -186,7 +237,9 @@ namespace Foundry.Properties {
         ///  &quot;Object&quot;,
         ///  &quot;ObjectList&quot;,
         ///  &quot;VectorList&quot;,
-        ///  &quot;Cin [rest of string was truncated]&quot;;.
+        ///  &quot;Cinematic&quot;,
+        ///  &quot;EventType&quot;,
+        ///  &quot;FlareTy [rest of string was truncated]&quot;;.
         /// </summary>
         public static string var {
             get {

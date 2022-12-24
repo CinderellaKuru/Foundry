@@ -1,4 +1,4 @@
-﻿using Foundry.DockingModules.ProjectExplorer;
+﻿using Foundry.Project.Modules.ScenarioEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +9,14 @@ namespace Foundry
 {
     internal static class Program
     {
-        public static Foundry window;
+        public static FoundryInstance window;
 
         [STAThread]
         static void Main()
         {
-            ProjectExplorer.InitImageList();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            window = new Foundry();
+            window = new FoundryInstance();
             Application.Run(window);
         }
     }

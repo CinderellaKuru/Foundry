@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Foundry</RootNamespace>
     <AssemblyName>hwfoundry</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -28,21 +29,12 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -58,41 +50,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Project\Modules\FoundryPage.cs" />
+    <Compile Include="Project\Modules\ScenarioEditor\ScenarioEditorContentFile.cs" />
+    <Compile Include="Project\Modules\ScenarioEditor\ScenarioEditorPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Project\Modules\Triggerscripter\TriggerscripterCompiler.cs" />
     <Compile Include="Project\Modules\Triggerscripter\TriggerScripterNode.cs" />
     <Compile Include="Project\Modules\Triggerscripter\TriggerscripterPage.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscripterPage.Designer.cs">
-      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Project\Modules\ProjectExplorer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Project\Modules\ProjectExplorer.Designer.cs">
-      <DependentUpon>ProjectExplorer.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Project\Modules\ProjectExplorer.cs" />
     <Compile Include="Project\Modules\PropertyEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ECF\ECF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project\Modules\Triggerscripter\TriggerscripterContentFile.cs" />
-    <Compile Include="Project\ModProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Project\MainWindow.cs">
+    <Compile Include="Project\FoundryInstance.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Project\MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
+    <Compile Include="Project\FoundryInstance.Designer.cs">
+      <DependentUpon>FoundryInstance.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
-    <EmbeddedResource Include="Project\Modules\Triggerscripter\TriggerscripterPage.resx">
-      <DependentUpon>TriggerscripterPage.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Project\Modules\ProjectExplorer.resx">
       <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
@@ -101,22 +81,23 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Project\FoundryInstance.resx">
+      <DependentUpon>FoundryInstance.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="ScriptComb\bin\Debug\out\cnd.json" />
-    <None Include="ScriptComb\bin\Debug\out\eff.json" />
-    <None Include="ScriptComb\bin\Debug\out\var.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ext\SMH-Icons\box.png" />
@@ -157,34 +138,12 @@
   <ItemGroup>
     <None Include="ext\CommandPositions\7.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\out.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\bin\Debug\out\var.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScriptComb\out\var.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"</PreBuildEvent>
+    <PreBuildEvent>xcopy /Y /E "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"
+rmdir /q /s "$(TargetDir)\workingProject\"
+xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProject\"</PreBuildEvent>
   </PropertyGroup>
-  <ItemGroup>
-    <AssembliesPath Include="R:\hwSuite\hwFoundry\hwfoundry\bin\x64\Debug\\hwfoundry.exe" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page.png" />
   </ItemGroup>
@@ -201,17 +160,29 @@
     <PackageReference Include="DockPanelSuite.ThemeVS2015">
       <Version>3.1.0</Version>
     </PackageReference>
+    <PackageReference Include="HelixToolkit.SharpDX.Core">
+      <Version>2.23.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
     </PackageReference>
-    <PackageReference Include="OpenTK.GLControl">
-      <Version>3.1.0</Version>
+    <PackageReference Include="OpenTK">
+      <Version>3.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Desktop">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.DirectInput">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Memory">
+      <Version>4.5.5</Version>
     </PackageReference>
     <PackageReference Include="TreeViewAdv">
       <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="YAXLib">
-      <Version>3.0.1</Version>
+      <Version>4.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +217,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\var.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_refresh_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lock_open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\box.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

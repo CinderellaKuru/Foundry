@@ -1,84 +1,174 @@
-﻿using System;
+﻿using Aga.Controls.Tree.NodeControls;
+using Aga.Controls.Tree;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Foundry.Project.ModProject;
+using System.Xml.Linq;
 using WeifenLuo.WinFormsUI.Docking;
-using Aga.Controls.Tree.NodeControls;
-using Aga.Controls.Tree;
-using Foundry.Project;
+using static Foundry.FoundryInstance;
 
-namespace Foundry.DockingModules.ProjectExplorer
+namespace Foundry.Project.Modules
 {
-    public partial class ProjectExplorer : DockContent
+    class ExplorerNode : Node
     {
-        public static void InitImageList()
+        public ExplorerNode(string text, string fullPath, Image image)
         {
-        }
-        
-        ContextMenu contextMenu;
-        TreeModel model;
-        NodeTextBox textBox;
-        NodeStateIcon stateIcon;
-        public ProjectExplorer()
-        {
-            contextMenu = new ContextMenu();
-            ContextMenu = contextMenu;
-            contextMenu.Popup += OnContextMenuPopup;
-            InitializeComponent();
-
-            model = new TreeModel();
-
-            stateIcon = new NodeStateIcon();
-            stateIcon.DataPropertyName = "Image";
-
-            textBox = new NodeTextBox();
-            textBox.DataPropertyName = "Text";
-            textBox.EditEnabled = false;
-            textBox.IncrementalSearchEnabled = true;
-            textBox.LeftMargin = 3;
-
-            treeViewAdv.Model = model;
-            treeViewAdv.NodeControls.Add(stateIcon);
-            treeViewAdv.NodeControls.Add(textBox);
-            treeViewAdv.NodeMouseDoubleClick += OnDoubleClicked;
-            treeViewAdv.NodeMouseClick += OnClicked;
+            Text = text;
+            FullPath = fullPath;
+            Image = image;
         }
 
-        private void OnContextMenuPopup(object o, EventArgs e)
-        {
-            contextMenu.MenuItems.Clear();
+        public string FullPath { get; set; }
+    }
+    public class ProjectExplorer : FoundryPage
+    {
+        private ToolStrip toolStrip;
+        private ToolStripButton buttonRefresh;
+        private NodeIcon nodeImage;
+        private NodeTextBox nodeText;
+        private TreeViewAdv treeView;
+        public  TreeModel treeModel;
 
+        public ProjectExplorer(FoundryInstance i) : base(i)
+        {
+            Init();
+        }
+        private void Init()
+        {
+            this.treeModel = new TreeModel();
+            this.nodeImage = new NodeIcon();
+            this.nodeText = new NodeTextBox();
+            this.toolStrip = new ToolStrip();
+            this.buttonRefresh = new ToolStripButton();
+            this.treeView = new TreeViewAdv();
+            this.toolStrip.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // nodeImage
+            // 
+            this.nodeImage.LeftMargin = 1;
+            this.nodeImage.ParentColumn = null;
+            this.nodeImage.DataPropertyName = "Image";
+            this.nodeImage.ScaleMode = Aga.Controls.Tree.ImageScaleMode.Clip;
+            // 
+            // nodeText
+            // 
+            this.nodeText.IncrementalSearchEnabled = true;
+            this.nodeText.LeftMargin = 3;
+            this.nodeText.DataPropertyName = "Text";
+            this.nodeText.ParentColumn = null;
+            // 
+            // toolstrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonRefresh});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolstrip";
+            this.toolStrip.Size = new System.Drawing.Size(284, 25);
+            this.toolStrip.TabIndex = 1;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonRefresh.Image = global::Foundry.Properties.Resources.arrow_refresh_small;
+            this.buttonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.buttonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefresh_Clicked);
+            // 
+            // treeView
+            // 
+            this.treeView.BackColor = System.Drawing.SystemColors.Window;
+            this.treeView.DefaultToolTipProvider = null;
+            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.DragDropMarkColor = System.Drawing.Color.Black;
+            this.treeView.LineColor = System.Drawing.SystemColors.ControlDark;
+            this.treeView.Location = new System.Drawing.Point(0, 25);
+            this.treeView.Model = treeModel;
+            this.treeView.Name = "treeView";
+            this.treeView.NodeControls.Add(this.nodeImage);
+            this.treeView.NodeControls.Add(this.nodeText);
+            this.treeView.SelectedNode = null;
+            this.treeView.Size = new System.Drawing.Size(284, 236);
+            this.treeView.TabIndex = 2;
+            this.treeView.Text = "treeview";
+            this.treeView.NodeMouseClick += new EventHandler<TreeNodeAdvMouseEventArgs>(TreeViewNode_Clicked);
+            this.treeView.NodeMouseDoubleClick += new EventHandler<TreeNodeAdvMouseEventArgs>(TreeViewNode_DoubleClicked);
+            // 
+            // ProjectExplorer
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.treeView);
+            this.Controls.Add(this.toolStrip);
+            this.Name = "ProjectExplorer";
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
-        private void OnClicked(object o, TreeNodeAdvMouseEventArgs e)
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // nodes
+        private void CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
         {
-            EntryNodeData end = (EntryNodeData)e.Node.Tag;
-            Program.window.project.DirSelectFile(end.FullPath);
+            foreach(DiskEntryNode child in diskNode._children)
+            {
+                ExplorerNode newNode = new ExplorerNode(child._name, child._path, child._icon);
+                CreateExplorerNodeRecursive(child, newNode);
+                explorerNode.Nodes.Add(newNode);
+            }
         }
-        private void OnDoubleClicked(object o, TreeNodeAdvMouseEventArgs e)
+        public void UpdateNodes(DiskEntryNode rootDiskEntryNode)
         {
-            EntryNodeData end = (EntryNodeData)e.Node.Tag;
-            Program.window.project.DirOpenFile(end.FullPath, end.SubName);
+            ExplorerNode rootExplorerNode = new ExplorerNode(rootDiskEntryNode._name, rootDiskEntryNode._path, rootDiskEntryNode._icon);
+            CreateExplorerNodeRecursive(rootDiskEntryNode, rootExplorerNode);
+            
+            treeView.BeginUpdate();
+            treeModel.Nodes.Clear();
+            treeModel.Nodes.Add(rootExplorerNode);
+            treeView.EndUpdate();
+
+            treeView.ExpandAll(); //replace with cached fold info.
+            treeView.FullUpdate();
+        }
+        public void RefreshNodes()
+        {
+            FoundryInstance owner = Instance();
+            owner.UpdateAllProjectExplorers(owner.UpdateContent());
+        }
+        public void ClearNodes()
+        {
+            treeView.BeginUpdate();
+            treeModel.Nodes.Clear();
+            treeView.EndUpdate();
+            treeView.FullUpdate();
         }
 
-        public void UpdateHierarchy(IEnumerable<EntryNodeData> rootNodes)
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ui callbacks
+        private void TreeViewNode_Clicked(object o, TreeNodeAdvMouseEventArgs e)
         {
-            model.Nodes.Clear();
-
-            treeViewAdv.BeginUpdate();
-
-            foreach (Node n in rootNodes)
-                model.Nodes.Add(n);
-
-            treeViewAdv.EndUpdate();
-            treeViewAdv.ExpandAll(); //replace with cached fold info.
-            treeViewAdv.FullUpdate();
+            
+        }
+        private void TreeViewNode_DoubleClicked(object o, TreeNodeAdvMouseEventArgs e)
+        {
+            if (e.Node.Tag is ExplorerNode)
+            {
+                Instance().ContentFileOpen(((ExplorerNode)e.Node.Tag).FullPath);
+            }
+        }
+        private void ButtonRefresh_Clicked(object o, EventArgs e)
+        {
+            RefreshNodes();
         }
     }
 }

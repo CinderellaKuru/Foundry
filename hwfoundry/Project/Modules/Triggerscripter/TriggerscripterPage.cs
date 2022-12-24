@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-using OpenTK;
+
+//TODO: replace this with slimdx's input libs
 using OpenTK.Input;
+
 using Newtonsoft.Json;
-using System.Xml;
 using System.Xml.Linq;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Foundry.Project.Modules.Triggerscripter
@@ -51,10 +51,9 @@ namespace Foundry.Project.Modules.Triggerscripter
         public int version;
     }
 
-    public partial class TriggerscripterPage : DockContent
+    public class TriggerscripterPage : FoundryPage
     {
-        ContextMenu cm;
-        public static Dictionary<string, string> nodeSubCategories = new Dictionary<string, string>()
+        private static Dictionary<string, string> nodeSubCategories = new Dictionary<string, string>()
         {
             {"AISquadAnalysisVar", "Page 1"},
             {"AISquadAnalysisComponentVar", "Page 1"},
@@ -745,16 +744,12 @@ namespace Foundry.Project.Modules.Triggerscripter
             {"UnitLocationDistanceCnd", "Game|World"},
             {"UnitUnitDistanceCnd", "Game|World"}
         };
+        private List<TriggerscripterNode> nodes = new List<TriggerscripterNode>();
 
-        public EventHandler OnEdit;
-
-        Timer t = new Timer();
-        public List<TriggerscripterNode> nodes = new List<TriggerscripterNode>();
-        bool copyPastePressed;
-
-        public TriggerscripterPage()
+        private ContextMenu cm;
+        private Timer t;
+        public TriggerscripterPage(FoundryInstance i) : base(i)
         {
-            InitializeComponent();
             DoubleBuffered = true;
             Paint += new PaintEventHandler(DrawControl);
 
@@ -773,17 +768,21 @@ namespace Foundry.Project.Modules.Triggerscripter
             cm.MenuItems.Add(effMI);
             cm.MenuItems.Add(varMI);
 
+            //populate with main categories
             Dictionary<string, MenuItem> hierarchy = new Dictionary<string, MenuItem>() {
                 { "cnd|", cndMI },
                 { "eff|", effMI },
                 { "var|", varMI }
             };
 
+            //deserialize and sort effects.
             List<Tuple<Effect, string>> effsSorted = new List<Tuple<Effect, string>>();
             foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(Properties.Resources.eff))
+            {
                 effsSorted.Add(new Tuple<Effect, string>(e, nodeSubCategories[e.name + "Eff"]));
+            }
             effsSorted = effsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
-
+            //create MenuItems for effects.
             foreach (var v in effsSorted)
             {
                 string concat = "eff|";
@@ -799,9 +798,8 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                     else
                     {
-                        MenuItem i = new MenuItem(s);
-                        hierarchy.Add(concat, i);
-                        item = i;
+                        item = new MenuItem(s);
+                        hierarchy.Add(concat, item);
                     }
                     last.MenuItems.Add(item);
                     last = item;
@@ -812,11 +810,13 @@ namespace Foundry.Project.Modules.Triggerscripter
                 last.MenuItems.Add(effI);
             }
 
+
+            //deserialize and sort conditions.
             List<Tuple<Condition, string>> cndsSorted = new List<Tuple<Condition, string>>();
             foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(Properties.Resources.cnd))
                 cndsSorted.Add(new Tuple<Condition, string>(c, nodeSubCategories[c.name + "Cnd"]));
             cndsSorted = cndsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
-
+            //create MenuItems for conditions
             foreach (var v in cndsSorted)
             {
                 string concat = "cnd|";
@@ -832,9 +832,8 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                     else
                     {
-                        MenuItem i = new MenuItem(s);
-                        hierarchy.Add(concat, i);
-                        item = i;
+                        item = new MenuItem(s);
+                        hierarchy.Add(concat, item);
                     }
                     last.MenuItems.Add(item);
                     last = item;
@@ -845,6 +844,8 @@ namespace Foundry.Project.Modules.Triggerscripter
                 last.MenuItems.Add(cndI);
             }
 
+
+            //deserialize and sort variable types.
             List<string> vs = JsonConvert.DeserializeObject<List<string>>(Properties.Resources.var);
             vs.Sort();
             foreach (string v in vs)
@@ -861,10 +862,10 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                     else
                     {
-                        MenuItem i = new MenuItem(s);
-                        hierarchy.Add(concat, i);
-                        last.MenuItems.Add(i);
-                        last = i;
+                        MenuItem item = new MenuItem(s);
+                        hierarchy.Add(concat, item);
+                        last.MenuItems.Add(item);
+                        last = item;
                     }
                 }
 
@@ -875,30 +876,26 @@ namespace Foundry.Project.Modules.Triggerscripter
             }
             #endregion
 
-            Tick(null, null);
+
+
+            //init matrices.
+            PollInput();
+            UpdateMatrices();
+
+            //start draw timer.
+            t = new Timer();
             t.Interval = 1;
             t.Tick += Tick;
             t.Start();
         }
         void Tick(object o, EventArgs e)
         {
-            MouseState mouse = Mouse.GetCursorState();
-            KeyboardState keyboard = Keyboard.GetState();
-
-            PollInput(mouse, keyboard);
-            lastX = mouse.X;
-            lastY = mouse.Y;
-            lastM = mouse.Scroll.Y;
-
+            PollInput();
             UpdateMatrices();
             Invalidate();
         }
-        public void AddNode(TriggerscripterNode n)
-        {
-            nodes.Add(n);
-        }
 
-
+        #region draw
         Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
         public int majorGridSpace = 200;
         float x = 0, y = 0;
@@ -950,6 +947,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                 }
             }
+           
             //draw temp connection
             Point[] pos = new Point[] { PointToClient(new Point((int)lastX, (int)lastY)) };
             transformInv.TransformPoints(pos);
@@ -960,6 +958,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
                     pos[0]);
             }
+            
             //draw nodes
             foreach (TriggerscripterNode n in nodes)
             {
@@ -970,6 +969,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     s.Draw(e);
                 }
             }
+            
             //draw marquee
             if (mouseState == CurrentMouseState.DraggingMarquee)
             {
@@ -992,12 +992,17 @@ namespace Foundry.Project.Modules.Triggerscripter
             transformInv.Scale(1 / zoom, 1 / zoom);
             transformInv.Translate(-Width / 2, -Height / 2);
         }
+        #endregion
 
-
+        #region ui/ux
         TriggerscripterSocket selectedSocket = null;
         bool lastClickedL = false, lastClickedR = false;
         bool suspendInput = false;
         float lastX = 0, lastY = 0, lastM = 0;
+        bool copyPastePressed;
+
+        EventHandler OnEdit;
+
         enum CurrentMouseState
         {
             None,
@@ -1010,9 +1015,11 @@ namespace Foundry.Project.Modules.Triggerscripter
         int marqueeX2, marqueeY2;
 
         CurrentMouseState mouseState;
-        void PollInput(MouseState m, KeyboardState keyboard)
+        void PollInput()
         {
             if (IsDisposed) return;
+            MouseState m = Mouse.GetCursorState();
+            KeyboardState keyboard = Keyboard.GetState();
 
             if (keyboard.IsKeyDown(Key.Delete))
             {
@@ -1068,7 +1075,9 @@ namespace Foundry.Project.Modules.Triggerscripter
                 copyPastePressed = true;
             }
             else
+            {
                 copyPastePressed = false;
+            }
 
             Point min = PointToScreen(new Point(0, 0));
             Point max = PointToScreen(new Point(Width, Height));
@@ -1136,6 +1145,11 @@ namespace Foundry.Project.Modules.Triggerscripter
                 else
                     suspendInput = false;
             }
+
+            //must be done after the entire poll.
+            lastX = m.X;
+            lastY = m.Y;
+            lastM = m.Scroll.Y;
         }
         void OnClickL(int mx, int my)
         {
@@ -1377,41 +1391,64 @@ DraggingSocketFinish:
 
         void OnNodeSelected(TriggerscripterNode n)
         {
-            Program.window.propertyEditor.SetSelectedObject(n);
+
         }
         void OnDeselect()
         {
-            Program.window.propertyEditor.SetSelectedObject(null);
-        }
 
+        }
+        #endregion
+
+        #region creation
         public static Color requiredVarColor = Color.FromArgb(255, 64, 130, 64);
         public static Color optionalVarColor = Color.FromArgb(255, 122, 130, 64);
         public static Color cndColor = Color.FromArgb(255, 130, 64, 64);
         public static Color trgColor = Color.FromArgb(255, 64, 117, 130);
         public static Color effColor = Color.FromArgb(255, 130, 64, 106);
 
-        Point[] nodeAddLocation = new Point[] { new Point() };
+        Point nodeAddLocation = new Point();
         public void CaptureMousePos(object o, EventArgs e)
         {
-            nodeAddLocation[0] = PointToClient(new Point(
+            nodeAddLocation = PointToClient(new Point(
                 OpenTK.Input.Mouse.GetCursorState().X,
                 OpenTK.Input.Mouse.GetCursorState().Y));
 
-            transformInv.TransformPoints(nodeAddLocation);
-            Console.WriteLine(nodeAddLocation[0]);
+            Point[] nodeAddLocationArr = new Point[] { nodeAddLocation };
+            transformInv.TransformPoints(nodeAddLocationArr);
+            nodeAddLocation = nodeAddLocationArr[0];
         }
         
         //node id trackers
         public int trgID = 0, varID = 0;
         public int cndID = 0, effID = 0;
 
+        //context menu callbacks
         public void CreateNewTriggerPressed(object o, EventArgs e)
         {
             SerializedTrigger t = new SerializedTrigger();
             t.name = "NewTrigger" + trgID;
-            CreateTriggerNode(t, trgID, nodeAddLocation[0].X, nodeAddLocation[0].Y);
+            CreateTriggerNode(t, trgID, nodeAddLocation.X, nodeAddLocation.Y);
             trgID++;
         }
+        public void CreateNewVarPressed(object o, EventArgs e)
+        {
+            SerializedVariable var = new SerializedVariable();
+            var.type = (string)((MenuItem)o).Tag;
+            var.name = "New" + var.type + varID.ToString();
+            var.value = "";
+            CreateVarNode(var, varID, nodeAddLocation.X, nodeAddLocation.Y);
+            varID++;
+        }
+        public void CreateNewEffectPressed(object o, EventArgs e)
+        {
+            CreateEffectNode((Effect)((MenuItem)o).Tag, effID++, nodeAddLocation.X, nodeAddLocation.Y);
+        }
+        public void CreateNewConditionPressed(object o, EventArgs e)
+        {
+            CreateConditionNode((Condition)((MenuItem)o).Tag, cndID++, nodeAddLocation.X, nodeAddLocation.Y);
+        }
+
+        //actual creation functions
         public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, int x, int y)
         {
             TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, x, y);
@@ -1425,18 +1462,8 @@ DraggingSocketFinish:
             n.Name = t.name;
 
             n.id = id;
-            AddNode(n);
+            nodes.Add(n);
             return n;
-        }
-
-        public void CreateNewVarPressed(object o, EventArgs e)
-        {
-            SerializedVariable var = new SerializedVariable();
-            var.type = (string)((MenuItem)o).Tag;
-            var.name = "New" + var.type + varID.ToString();
-            var.value = "";
-            CreateVarNode(var, varID, nodeAddLocation[0].X, nodeAddLocation[0].Y);
-            varID++;
         }
         public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, int x, int y)
         {
@@ -1456,13 +1483,8 @@ DraggingSocketFinish:
 
             n.bottomPadding = 50;
 
-            AddNode(n);
+            nodes.Add(n);
             return n;
-        }
-
-        public void CreateNewEffectPressed(object o, EventArgs e)
-        {
-            CreateEffectNode((Effect)((MenuItem)o).Tag, effID++, nodeAddLocation[0].X, nodeAddLocation[0].Y);
         }
         public TriggerscripterNode CreateEffectNode(Effect e, int id, int x, int y)
         {
@@ -1496,14 +1518,9 @@ DraggingSocketFinish:
                 n.AddSocket(false, "Trigger", "TRG", trgColor, false, false);
             }
 
-            AddNode(n);
+            nodes.Add(n);
 
             return n;
-        }
-
-        public void CreateNewConditionPressed(object o, EventArgs e)
-        {
-            CreateConditionNode((Condition)((MenuItem)o).Tag, cndID++, nodeAddLocation[0].X, nodeAddLocation[0].Y);
         }
         public TriggerscripterNode CreateConditionNode(Condition c, int id, int x, int y)
         {
@@ -1528,11 +1545,13 @@ DraggingSocketFinish:
                 n.AddSocket(false, ou.name, ou.valueType, color, true, false);
             }
 
-            AddNode(n);
+            nodes.Add(n);
 
             return n;
         }
+        #endregion
 
+        #region serialization
         public SerializedTriggerscripter GetSerializedGraph()
         {
             SerializedTriggerscripter sts = new SerializedTriggerscripter();
@@ -1611,16 +1630,8 @@ DraggingSocketFinish:
             return sts;
         }
 
-        public void SaveToFile(string path)
-        {
-            JsonSerializerSettings s = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.None,
-                Formatting = Newtonsoft.Json.Formatting.Indented
-            };
-            File.WriteAllText(path, JsonConvert.SerializeObject(GetSerializedGraph(), s));
-        }
-        public void LoadFromFile(SerializedTriggerscripter sts)
+        //TODO: rename -- this does not take a file as input.
+        public bool Load(SerializedTriggerscripter sts)
         {
             nodes.Clear();
             Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
@@ -1651,13 +1662,12 @@ DraggingSocketFinish:
                     }
                     if (n.handleAs == "Condition")
                     {
-                        Console.WriteLine(n.id);
                         conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
                     }
                 }
                 catch
                 {
-
+                    return false;
                 }
             }
             
@@ -1731,15 +1741,17 @@ DraggingSocketFinish:
                         }
                     }
                 }
-                catch(Exception e)
+                catch 
                 {
-                    Program.window.label.Text = "Load error. See log.";
-                    Console.WriteLine(e.Message);
+                    return false;
                 }
             }
-        }
 
-        //copy/paste
+            return true;
+        }
+        #endregion
+
+        #region copy/paste
         int pasteOffset = 50;
         SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
         public void CopyGraph()
@@ -1868,8 +1880,9 @@ DraggingSocketFinish:
             mouseState = CurrentMouseState.NodesSelected;
             }
         }
+        #endregion
 
-        //import from a .triggerscript
+        #region import from a .triggerscript
         public void ImportScript(string file)
         {
             XDocument doc = XDocument.Load(file);
@@ -1877,5 +1890,6 @@ DraggingSocketFinish:
             XElement triggers = doc.Element("TriggerSystem").Element("Trigger");
 
         }
+        #endregion
     }
 }
