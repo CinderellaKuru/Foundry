@@ -196,9 +196,6 @@ namespace Foundry
                 instance = i;
                 status = Status.Closed;
 
-                mouseState = new MouseState();
-                downKeys = new List<Keys>();
-
                 GotFocus += new EventHandler(Internal_GotFocus);
                 LostFocus += new EventHandler(Internal_LostFocus);
 
@@ -206,6 +203,9 @@ namespace Foundry
                 MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
                 MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
                 MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
+
+                mouseState = new MouseState();
+                downKeys = new List<Keys>();
             }
             public FoundryPage(FoundryInstance i, string file) : this(i)
             {
@@ -236,12 +236,24 @@ namespace Foundry
             {
                 if (status == Status.Closed)
                 {
-                    OnOpen();
+                    if (fileName != null)
+                    {
+                        //if the file exists, open it. else return false.
+                        if (File.Exists(fileName))
+                        {
+                            OnOpen(fileName);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        OnOpen();
+                    }
 
                     Show(workspace, state);
-
-                    GotFocus += new EventHandler(Internal_GotFocus);
-                    LostFocus += new EventHandler(Internal_LostFocus);
 
                     status = Status.Opened;
                     return true;
@@ -256,6 +268,7 @@ namespace Foundry
                 if (status == Status.Opened)
                 {
                     Close();
+
                     return true;
                 }
                 else if (status == Status.Opened_Edited)
@@ -397,7 +410,7 @@ namespace Foundry
             }
 
             //page overridable functions
-            protected virtual void OnOpen() { }
+            protected virtual void OnOpen(string file) { }
             protected virtual void OnSave(string file) { }
             protected virtual void OnInput() { }
         }
@@ -416,11 +429,6 @@ namespace Foundry
 
         //content files
         private Dictionary<string, FoundryPage> contentFiles = new Dictionary<string, FoundryPage>();
-        private const Dictionary<string, Image> contentFileImages = new Dictionary<string, Image>()
-        {
-            { FOUNDRYTRIGGERSCRIPT_EXT, Properties.Resources.page_white },
-            { FOUNDRYSCENARIO_EXT,      Properties.Resources.page_white },
-        };
         private void TryAddContentFile(string file)
         {
             if (!contentFiles.ContainsKey(file))
@@ -430,15 +438,16 @@ namespace Foundry
                 switch (ext)
                 {
                     case FOUNDRYTRIGGERSCRIPT_EXT:
-                        contentFile = new TriggerscriptContentFile(this, file);
+                        contentFile = new TriggerscriptEditorPage(this, file);
+                        contentFiles.Add(file, contentFile);
                         break;
                     case FOUNDRYSCENARIO_EXT:
-                        contentFile = new ScenarioEditorContentFile(this, file);
+                        contentFile = new ScenarioEditorPage(this, file);
+                        contentFiles.Add(file, contentFile);
                         break;
                     default:
                         return;
                 }
-                contentFiles.Add(file, contentFile);
             }
         }
         public struct DiskEntryNode
@@ -455,7 +464,7 @@ namespace Foundry
             public Image _icon;
             public List<DiskEntryNode> _children;
         }
-        private void ScanProjectDirectoryRecursive(DiskEntryNode node, List<string> foundFiles)
+        private void ScanProjectDirectoryRecursive(DiskEntryNode node)
         {
             if (File.GetAttributes(node._path).HasFlag(FileAttributes.Directory))
             {
@@ -464,25 +473,13 @@ namespace Foundry
                 {
                     DiskEntryNode child = new DiskEntryNode(Path.GetDirectoryName(dir), dir, Properties.Resources.folder);
                     node._children.Add(child);
-                    AddChildrenRecursive(child, foundFiles);
+                    ScanProjectDirectoryRecursive(child);
                 }
 
                 //get child files second
                 foreach (string file in Directory.GetFiles(node._path))
                 {
                     Image image = Properties.Resources.page_white;
-                    
-                    //set the image if this extension has one.
-                    string ext = Path.GetExtension(file);
-                    if (contentFileImages.ContainsKey(ext))
-                        image = contentFileImages[ext];
-
-                    //try and add this file.
-                    TryAddContentFile(file);
-
-
-                    //add this file to the manifest to use to remove files that are no longer present on disk.
-                    foundFiles.Add(file);
 
                     //create a node for this file.
                     DiskEntryNode child = new DiskEntryNode(Path.GetFileName(file), file, image);
@@ -493,17 +490,7 @@ namespace Foundry
         public DiskEntryNode ScanProjectDirectory()
         {
             DiskEntryNode root = new DiskEntryNode(openedName, openedDir, Properties.Resources.box);
-            List<string> foundFiles = new List<string>() { root._path };
-            ScanProjectDirectoryRecursive(root, foundFiles);
-
-            //Remove unused files.
-            foreach(var pair in contentFiles)
-            {
-                if(!foundFiles.Contains(pair.Key))
-                {
-                    ContentFileDelete(pair.Key);
-                }
-            }
+            ScanProjectDirectoryRecursive(root);
 
             return root;
         }
@@ -524,18 +511,21 @@ namespace Foundry
         }
         public void ContentFileClose(string file)
         {
-
+            if (contentFiles.ContainsKey(file))
+            {
+                contentFiles[file].TryClose();
+            }
         }
         public void ContentFileSaveAll()
         {
-            foreach (ContentFile f in contentFiles.Values)
+            foreach (FoundryPage f in contentFiles.Values)
             {
                 f.TrySave();
             }
         }
         public void ContentFileCloseAll()
         {
-            foreach (ContentFile f in contentFiles.Values)
+            foreach (FoundryPage f in contentFiles.Values)
             {
                 f.TryClose();
             }

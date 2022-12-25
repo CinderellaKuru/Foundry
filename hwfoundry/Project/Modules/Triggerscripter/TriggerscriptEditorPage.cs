@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
-//TODO: replace this with slimdx's input libs
+//TODO: replace this
 using OpenTK.Input;
 
 using Newtonsoft.Json;
 using System.Xml.Linq;
 using System.IO;
 using WeifenLuo.WinFormsUI.Docking;
+using static Foundry.FoundryInstance;
 
 namespace Foundry.Project.Modules.Triggerscripter
 {
@@ -51,7 +52,49 @@ namespace Foundry.Project.Modules.Triggerscripter
         public int version;
     }
 
-    public class TriggerscripterPage : FoundryPage
+
+    public class SerializedVariable
+    {
+        public string name;
+        public string value;
+        public string type;
+    }
+    public class SerializedTrigger
+    {
+        public string name;
+        public bool cndIsOr;
+        public bool active;
+    }
+    public class SerializedNodeLink
+    {
+        public string sourceType;
+        public string sourceSocketName;
+        public int sourceId;
+
+        public int targetId;
+        public string targetType;
+        public string targetSocketName;
+    }
+    public class SerializableNode
+    {
+        public int id;
+        public int x, y;
+        public string handleAs;
+        public bool selected;
+        public SerializedTrigger trigger;
+        public SerializedVariable variable;
+        public Effect effect;
+        public Condition condition;
+    }
+    public class SerializedTriggerscripter
+    {
+        public int lastTrg, lastVar, lastEff, lastCnd;
+        public List<SerializableNode> nodes = new List<SerializableNode>();
+        public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
+    }
+
+
+    public class TriggerscriptEditorPage : FoundryPage
     {
         private static Dictionary<string, string> nodeSubCategories = new Dictionary<string, string>()
         {
@@ -748,8 +791,9 @@ namespace Foundry.Project.Modules.Triggerscripter
 
         private ContextMenu cm;
         private Timer t;
-        public TriggerscripterPage(FoundryInstance i) : base(i)
+        public TriggerscriptEditorPage(FoundryInstance i, string file) : base(i, file)
         {
+            Text = Path.GetFileName(file);
             DoubleBuffered = true;
             Paint += new PaintEventHandler(DrawControl);
 
@@ -876,8 +920,6 @@ namespace Foundry.Project.Modules.Triggerscripter
             }
             #endregion
 
-
-
             //init matrices.
             PollInput();
             UpdateMatrices();
@@ -895,6 +937,21 @@ namespace Foundry.Project.Modules.Triggerscripter
             Invalidate();
         }
 
+        #region page
+        protected override void OnOpen(string file)
+        {
+            string text = File.ReadAllText(file);
+            SerializedTriggerscripter sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(text);
+            Load(sts);
+        }
+        protected override void OnSave(string file)
+        {
+            string text = JsonConvert.SerializeObject(GetSerializedGraph());
+            File.WriteAllText(file, text);
+        }
+        #endregion
+
+        #region editor
         #region draw
         Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
         public int majorGridSpace = 200;
@@ -1890,6 +1947,7 @@ DraggingSocketFinish:
             XElement triggers = doc.Element("TriggerSystem").Element("Trigger");
 
         }
+        #endregion
         #endregion
     }
 }

@@ -24,7 +24,7 @@ namespace Foundry.Project.Modules
         private ViewportCore viewport;
         private CameraCore camera;
         private AmbientLightNode ambientLight;
-        public ScenarioEditorPage(ContentFile f) : base(f)
+        public ScenarioEditorPage(FoundryInstance i, string file) : base(i, file)
         {
             Init();
 

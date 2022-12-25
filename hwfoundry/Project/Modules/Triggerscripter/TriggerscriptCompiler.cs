@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Foundry.Project.Modules.Triggerscripter
 {
-    public class TriggerscripterCompiler
+    public class TriggerscriptCompiler
     {
         List<int> varIds = new List<int>();
         Dictionary<int, int> triggerVarLinks = new Dictionary<int, int>();

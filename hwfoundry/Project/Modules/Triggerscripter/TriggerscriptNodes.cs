@@ -163,7 +163,7 @@ namespace Foundry.Project.Modules.Triggerscripter
 
     public class TriggerscripterNode
     {
-        public TriggerscripterPage owner;
+        public TriggerscriptEditorPage owner;
         public int width = 350, height, bottomPadding = 0;
         public int x, y;
         public int layer = 0;
@@ -181,7 +181,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         public Dictionary<string, TriggerscripterSocket> sockets = new Dictionary<string, TriggerscripterSocket>();
         int inSockets = 0, outSockets = 0;
 
-        public TriggerscripterNode(TriggerscripterPage control, int px, int py)
+        public TriggerscripterNode(TriggerscriptEditorPage control, int px, int py)
         {
             owner = control;
             x = px;
@@ -356,14 +356,14 @@ namespace Foundry.Project.Modules.Triggerscripter
             set { conditional = value; }
         }
         
-        public TriggerscripterNode_Trigger(TriggerscripterPage control, int px, int py) : base(control, px, py)
+        public TriggerscripterNode_Trigger(TriggerscriptEditorPage control, int px, int py) : base(control, px, py)
         {
             typeTitle = "Trigger";
             handleAs = "Trigger";
-            AddSocket(true, "Caller", "TRG", TriggerscripterPage.trgColor, false, true);
-            AddSocket(true, "Conditions", "CND", TriggerscripterPage.cndColor, false, true);
-            AddSocket(false, "Call On True", "EFF", TriggerscripterPage.effColor, false, false);
-            AddSocket(false, "Call On False", "EFF", TriggerscripterPage.effColor, false, false);
+            AddSocket(true, "Caller", "TRG", TriggerscriptEditorPage.trgColor, false, true);
+            AddSocket(true, "Conditions", "CND", TriggerscriptEditorPage.cndColor, false, true);
+            AddSocket(false, "Call On True", "EFF", TriggerscriptEditorPage.effColor, false, false);
+            AddSocket(false, "Call On False", "EFF", TriggerscriptEditorPage.effColor, false, false);
         }
         
         public override void Draw(PaintEventArgs e)
@@ -399,7 +399,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             set { valueString = value; }
         }
 
-        public TriggerscripterNode_Variable(TriggerscripterPage c, int x, int y) : base(c,x,y)
+        public TriggerscripterNode_Variable(TriggerscriptEditorPage c, int x, int y) : base(c,x,y)
         {
             handleAs = "Variable";
         }
@@ -421,7 +421,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             set { inverted = value; }
         }
 
-        public TriggerscripterNode_Condition(TriggerscripterPage c, int x, int y) : base(c, x, y)
+        public TriggerscripterNode_Condition(TriggerscriptEditorPage c, int x, int y) : base(c, x, y)
         {
             handleAs = "Condition";
             typeTitle = "Condition";
