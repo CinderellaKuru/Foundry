@@ -62,7 +62,7 @@
     <Compile Include="Project\Modules\PropertyEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ECF\ECF.cs" />
+    <Compile Include="ECF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project\Modules\Triggerscripter\TriggerscripterContentFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

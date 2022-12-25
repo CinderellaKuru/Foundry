@@ -17,8 +17,7 @@ namespace Foundry
 {
     public partial class FoundryInstance : Form
     {
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // foundry instance
+        #region  foundry instance
         public FoundryInstance()
         {
             InitializeComponent();
@@ -39,10 +38,147 @@ namespace Foundry
                 ProjectOpen(ofd.FileName);
             }
         }
+        #endregion
 
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // pages
+        #region  log
+        public enum LogEntryType
+        {
+            Info,
+            Warning,
+            Error,
+        }
+        public void AppendLog(LogEntryType type, string message, bool displayAsStatus, string secondaryMessage = "")
+        {
+            string prefix;
+            switch(type)
+            {
+                case LogEntryType.Info:
+                    prefix = "[Info] ";
+                    break;
+                case LogEntryType.Warning:
+                    prefix = "[Warning] ";
+                    break;
+                case LogEntryType.Error:
+                    prefix = "[Error] ";
+                    break;
+                default:
+                    prefix = "";
+                    break;
+            }
+            string print = prefix + message;
+
+            if(displayAsStatus)
+                logStatus.Text = print;
+
+            Console.WriteLine(print);
+            if(secondaryMessage != "")
+            {
+                Console.WriteLine(secondaryMessage);
+            }
+        }
+        #endregion
+
+
+        #region property editors
+        private List<PropertyEditor> propertyEditors = new List<PropertyEditor>();
+        public void AddPropertyEditor(DockState state)
+        {
+            PropertyEditor pe = new PropertyEditor();
+            propertyEditors.Add(pe);
+            pe.Show(workspace, DockState.Float);
+        }
+        public void SetSelectedObject(object o)
+        {
+
+        }
+        #endregion
+
+
+        #region project
+        private const string FOUNDRYPROJECT_EXT = ".fproject";
+        private const string FOUNDRYTRIGGERSCRIPT_EXT = ".fts";
+        private const string FOUNDRYSCENARIO_EXT = ".fsc";
+
+        private class ProjectData
+        {
+            public ProjectData()
+            {
+            }
+
+            //folder data
+            public class FolderDataEntry
+            {
+                public FolderDataEntry()
+                {
+                    folded = true;
+                }
+                [YAXSerializeAs("Folded")]
+                public bool folded { get; set; }
+            }
+            [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
+            [YAXSerializeAs("FolderData")]
+            public Dictionary<string, FolderDataEntry> FolderData { get; set; }
+        }
+        private ProjectData openedData;
+        private string openedDir;
+        private string openedFile;
+        private string openedName;
+        private bool projectOpened = false;
+
+        public void ProjectCreate(string file)
+        {
+            //TODO
+        }
+        public void ProjectOpen(string file)
+        {
+            if (projectOpened)
+                ProjectClose();
+            projectOpened = true;
+
+            if (!File.Exists(file))
+                return;
+
+            if (Path.GetExtension(file) != FOUNDRYPROJECT_EXT)
+                return;
+
+            openedDir = Path.GetDirectoryName(file);
+            openedFile = Path.GetFullPath(file);
+            openedName = Path.GetFileNameWithoutExtension(file);
+
+            try
+            {
+                YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
+                openedData = (ProjectData)ser.DeserializeFromFile(openedFile);
+            }
+            catch(Exception e)
+            {
+                ProjectClose();
+                AppendLog(LogEntryType.Error, "Project '" + openedName + "' failed to load. Open the log for more info.", true, e.Message);
+                return;
+            }
+
+            UpdateAllProjectExplorers(UpdateContent());
+
+            AppendLog(LogEntryType.Info, "Project '" + openedName + "' loaded.", true);
+        }
+        public void ProjectSave()
+        {
+            YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
+            string serStr = ser.Serialize(openedData);
+            File.WriteAllText(openedFile, serStr);
+        }
+        public void ProjectClose()
+        {
+            ContentFileCloseAll();
+            ClearAllProjectExplorers();
+            contentFiles.Clear();
+            projectOpened = false;
+            openedDir = null;
+            openedFile = null;
+            openedName = null;
+        }
+
         public class FoundryPage : DockContent
         {
             private string fileName = null;
@@ -75,7 +211,6 @@ namespace Foundry
             {
                 fileName = file;
             }
-
 
             //external file interactions
             public bool TrySetEdited()
@@ -142,7 +277,7 @@ namespace Foundry
                     return false;
                 }
             }
-            public bool TrySave(string file)
+            public bool TrySave()
             {
                 if (fileName != null)
                 {
@@ -162,16 +297,28 @@ namespace Foundry
                     return false;
                 }
             }
-
+            public bool TrySaveAs(string file)
+            {
+                if (fileName != null)
+                {
+                    fileName = file;
+                    OnSave(file);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             //internal page callbacks
             private void Internal_GotFocus(object o, EventArgs e)
             {
-
+                downKeys.Clear();
             }
             private void Internal_LostFocus(object o, EventArgs e)
             {
-
+                downKeys.Clear();
             }
 
             protected struct MouseState
@@ -180,7 +327,7 @@ namespace Foundry
                 public int mX, mY;
                 public int deltaX, deltaY, deltaScroll;
             }
-            MouseState mouseState;
+            private MouseState mouseState;
             private void Internal_MouseMoved(object o, MouseEventArgs e)
             {
                 mouseState.deltaScroll = 0;
@@ -235,7 +382,6 @@ namespace Foundry
                 OnInput();
             }
 
-
             //protected getters
             protected FoundryInstance Instance()
             {
@@ -250,158 +396,51 @@ namespace Foundry
                 return downKeys.Contains(k);
             }
 
-
             //page overridable functions
             protected virtual void OnOpen() { }
             protected virtual void OnSave(string file) { }
             protected virtual void OnInput() { }
         }
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // log
-        public enum LogEntryType
+        private FoundryPage activePage;
+        public void SetActivePage(FoundryPage page)
         {
-            Info,
-            Warning,
-            Error,
+            activePage = page;
         }
-        public void AppendLog(LogEntryType type, string message, bool displayAsStatus, string secondaryMessage = "")
+        public void SaveActivePage()
         {
-            string prefix;
-            switch(type)
+            if(activePage != null)
             {
-                case LogEntryType.Info:
-                    prefix = "[Info] ";
-                    break;
-                case LogEntryType.Warning:
-                    prefix = "[Warning] ";
-                    break;
-                case LogEntryType.Error:
-                    prefix = "[Error] ";
-                    break;
-                default:
-                    prefix = "";
-                    break;
-            }
-            string print = prefix + message;
-
-            if(displayAsStatus)
-                logStatus.Text = print;
-
-            Console.WriteLine(print);
-            if(secondaryMessage != "")
-            {
-                Console.WriteLine(secondaryMessage);
+                activePage.TrySave();
             }
         }
 
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // property editors
-        private List<PropertyEditor> propertyEditors = new List<PropertyEditor>();
-        public void AddPropertyEditor(DockState state)
+        //content files
+        private Dictionary<string, FoundryPage> contentFiles = new Dictionary<string, FoundryPage>();
+        private const Dictionary<string, Image> contentFileImages = new Dictionary<string, Image>()
         {
-            PropertyEditor pe = new PropertyEditor();
-            propertyEditors.Add(pe);
-            pe.Show(workspace, DockState.Float);
-        }
-        public void SetSelectedObject(object o)
+            { FOUNDRYTRIGGERSCRIPT_EXT, Properties.Resources.page_white },
+            { FOUNDRYSCENARIO_EXT,      Properties.Resources.page_white },
+        };
+        private void TryAddContentFile(string file)
         {
-
-        }
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // projectfiles
-        private const string FOUNDRYPROJECT_EXT = ".fproject";
-        private const string FOUNDRYTRIGGERSCRIPT_EXT = ".fts";
-        private const string FOUNDRYSCENARIO_EXT = ".fsc";
-
-        private class ProjectData
-        {
-            public ProjectData()
+            if (!contentFiles.ContainsKey(file))
             {
-            }
-
-            //folder data
-            public class FolderDataEntry
-            {
-                public FolderDataEntry()
+                string ext = Path.GetExtension(file);
+                FoundryPage contentFile = null;
+                switch (ext)
                 {
-                    folded = true;
+                    case FOUNDRYTRIGGERSCRIPT_EXT:
+                        contentFile = new TriggerscriptContentFile(this, file);
+                        break;
+                    case FOUNDRYSCENARIO_EXT:
+                        contentFile = new ScenarioEditorContentFile(this, file);
+                        break;
+                    default:
+                        return;
                 }
-                [YAXSerializeAs("Folded")]
-                public bool folded { get; set; }
+                contentFiles.Add(file, contentFile);
             }
-            [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
-            [YAXSerializeAs("FolderData")]
-            public Dictionary<string, FolderDataEntry> FolderData { get; set; }
         }
-        private ProjectData openedData;
-        private string openedDir;
-        private string openedFile;
-        private string openedName;
-        private bool projectOpened = false;
-
-
-        private Dictionary<string, ContentFile> files = new Dictionary<string, ContentFile>();
-
-
-        public void ProjectCreate(string file)
-        {
-            //TODO
-        }
-        public void ProjectOpen(string file)
-        {
-            if (projectOpened)
-                ProjectClose();
-            projectOpened = true;
-
-            if (!File.Exists(file))
-                return;
-
-            if (Path.GetExtension(file) != FOUNDRYPROJECT_EXT)
-                return;
-
-            openedDir = Path.GetDirectoryName(file);
-            openedFile = Path.GetFullPath(file);
-            openedName = Path.GetFileNameWithoutExtension(file);
-
-            try
-            {
-                YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
-                openedData = (ProjectData)ser.DeserializeFromFile(openedFile);
-            }
-            catch(Exception e)
-            {
-                ProjectClose();
-                AppendLog(LogEntryType.Error, "Project '" + openedName + "' failed to load. Open the log for more info.", true, e.Message);
-                return;
-            }
-
-            UpdateAllProjectExplorers(UpdateContent());
-
-            AppendLog(LogEntryType.Info, "Project '" + openedName + "' loaded.", true);
-        }
-        public void ProjectSave()
-        {
-            YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
-            string serStr = ser.Serialize(openedData);
-            File.WriteAllText(openedFile, serStr);
-        }
-        public void ProjectClose()
-        {
-            ContentFileCloseAll();
-            ClearAllProjectExplorers();
-            files.Clear();
-            projectOpened = false;
-            openedDir = null;
-            openedFile = null;
-            openedName = null;
-        }
-
-
         public struct DiskEntryNode
         {
             public DiskEntryNode(string name, string path, Image icon)
@@ -416,11 +455,11 @@ namespace Foundry
             public Image _icon;
             public List<DiskEntryNode> _children;
         }
-        private void AddChildrenRecursive(DiskEntryNode node, List<string> foundFiles)
+        private void ScanProjectDirectoryRecursive(DiskEntryNode node, List<string> foundFiles)
         {
             if (File.GetAttributes(node._path).HasFlag(FileAttributes.Directory))
             {
-                //Get child folders first
+                //get child folders first
                 foreach (string dir in Directory.GetDirectories(node._path))
                 {
                     DiskEntryNode child = new DiskEntryNode(Path.GetDirectoryName(dir), dir, Properties.Resources.folder);
@@ -428,52 +467,37 @@ namespace Foundry
                     AddChildrenRecursive(child, foundFiles);
                 }
 
-                //Get child files second
+                //get child files second
                 foreach (string file in Directory.GetFiles(node._path))
                 {
                     Image image = Properties.Resources.page_white;
+                    
+                    //set the image if this extension has one.
+                    string ext = Path.GetExtension(file);
+                    if (contentFileImages.ContainsKey(ext))
+                        image = contentFileImages[ext];
 
-                    //If this file is not represented by a ContentFile, add it.
-                    //We need to probe the files extension here already for the nodes image, so we create the ContentFile while were here.
-                    if (!ContentFileExists(file))
-                    {
-                        switch (Path.GetExtension(file))
-                        {
-                            case FOUNDRYPROJECT_EXT:
-                                //TODO: add content file for ProjectData
-                                break;
-                            case FOUNDRYTRIGGERSCRIPT_EXT:
-                                files.Add(file, new TriggerscriptContentFile(this, file));
-                                image = Properties.Resources.page_white;
-                                break;
-                            case FOUNDRYSCENARIO_EXT:
-                                files.Add(file, new ScenarioEditorContentFile(this, file));
-                                image = Properties.Resources.page_white;
-                                break;
-                            default:
-                                files.Add(file, new ContentFile(this, file));
-                                image = Properties.Resources.page_white;
-                                break;
-                        }
-                    }
+                    //try and add this file.
+                    TryAddContentFile(file);
 
-                    //Add this file to the manifest to use to remove files that are no longer present on disk.
+
+                    //add this file to the manifest to use to remove files that are no longer present on disk.
                     foundFiles.Add(file);
 
-                    //Create a node for this file.
+                    //create a node for this file.
                     DiskEntryNode child = new DiskEntryNode(Path.GetFileName(file), file, image);
                     node._children.Add(child);
                 }
             }
         }
-        public DiskEntryNode UpdateContent()
+        public DiskEntryNode ScanProjectDirectory()
         {
             DiskEntryNode root = new DiskEntryNode(openedName, openedDir, Properties.Resources.box);
             List<string> foundFiles = new List<string>() { root._path };
-            AddChildrenRecursive(root, foundFiles);
+            ScanProjectDirectoryRecursive(root, foundFiles);
 
             //Remove unused files.
-            foreach(var pair in files)
+            foreach(var pair in contentFiles)
             {
                 if(!foundFiles.Contains(pair.Key))
                 {
@@ -484,21 +508,18 @@ namespace Foundry
             return root;
         }
 
-
-        //content files
-        private string activeFile;
         public void ContentFileOpen(string file)
         {
-            if (files.ContainsKey(file))
+            if (contentFiles.ContainsKey(file))
             {
-                files[file].TryOpen(workspace, DockState.Document);
+                contentFiles[file].TryOpen(workspace, DockState.Document);
             }
         }
         public void ContentFileSave(string file)
         {
-            if (files.ContainsKey(file))
+            if (contentFiles.ContainsKey(file))
             {
-                files[file].TrySave();
+                contentFiles[file].TrySave();
             }
         }
         public void ContentFileClose(string file)
@@ -507,41 +528,35 @@ namespace Foundry
         }
         public void ContentFileSaveAll()
         {
-            foreach (ContentFile f in files.Values)
+            foreach (ContentFile f in contentFiles.Values)
             {
                 f.TrySave();
             }
         }
         public void ContentFileCloseAll()
         {
-            foreach (ContentFile f in files.Values)
+            foreach (ContentFile f in contentFiles.Values)
             {
                 f.TryClose();
             }
         }
         public bool ContentFileExists(string file)
         {
-            return files.Keys.Contains(file);
+            return contentFiles.Keys.Contains(file);
         }
         public void ContentFileDelete(string file)
         {
             if(ContentFileExists(file))
             {
-                files[file].TryClose();
-                files.Remove(file);
-                if (file == activeFile)
+                contentFiles[file].TryClose();
+                if (contentFiles[file] == activePage)
                 {
-                    activeFile = null;
+                    activePage = null;
                 }
+                contentFiles.Remove(file);
             }
         }
-        public void ContentFileSetActive(string file)
-        {
-            if (ContentFileExists(file))
-            {
-                activeFile = file;
-            }
-        }
+        #endregion
 
 
         //project explorers
