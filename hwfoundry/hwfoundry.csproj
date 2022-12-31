@@ -23,6 +23,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -213,15 +214,6 @@ xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProjec
     <None Include="Resources\7.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\cnd.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\eff.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\var.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\arrow_refresh_small.png" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +224,15 @@ xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProjec
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cnd.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eff.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\var.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -77,6 +77,7 @@ class ScriptComb
                         {
                             effect = triggers.ChildNodes[i].ChildNodes[inOut].ChildNodes[z];
                             Effect e = new Effect();
+                            e.sources.Add(Path.GetFileName(s));
                             e.name = effect.Attributes[1].Value;
                             int.TryParse(effect.Attributes[2].Value, out e.dbid);
                             int.TryParse(effect.Attributes[3].Value, out e.version);
@@ -163,7 +164,6 @@ class ScriptComb
                     }
 
                     #endregion
-
                 }
             }
             //catch { Console.WriteLine("Error: " + s); }

@@ -115,7 +115,7 @@ namespace Foundry.Properties {
         ///      },
         ///      {
         ///        &quot;name&quot;: &quot;FilterLocation&quot;,
-        ///        &quot;valueType&quot;: &quot;Vector&quot; [rest of string was truncated]&quot;;.
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
         public static string cnd {
             get {
@@ -136,7 +136,9 @@ namespace Foundry.Properties {
         ///      }
         ///    ],
         ///    &quot;outputs&quot;: [],
-        ///    &quot;sources&quot;: [],
+        ///    &quot;sources&quot;: [
+        ///      &quot;1.txt&quot;
+        ///    ],
         ///    &quot;dbid&quot;: 31,
         ///    &quot;version&quot;: 1
         ///  },
@@ -152,9 +154,7 @@ namespace Foundry.Properties {
         ///    ],
         ///    &quot;outputs&quot;: [
         ///      {
-        ///        &quot;name&quot;: &quot;BoolCopy&quot;,
-        ///        &quot;valueType&quot;: &quot;Bool&quot;,
-        ///  [rest of string was truncated]&quot;;.
+        ///        &quot; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string eff {
             get {
@@ -237,9 +237,7 @@ namespace Foundry.Properties {
         ///  &quot;Object&quot;,
         ///  &quot;ObjectList&quot;,
         ///  &quot;VectorList&quot;,
-        ///  &quot;Cinematic&quot;,
-        ///  &quot;EventType&quot;,
-        ///  &quot;FlareTy [rest of string was truncated]&quot;;.
+        ///  &quot;Cin [rest of string was truncated]&quot;;.
         /// </summary>
         public static string var {
             get {

@@ -14,7 +14,6 @@ using HelixToolkit.SharpDX.Core.Controls;
 using HelixToolkit.SharpDX.Core.Model;
 using HelixToolkit.SharpDX.Core.Model.Scene;
 using Vector3 = SharpDX.Vector3;
-using static Foundry.FoundryInstance;
 using SharpDX;
 using SharpDX.Windows;
 using SharpDX.DXGI;
@@ -24,6 +23,7 @@ using Device = SharpDX.Direct3D11.Device;
 using System.Runtime.Remoting.Contexts;
 using Color = SharpDX.Color;
 using System.Diagnostics;
+using static Foundry.Project.FoundryInstance;
 
 namespace Foundry.Project.Modules.ScenarioEditor
 {

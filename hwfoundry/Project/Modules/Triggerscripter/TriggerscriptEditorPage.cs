@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using System.Xml.Linq;
 using System.IO;
 using WeifenLuo.WinFormsUI.Docking;
-using static Foundry.FoundryInstance;
+using static Foundry.Project.FoundryInstance;
 
 namespace Foundry.Project.Modules.Triggerscripter
 {
@@ -52,7 +52,6 @@ namespace Foundry.Project.Modules.Triggerscripter
         public int version;
     }
 
-
     public class SerializedVariable
     {
         public string name;
@@ -67,15 +66,15 @@ namespace Foundry.Project.Modules.Triggerscripter
     }
     public class SerializedNodeLink
     {
+        public int sourceId;
         public string sourceType;
         public string sourceSocketName;
-        public int sourceId;
 
         public int targetId;
         public string targetType;
         public string targetSocketName;
     }
-    public class SerializableNode
+    public class SerializedNode
     {
         public int id;
         public int x, y;
@@ -89,10 +88,9 @@ namespace Foundry.Project.Modules.Triggerscripter
     public class SerializedTriggerscripter
     {
         public int lastTrg, lastVar, lastEff, lastCnd;
-        public List<SerializableNode> nodes = new List<SerializableNode>();
+        public List<SerializedNode> nodes = new List<SerializedNode>();
         public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
     }
-
 
     public class TriggerscriptEditorPage : EditorPage
     {
@@ -929,20 +927,22 @@ namespace Foundry.Project.Modules.Triggerscripter
             t.Tick += Tick;
             t.Start();
         }
-        void Tick(object o, EventArgs e)
+        private void Tick(object o, EventArgs e)
         {
             PollInput();
             UpdateMatrices();
             Invalidate();
         }
 
+
+        //////////////////////////////////////////////////////////////////////////////////////
         #region load/unload
         public SerializedTriggerscripter GetSerializedGraph()
         {
             SerializedTriggerscripter sts = new SerializedTriggerscripter();
             foreach (TriggerscripterNode n in nodes)
             {
-                SerializableNode sn = new SerializableNode();
+                SerializedNode sn = new SerializedNode();
                 sn.handleAs = n.handleAs;
                 sn.selected = n.selected;
                 if (n.handleAs == "Trigger")
@@ -1016,104 +1016,104 @@ namespace Foundry.Project.Modules.Triggerscripter
         }
         public bool LoadFromSerializedGraph(SerializedTriggerscripter sts)
         {
-                nodes.Clear();
-                Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
-                Dictionary<int, TriggerscripterNode> variables = new Dictionary<int, TriggerscripterNode>();
-                Dictionary<int, TriggerscripterNode> effects = new Dictionary<int, TriggerscripterNode>();
-                Dictionary<int, TriggerscripterNode> conditions = new Dictionary<int, TriggerscripterNode>();
+            nodes.Clear();
+            Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> variables = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> effects = new Dictionary<int, TriggerscripterNode>();
+            Dictionary<int, TriggerscripterNode> conditions = new Dictionary<int, TriggerscripterNode>();
 
-                trgID = sts.lastTrg;
-                varID = sts.lastVar;
-                effID = sts.lastEff;
-                cndID = sts.lastCnd;
+            trgID = sts.lastTrg;
+            varID = sts.lastVar;
+            effID = sts.lastEff;
+            cndID = sts.lastCnd;
 
-                foreach (SerializableNode n in sts.nodes)
+            foreach (SerializedNode n in sts.nodes)
+            {
+                if (n.handleAs == "Trigger")
                 {
-                    if (n.handleAs == "Trigger")
+                    triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Variable")
+                {
+                    variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Effect")
+                {
+                    effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
+                }
+                if (n.handleAs == "Condition")
+                {
+                    conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
+                }
+            }
+            foreach (SerializedNodeLink l in sts.links)
+            {
+                if (l.sourceType == "Trigger")
+                {
+                    switch (l.targetType)
                     {
-                        triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Variable")
-                    {
-                        variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Effect")
-                    {
-                        effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Condition")
-                    {
-                        conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)triggers[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
                     }
                 }
-                foreach (SerializedNodeLink l in sts.links)
+                if (l.sourceType == "Effect")
                 {
-                    if (l.sourceType == "Trigger")
+                    switch (l.targetType)
                     {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)triggers[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Effect")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Variable":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Trigger":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Condition")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Variable":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Trigger":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Variable")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Condition":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Variable":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Trigger":
+                            ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
                     }
                 }
+                if (l.sourceType == "Condition")
+                {
+                    switch (l.targetType)
+                    {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Condition":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Variable":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Trigger":
+                            ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (l.sourceType == "Variable")
+                {
+                    switch (l.targetType)
+                    {
+                        case "Effect":
+                            ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        case "Condition":
+                            ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
             return true;
         }
 
@@ -1131,16 +1131,17 @@ namespace Foundry.Project.Modules.Triggerscripter
         }
         #endregion
 
-        #region editor
+
+        //////////////////////////////////////////////////////////////////////////////////////
         #region draw
-        Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
+        private Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
+        private float x = 0, y = 0;
+        private float zoomMax = 1.5f, zoomMin = .025f;
         public int majorGridSpace = 200;
-        float x = 0, y = 0;
         public float zoom = .25f;
-        float zoomMax = 1.5f, zoomMin = .025f;
         public Matrix transform = new Matrix();
         public Matrix transformInv = new Matrix();
-        void DrawControl(object o, PaintEventArgs e)
+        private void DrawControl(object o, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1148,7 +1149,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             g.Transform = transform;
 
             g.Clear(Color.DarkGray);
-            
+
             PointF[] points = new PointF[]
             {
                 new PointF(e.ClipRectangle.Left, e.ClipRectangle.Top),
@@ -1173,6 +1174,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             {
                 g.DrawLine(gridPen, left, y, right, y);
             }
+            
             //draw connections
             foreach (TriggerscripterNode n in nodes)
             {
@@ -1184,7 +1186,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                 }
             }
-           
+
             //draw temp connection
             Point[] pos = new Point[] { PointToClient(new Point((int)lastX, (int)lastY)) };
             transformInv.TransformPoints(pos);
@@ -1195,7 +1197,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
                     pos[0]);
             }
-            
+
             //draw nodes
             foreach (TriggerscripterNode n in nodes)
             {
@@ -1206,7 +1208,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     s.Draw(e);
                 }
             }
-            
+
             //draw marquee
             if (mouseState == CurrentMouseState.DraggingMarquee)
             {
@@ -1217,7 +1219,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     Math.Abs(marqueeY2 - marqueeY1));
             }
         }
-        void UpdateMatrices()
+        private void UpdateMatrices()
         {
             transform.Reset();
             transform.Translate(Width / 2, Height / 2);
@@ -1231,32 +1233,47 @@ namespace Foundry.Project.Modules.Triggerscripter
         }
         #endregion
 
+
+        //////////////////////////////////////////////////////////////////////////////////////
         #region ui/ux
-        TriggerscripterSocket selectedSocket = null;
-        bool lastClickedL = false, lastClickedR = false;
-        bool suspendInput = false;
-        float lastX = 0, lastY = 0, lastM = 0;
-        bool copyPastePressed;
+        private TriggerscripterSocket selectedSocket = null;
+        private bool lastClickedL = false, lastClickedR = false;
+        private bool suspendInput = false;
+        private float lastX = 0, lastY = 0, lastM = 0;
+        private bool copyPastePressed;
+        private EventHandler OnEdit;
 
-        EventHandler OnEdit;
-
-        enum CurrentMouseState
+        private enum CurrentMouseState
         {
             None,
             NodesSelected,
             DraggingMarquee,
             DraggingSocket
         }
+        private CurrentMouseState mouseState;
 
-        int marqueeX1, marqueeY1;
-        int marqueeX2, marqueeY2;
+        private int marqueeX1, marqueeY1;
+        private int marqueeX2, marqueeY2;
 
-        CurrentMouseState mouseState;
-        void PollInput()
+#if DEBUG
+        private bool compilePressed = false;
+#endif
+
+        private void PollInput()
         {
             if (IsDisposed) return;
             OpenTK.Input.MouseState m = Mouse.GetCursorState();
             KeyboardState keyboard = Keyboard.GetState();
+
+#if DEBUG
+            if (keyboard.IsKeyDown(Key.F5) && !compilePressed)
+            {
+                TriggerscriptCompiler c = new TriggerscriptCompiler();
+                c.Compile(nodes, varID, "out.triggerscript");
+                compilePressed = true;
+            }
+            else compilePressed = false;
+#endif
 
             if (keyboard.IsKeyDown(Key.Delete))
             {
@@ -1320,13 +1337,14 @@ namespace Foundry.Project.Modules.Triggerscripter
             Point max = PointToScreen(new Point(Width, Height));
             if (m.X >= min.X && m.X <= max.X &&
                 m.Y >= min.Y && m.Y <= max.Y &&
-                !suspendInput &&
-                Focused)
+                !suspendInput && Focused)
             {
                 //translated mouse pos
                 Point[] p = new Point[] { PointToClient(new Point(m.X, m.Y)) };
                 transformInv.TransformPoints(p);
 
+                //mouse clicks
+                //left mouse
                 if (!lastClickedL)
                 {
                     if (m.LeftButton == OpenTK.Input.ButtonState.Pressed)
@@ -1349,6 +1367,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     lastClickedL = false;
                 }
 
+                //right mouse
                 if (!lastClickedR)
                 {
                     if (m.RightButton == OpenTK.Input.ButtonState.Pressed)
@@ -1363,7 +1382,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     lastClickedR = false;
                 }
 
-                //zoom
+                //scroll wheel (zoom)
                 if (m.MiddleButton == OpenTK.Input.ButtonState.Pressed)
                 {
                     x += (m.X - (int)lastX) * 1 / zoom;
@@ -1388,7 +1407,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             lastY = m.Y;
             lastM = m.Scroll.Y;
         }
-        void OnClickL(int mx, int my)
+        private void OnClickL(int mx, int my)
         {
             marqueeX1 = mx;
             marqueeY1 = my;
@@ -1432,7 +1451,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     }
                 }
             }
-            
+
             //doing nothing
             if (mouseState == CurrentMouseState.None)
             {
@@ -1452,7 +1471,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                             n2.selected = false;
                         n.selected = true;
                         OnNodeSelected(n);
-                        
+
                         mouseState = CurrentMouseState.NodesSelected;
                         return;
                     }
@@ -1473,7 +1492,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     n.selectedY = oy;
 
                     //determine if a selected node is under the mouse
-                    if(n.selected && n.PointIsIn(mx, my))
+                    if (n.selected && n.PointIsIn(mx, my))
                     {
                         selectedUnderMouse = true;
                     }
@@ -1495,7 +1514,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                     if (n.PointIsIn(mx, my))
                         somethingUnderMouse = true;
 
-                    if(n.selected)
+                    if (n.selected)
                     {
                         //select the node
                         OnNodeSelected(n);
@@ -1523,7 +1542,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                 OnDeselect();
             }
         }
-        void OnMouseHeldL(int mx, int my)
+        private void OnMouseHeldL(int mx, int my)
         {
             var nodesReversed = nodes.ToList();
             nodesReversed.Reverse();
@@ -1533,7 +1552,7 @@ namespace Foundry.Project.Modules.Triggerscripter
             {
                 foreach (TriggerscripterNode n in nodesReversed)
                 {
-                    if(n.selected)
+                    if (n.selected)
                     {
                         n.SetPos(mx - n.selectedX, my - n.selectedY);
                         OnEdit?.Invoke(this, null);
@@ -1560,7 +1579,7 @@ namespace Foundry.Project.Modules.Triggerscripter
                 }
             }
         }
-        void OnMouseReleasedL(int mx, int my)
+        private void OnMouseReleasedL(int mx, int my)
         {
             //marquee was dragging. select nodes inside it
             if (mouseState == CurrentMouseState.DraggingMarquee)
@@ -1583,17 +1602,17 @@ namespace Foundry.Project.Modules.Triggerscripter
             if (mouseState == CurrentMouseState.DraggingSocket)
             {
                 //foreach node
-                foreach(TriggerscripterNode n in nodes)
+                foreach (TriggerscripterNode n in nodes)
                 {
                     //foreach socket in that node
-                    foreach(TriggerscripterSocket s in n.sockets.Values)
+                    foreach (TriggerscripterSocket s in n.sockets.Values)
                     {
                         if (s == selectedSocket) break;
                         //if mouse was in that socket
-                        if (s.PointIsIn(mx,my))
+                        if (s.PointIsIn(mx, my))
                         {
                             //if selected socket is output
-                            if(selectedSocket is TriggerscripterSocket_Output)
+                            if (selectedSocket is TriggerscripterSocket_Output)
                             {
                                 //if this socket is input (compatible)
                                 if (s is TriggerscripterSocket_Input)
@@ -1617,25 +1636,27 @@ namespace Foundry.Project.Modules.Triggerscripter
                         }
                     }
                 }
-DraggingSocketFinish:
+                DraggingSocketFinish:
                 mouseState = CurrentMouseState.None;
                 selectedSocket = null;
             }
         }
-        void OnClickR(int mx, int my)
+        private void OnClickR(int mx, int my)
         {
         }
 
-        void OnNodeSelected(TriggerscripterNode n)
+        private void OnNodeSelected(TriggerscripterNode n)
         {
 
         }
-        void OnDeselect()
+        private void OnDeselect()
         {
 
         }
         #endregion
 
+
+        //////////////////////////////////////////////////////////////////////////////////////
         #region creation
         public static Color requiredVarColor = Color.FromArgb(255, 64, 130, 64);
         public static Color optionalVarColor = Color.FromArgb(255, 122, 130, 64);
@@ -1643,7 +1664,7 @@ DraggingSocketFinish:
         public static Color trgColor = Color.FromArgb(255, 64, 117, 130);
         public static Color effColor = Color.FromArgb(255, 130, 64, 106);
 
-        Point nodeAddLocation = new Point();
+        private Point nodeAddLocation = new Point();
         public void CaptureMousePos(object o, EventArgs e)
         {
             nodeAddLocation = PointToClient(new Point(
@@ -1654,7 +1675,7 @@ DraggingSocketFinish:
             transformInv.TransformPoints(nodeAddLocationArr);
             nodeAddLocation = nodeAddLocationArr[0];
         }
-        
+
         //node id trackers
         public int trgID = 0, varID = 0;
         public int cndID = 0, effID = 0;
@@ -1789,9 +1810,10 @@ DraggingSocketFinish:
         #endregion
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
         #region copy/paste
-        int pasteOffset = 50;
-        SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
+        private int pasteOffset = 50;
+        private SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
         public void CopyGraph()
         {
             copyBuffer = GetSerializedGraph();
@@ -1805,18 +1827,18 @@ DraggingSocketFinish:
             Dictionary<int, TriggerscripterNode> effMap = new Dictionary<int, TriggerscripterNode>();
             Dictionary<int, TriggerscripterNode> varMap = new Dictionary<int, TriggerscripterNode>();
             Dictionary<int, TriggerscripterNode> cndMap = new Dictionary<int, TriggerscripterNode>();
-            foreach (SerializableNode sn in copyBuffer.nodes)
+            foreach (SerializedNode sn in copyBuffer.nodes)
             {
-                if(sn.selected)
+                if (sn.selected)
                 {
-                    if(sn.handleAs == "Trigger")
+                    if (sn.handleAs == "Trigger")
                     {
                         TriggerscripterNode n = CreateTriggerNode(sn.trigger, trgID, sn.x - pasteOffset, sn.y - pasteOffset);
                         n.selected = true;
                         trgMap.Add(sn.id, n);
                         trgID++;
                     }
-                    if(sn.handleAs == "Effect")
+                    if (sn.handleAs == "Effect")
                     {
                         TriggerscripterNode n = CreateEffectNode(sn.effect, effID, sn.x - pasteOffset, sn.y - pasteOffset);
                         n.selected = true;
@@ -1915,20 +1937,9 @@ DraggingSocketFinish:
                     }
                 }
                 catch { }
-            mouseState = CurrentMouseState.NodesSelected;
+                mouseState = CurrentMouseState.NodesSelected;
             }
         }
-        #endregion
-
-        #region import from a .triggerscript
-        public void ImportScript(string file)
-        {
-            XDocument doc = XDocument.Load(file);
-            XElement vars = doc.Element("TriggerSystem").Element("TriggerVars");
-            XElement triggers = doc.Element("TriggerSystem").Element("Trigger");
-
-        }
-        #endregion
         #endregion
     }
 }

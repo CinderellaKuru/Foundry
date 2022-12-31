@@ -15,7 +15,7 @@ using Foundry.Project.Modules;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Foundry
+namespace Foundry.Project
 {
     public partial class FoundryInstance : Form
     {
@@ -33,7 +33,9 @@ namespace Foundry
         {
             AddProjectExplorer(workspace, DockState.DockLeft);
 
+#if DEBUG
             ProjectOpen("workingProject/workingproj.fproject");
+#endif
         }
         private void FoundryInstance_OnClose(object o, EventArgs e)
         {
@@ -132,6 +134,7 @@ namespace Foundry
         public const string TriggerscriptProjectExt = ".fts";
         public const string ScenarioProjectExt = ".fsc";
 
+        //contains info about project state, such as folded folders etc.
         private class ProjectData
         {
             public ProjectData()
@@ -218,7 +221,7 @@ namespace Foundry
             openedName = null;
         }
 
-        //pages
+        //the editor page is the base class for all editors. handles input, rendering, content file saving, etc.
         public class EditorPage : DockContent
         {
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,7 +249,6 @@ namespace Foundry
 
                 renderTimer.Start();
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -356,13 +358,12 @@ namespace Foundry
             private void Internal_Tick()
             {
                 OnTick();
-                if(renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
+                if (renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
                 {
                     OnDraw();
                     renderTimer.Restart();
                 }
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,7 +451,6 @@ namespace Foundry
             {
                 return edited;
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,7 +467,6 @@ namespace Foundry
             {
                 return downKeys.Contains(k);
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,8 +477,8 @@ namespace Foundry
             protected virtual void OnClose() { }
             protected virtual void OnTick() { }
             protected virtual void OnDraw() { }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
         }
+
         public struct DiskEntryNode
         {
             public DiskEntryNode(string name, string path, bool isFolder)
@@ -525,6 +524,7 @@ namespace Foundry
             }
         }
 
+        //editors that are currently open.
         private Dictionary<string, EditorPage> openEditors = new Dictionary<string, EditorPage>();
         public bool EditorIsOpen(string file)
         {

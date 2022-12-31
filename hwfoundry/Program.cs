@@ -1,4 +1,5 @@
-﻿using Foundry.Project.Modules.ScenarioEditor;
+﻿using Foundry.Project;
+using Foundry.Project.Modules.ScenarioEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;

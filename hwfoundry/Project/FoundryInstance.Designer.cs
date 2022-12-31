@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Foundry
+namespace Foundry.Project
 {
     partial class FoundryInstance
     {

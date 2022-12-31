@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using WeifenLuo.WinFormsUI.Docking;
-using static Foundry.FoundryInstance;
 using System.IO;
+using static Foundry.Project.FoundryInstance;
 
 namespace Foundry.Project.Modules
 {
