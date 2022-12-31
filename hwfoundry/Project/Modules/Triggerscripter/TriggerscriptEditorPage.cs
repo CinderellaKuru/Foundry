@@ -94,7 +94,7 @@ namespace Foundry.Project.Modules.Triggerscripter
     }
 
 
-    public class TriggerscriptEditorPage : FoundryPage
+    public class TriggerscriptEditorPage : EditorPage
     {
         private static Dictionary<string, string> nodeSubCategories = new Dictionary<string, string>()
         {
@@ -791,9 +791,8 @@ namespace Foundry.Project.Modules.Triggerscripter
 
         private ContextMenu cm;
         private Timer t;
-        public TriggerscriptEditorPage(FoundryInstance i, string file) : base(i, file)
+        public TriggerscriptEditorPage(FoundryInstance i) : base(i)
         {
-            Text = Path.GetFileName(file);
             DoubleBuffered = true;
             Paint += new PaintEventHandler(DrawControl);
 
@@ -937,17 +936,198 @@ namespace Foundry.Project.Modules.Triggerscripter
             Invalidate();
         }
 
-        #region page
-        protected override void OnOpen(string file)
+        #region load/unload
+        public SerializedTriggerscripter GetSerializedGraph()
+        {
+            SerializedTriggerscripter sts = new SerializedTriggerscripter();
+            foreach (TriggerscripterNode n in nodes)
+            {
+                SerializableNode sn = new SerializableNode();
+                sn.handleAs = n.handleAs;
+                sn.selected = n.selected;
+                if (n.handleAs == "Trigger")
+                {
+                    SerializedTrigger t = new SerializedTrigger();
+                    t.active = ((TriggerscripterNode_Trigger)n).Active;
+                    t.cndIsOr = ((TriggerscripterNode_Trigger)n).Conditional;
+                    t.name = ((TriggerscripterNode_Trigger)n).Name;
+                    sn.trigger = t;
+                }
+                if (n.handleAs == "Variable")
+                {
+                    SerializedVariable v = new SerializedVariable();
+                    v.value = ((TriggerscripterNode_Variable)n).Value;
+                    v.name = ((TriggerscripterNode_Variable)n).Name;
+                    v.type = n.typeTitle;
+                    sn.variable = v;
+                }
+                if (n.handleAs == "Effect")
+                {
+                    Effect e = (Effect)n.data;
+                    sn.effect = e;
+                }
+                if (n.handleAs == "Condition")
+                {
+                    Condition c = (Condition)n.data;
+                    Console.WriteLine(n.id);
+                    sn.condition = c;
+                }
+
+                foreach (TriggerscripterSocket os in n.sockets.Values)
+                {
+                    if (os is TriggerscripterSocket_Output)
+                    {
+                        foreach (TriggerscripterSocket s in os.connectedSockets)
+                        {
+                            SerializedNodeLink link = new SerializedNodeLink();
+                            link.sourceId = n.id;
+                            link.sourceSocketName = os.text;
+
+                            if (n is TriggerscripterNode_Variable)
+                                link.sourceType = "Variable";
+                            else
+                                link.sourceType = n.typeTitle;
+
+                            link.targetId = s.node.id;
+                            link.targetSocketName = s.text;
+                            if (s.node is TriggerscripterNode_Variable)
+                                link.targetType = "Variable";
+                            else
+                                link.targetType = s.node.typeTitle;
+
+                            sts.links.Add(link);
+                        }
+
+
+                    }
+                }
+
+                sn.x = n.x;
+                sn.y = n.y;
+                sn.id = n.id;
+
+                sts.nodes.Add(sn);
+            }
+            sts.lastTrg = trgID++;
+            sts.lastVar = varID++;
+            sts.lastEff = effID++;
+            sts.lastCnd = cndID++;
+            return sts;
+        }
+        public bool LoadFromSerializedGraph(SerializedTriggerscripter sts)
+        {
+                nodes.Clear();
+                Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
+                Dictionary<int, TriggerscripterNode> variables = new Dictionary<int, TriggerscripterNode>();
+                Dictionary<int, TriggerscripterNode> effects = new Dictionary<int, TriggerscripterNode>();
+                Dictionary<int, TriggerscripterNode> conditions = new Dictionary<int, TriggerscripterNode>();
+
+                trgID = sts.lastTrg;
+                varID = sts.lastVar;
+                effID = sts.lastEff;
+                cndID = sts.lastCnd;
+
+                foreach (SerializableNode n in sts.nodes)
+                {
+                    if (n.handleAs == "Trigger")
+                    {
+                        triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Variable")
+                    {
+                        variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Effect")
+                    {
+                        effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
+                    }
+                    if (n.handleAs == "Condition")
+                    {
+                        conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
+                    }
+                }
+                foreach (SerializedNodeLink l in sts.links)
+                {
+                    if (l.sourceType == "Trigger")
+                    {
+                        switch (l.targetType)
+                        {
+                            case "Effect":
+                                ((TriggerscripterSocket_Output)triggers[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (l.sourceType == "Effect")
+                    {
+                        switch (l.targetType)
+                        {
+                            case "Effect":
+                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Condition":
+                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Variable":
+                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Trigger":
+                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (l.sourceType == "Condition")
+                    {
+                        switch (l.targetType)
+                        {
+                            case "Effect":
+                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Condition":
+                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Variable":
+                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Trigger":
+                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (l.sourceType == "Variable")
+                    {
+                        switch (l.targetType)
+                        {
+                            case "Effect":
+                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            case "Condition":
+                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            return true;
+        }
+
+        protected override bool OnLoadFile(string file)
         {
             string text = File.ReadAllText(file);
             SerializedTriggerscripter sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(text);
-            Load(sts);
+            return LoadFromSerializedGraph(sts);
         }
-        protected override void OnSave(string file)
+        protected override bool OnSaveFile(string file)
         {
             string text = JsonConvert.SerializeObject(GetSerializedGraph());
             File.WriteAllText(file, text);
+            return true;
         }
         #endregion
 
@@ -1075,7 +1255,7 @@ namespace Foundry.Project.Modules.Triggerscripter
         void PollInput()
         {
             if (IsDisposed) return;
-            MouseState m = Mouse.GetCursorState();
+            OpenTK.Input.MouseState m = Mouse.GetCursorState();
             KeyboardState keyboard = Keyboard.GetState();
 
             if (keyboard.IsKeyDown(Key.Delete))
@@ -1608,205 +1788,6 @@ DraggingSocketFinish:
         }
         #endregion
 
-        #region serialization
-        public SerializedTriggerscripter GetSerializedGraph()
-        {
-            SerializedTriggerscripter sts = new SerializedTriggerscripter();
-            foreach (TriggerscripterNode n in nodes)
-            {
-                SerializableNode sn = new SerializableNode();
-                sn.handleAs = n.handleAs;
-                sn.selected = n.selected;
-                if (n.handleAs == "Trigger")
-                {
-                    SerializedTrigger t = new SerializedTrigger();
-                    t.active = ((TriggerscripterNode_Trigger)n).Active;
-                    t.cndIsOr = ((TriggerscripterNode_Trigger)n).Conditional;
-                    t.name = ((TriggerscripterNode_Trigger)n).Name;
-                    sn.trigger = t;
-                }
-                if (n.handleAs == "Variable")
-                {
-                    SerializedVariable v = new SerializedVariable();
-                    v.value = ((TriggerscripterNode_Variable)n).Value;
-                    v.name = ((TriggerscripterNode_Variable)n).Name;
-                    v.type = n.typeTitle;
-                    sn.variable = v;
-                }
-                if (n.handleAs == "Effect")
-                {
-                    Effect e = (Effect)n.data;
-                    sn.effect = e;
-                }
-                if (n.handleAs == "Condition")
-                {
-                    Condition c = (Condition)n.data;
-                    Console.WriteLine(n.id);
-                    sn.condition = c;
-                }
-
-                foreach (TriggerscripterSocket os in n.sockets.Values)
-                {
-                    if (os is TriggerscripterSocket_Output)
-                    {
-                        foreach (TriggerscripterSocket s in os.connectedSockets)
-                        {
-                            SerializedNodeLink link = new SerializedNodeLink();
-                            link.sourceId = n.id;
-                            link.sourceSocketName = os.text;
-
-                            if (n is TriggerscripterNode_Variable)
-                                link.sourceType = "Variable";
-                            else
-                                link.sourceType = n.typeTitle;
-
-                            link.targetId = s.node.id;
-                            link.targetSocketName = s.text;
-                            if (s.node is TriggerscripterNode_Variable)
-                                link.targetType = "Variable";
-                            else
-                                link.targetType = s.node.typeTitle;
-
-                            sts.links.Add(link);
-                        }
-
-
-                    }
-                }
-
-                sn.x = n.x;
-                sn.y = n.y;
-                sn.id = n.id;
-
-                sts.nodes.Add(sn);
-            }
-            sts.lastTrg = trgID++;
-            sts.lastVar = varID++;
-            sts.lastEff = effID++;
-            sts.lastCnd = cndID++;
-            return sts;
-        }
-
-        //TODO: rename -- this does not take a file as input.
-        public bool Load(SerializedTriggerscripter sts)
-        {
-            nodes.Clear();
-            Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
-            Dictionary<int, TriggerscripterNode> variables = new Dictionary<int, TriggerscripterNode>();
-            Dictionary<int, TriggerscripterNode> effects = new Dictionary<int, TriggerscripterNode>();
-            Dictionary<int, TriggerscripterNode> conditions = new Dictionary<int, TriggerscripterNode>();
-
-            trgID = sts.lastTrg;
-            varID = sts.lastVar;
-            effID = sts.lastEff;
-            cndID = sts.lastCnd;
-
-            foreach (SerializableNode n in sts.nodes)
-            {
-                try
-                {
-                    if (n.handleAs == "Trigger")
-                    {
-                        triggers.Add(n.id, CreateTriggerNode(n.trigger, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Variable")
-                    {
-                        variables.Add(n.id, CreateVarNode(n.variable, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Effect")
-                    {
-                        effects.Add(n.id, CreateEffectNode(n.effect, n.id, n.x, n.y));
-                    }
-                    if (n.handleAs == "Condition")
-                    {
-                        conditions.Add(n.id, CreateConditionNode(n.condition, n.id, n.x, n.y));
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            
-            foreach (SerializedNodeLink l in sts.links)
-            {
-                try
-                {
-                    if (l.sourceType == "Trigger")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)triggers[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Effect")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Variable":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Trigger":
-                                ((TriggerscripterSocket_Output)effects[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Condition")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Variable":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)variables[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Trigger":
-                                ((TriggerscripterSocket_Output)conditions[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)triggers[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (l.sourceType == "Variable")
-                    {
-                        switch (l.targetType)
-                        {
-                            case "Effect":
-                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)effects[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            case "Condition":
-                                ((TriggerscripterSocket_Output)variables[l.sourceId].sockets[l.sourceSocketName]).Connect((TriggerscripterSocket_Input)conditions[l.targetId].sockets[l.targetSocketName]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                catch 
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        #endregion
 
         #region copy/paste
         int pasteOffset = 50;

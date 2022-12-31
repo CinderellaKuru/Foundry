@@ -9,14 +9,12 @@ namespace Foundry
 {
     internal static class Program
     {
-        public static FoundryInstance window;
-
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            window = new FoundryInstance();
+            FoundryInstance window = new FoundryInstance();
             Application.Run(window);
         }
     }

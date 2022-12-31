@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 using static Foundry.FoundryInstance;
+using System.IO;
 
 namespace Foundry.Project.Modules
 {
@@ -24,17 +25,20 @@ namespace Foundry.Project.Modules
 
         public string FullPath { get; set; }
     }
-    public class ProjectExplorer : FoundryPage
+    public class ProjectExplorer : DockContent
     {
         private ToolStrip toolStrip;
         private ToolStripButton buttonRefresh;
         private NodeIcon nodeImage;
         private NodeTextBox nodeText;
         private TreeViewAdv treeView;
-        public  TreeModel treeModel;
+        private TreeModel treeModel;
 
-        public ProjectExplorer(FoundryInstance i) : base(i)
+        private FoundryInstance instance;
+
+        public ProjectExplorer(FoundryInstance i)
         {
+            instance = i;
             Init();
         }
         private void Init()
@@ -117,19 +121,30 @@ namespace Foundry.Project.Modules
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // nodes
+        private Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
+        {
+            { TriggerscriptProjectExt,   Properties.Resources.page_white },
+            { ScenarioProjectExt,        Properties.Resources.page_white },
+        };
         private void CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
         {
-            foreach(DiskEntryNode child in diskNode._children)
+            foreach(DiskEntryNode child in diskNode.children)
             {
-                ExplorerNode newNode = new ExplorerNode(child._name, child._path, child._icon);
+                Image img = Properties.Resources.page_white;
+                if (child.isFolder)
+                    img = Properties.Resources.folder;
+                else
+                    img = nodeImages.ContainsKey(Path.GetExtension(child.path)) ? nodeImages[Path.GetExtension(child.path)] : Properties.Resources.page_white;
+
+                ExplorerNode newNode = new ExplorerNode(child.name, child.path, img);
                 CreateExplorerNodeRecursive(child, newNode);
                 explorerNode.Nodes.Add(newNode);
             }
         }
-        public void UpdateNodes(DiskEntryNode rootDiskEntryNode)
+        public void UpdateNodes(DiskEntryNode root)
         {
-            ExplorerNode rootExplorerNode = new ExplorerNode(rootDiskEntryNode._name, rootDiskEntryNode._path, rootDiskEntryNode._icon);
-            CreateExplorerNodeRecursive(rootDiskEntryNode, rootExplorerNode);
+            ExplorerNode rootExplorerNode = new ExplorerNode(root.name, root.path, Properties.Resources.box);
+            CreateExplorerNodeRecursive(root, rootExplorerNode);
             
             treeView.BeginUpdate();
             treeModel.Nodes.Clear();
@@ -141,8 +156,7 @@ namespace Foundry.Project.Modules
         }
         public void RefreshNodes()
         {
-            FoundryInstance owner = Instance();
-            owner.UpdateAllProjectExplorers(owner.UpdateContent());
+            instance.ScanProjectDirectoryAndUpdate();
         }
         public void ClearNodes()
         {
@@ -163,7 +177,7 @@ namespace Foundry.Project.Modules
         {
             if (e.Node.Tag is ExplorerNode)
             {
-                Instance().ContentFileOpen(((ExplorerNode)e.Node.Tag).FullPath);
+                instance.EditorOpen(((ExplorerNode)e.Node.Tag).FullPath);
             }
         }
         private void ButtonRefresh_Clicked(object o, EventArgs e)

@@ -131,7 +131,6 @@ namespace Foundry
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FoundryInstance";
             this.Text = "Foundry";
-            this.Load += new System.EventHandler(this.FoundryInstance_Load);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
             this.menuStrip.ResumeLayout(false);

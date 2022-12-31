@@ -12,6 +12,8 @@ using YAXLib;
 using System.Drawing;
 using System.Linq;
 using Foundry.Project.Modules;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Foundry
 {
@@ -20,15 +22,26 @@ namespace Foundry
         #region  foundry instance
         public FoundryInstance()
         {
+            Load += new System.EventHandler(FoundryInstance_OnLoad);
+            FormClosed += new FormClosedEventHandler(FoundryInstance_OnClose);
+
             InitializeComponent();
             versionReadout.Text = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.ToString();
             workspace.Theme = new VS2015LightTheme();
         }
-        private void FoundryInstance_Load(object sender, EventArgs e)
+        private void FoundryInstance_OnLoad(object o, EventArgs e)
         {
             AddProjectExplorer(workspace, DockState.DockLeft);
 
             ProjectOpen("workingProject/workingproj.fproject");
+        }
+        private void FoundryInstance_OnClose(object o, EventArgs e)
+        {
+            if (projectOpened)
+            {
+                ProjectClose();
+            }
+            Controls.Clear();
         }
         private void ToolStripMenu_OpenProject_Click(object sender, EventArgs e)
         {
@@ -81,11 +94,11 @@ namespace Foundry
 
 
         #region property editors
-        private List<PropertyEditor> propertyEditors = new List<PropertyEditor>();
+        private List<PropertyEditor> propertyEditorPages = new List<PropertyEditor>();
         public void AddPropertyEditor(DockState state)
         {
             PropertyEditor pe = new PropertyEditor();
-            propertyEditors.Add(pe);
+            propertyEditorPages.Add(pe);
             pe.Show(workspace, DockState.Float);
         }
         public void SetSelectedObject(object o)
@@ -95,10 +108,29 @@ namespace Foundry
         #endregion
 
 
+        #region project explorers
+        private List<ProjectExplorer> projectExplorerPages = new List<ProjectExplorer>();
+        private void ProjectExplorer_OnClose(object o, FormClosedEventArgs e)
+        {
+            if (o is ProjectExplorer)
+            {
+                projectExplorerPages.Remove((ProjectExplorer)o);
+            }
+        }
+        public void AddProjectExplorer(DockPanel workspace, DockState state)
+        {
+            ProjectExplorer pe = new ProjectExplorer(this);
+            pe.FormClosed += new FormClosedEventHandler(ProjectExplorer_OnClose);
+            projectExplorerPages.Add(pe);
+            pe.Show(workspace, state);
+        }
+        #endregion
+
+
         #region project
-        private const string FOUNDRYPROJECT_EXT = ".fproject";
-        private const string FOUNDRYTRIGGERSCRIPT_EXT = ".fts";
-        private const string FOUNDRYSCENARIO_EXT = ".fsc";
+        public const string FoundryProjectExt = ".fproject";
+        public const string TriggerscriptProjectExt = ".fts";
+        public const string ScenarioProjectExt = ".fsc";
 
         private class ProjectData
         {
@@ -134,17 +166,17 @@ namespace Foundry
         {
             if (projectOpened)
                 ProjectClose();
-            projectOpened = true;
 
             if (!File.Exists(file))
                 return;
 
-            if (Path.GetExtension(file) != FOUNDRYPROJECT_EXT)
+            if (Path.GetExtension(file) != FoundryProjectExt)
                 return;
 
             openedDir = Path.GetDirectoryName(file);
             openedFile = Path.GetFullPath(file);
             openedName = Path.GetFileNameWithoutExtension(file);
+            projectOpened = true;
 
             try
             {
@@ -158,7 +190,7 @@ namespace Foundry
                 return;
             }
 
-            UpdateAllProjectExplorers(UpdateContent());
+            ScanProjectDirectoryAndUpdate();
 
             AppendLog(LogEntryType.Info, "Project '" + openedName + "' loaded.", true);
         }
@@ -170,190 +202,99 @@ namespace Foundry
         }
         public void ProjectClose()
         {
-            ContentFileCloseAll();
-            ClearAllProjectExplorers();
-            contentFiles.Clear();
+            foreach (EditorPage p in openEditors.Values)
+            {
+                p.TryClose(true);
+                //TODO: check for edited editors.
+                //if(p.IsEdited()))
+                //{
+                //    return;
+                //}
+            }
+            openEditors.Clear();
             projectOpened = false;
             openedDir = null;
             openedFile = null;
             openedName = null;
         }
 
-        public class FoundryPage : DockContent
+        //pages
+        public class EditorPage : DockContent
         {
-            private string fileName = null;
+            //////////////////////////////////////////////////////////////////////////////////////////////////
             private FoundryInstance instance;
-            private enum Status
-            {
-                Closed,
-                Opened,
-                Opened_Edited,
-            }
-            private Status status;
-
-            public FoundryPage(FoundryInstance i)
+            bool loaded = false;
+            bool edited = false;
+            public EditorPage(FoundryInstance i)
             {
                 instance = i;
-                status = Status.Closed;
 
-                GotFocus += new EventHandler(Internal_GotFocus);
-                LostFocus += new EventHandler(Internal_LostFocus);
+                mouseState = new MouseState();
+                downKeys = new List<Keys>();
+
+                ControlAdded += new ControlEventHandler(InternalOnly_ControlAdded);
+                FormClosing += new FormClosingEventHandler(Internal_Closed);
+                Resize += new EventHandler(Internal_Resize);
 
                 MouseMove += new MouseEventHandler(Internal_MouseMoved);
                 MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
                 MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
                 MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
 
-                mouseState = new MouseState();
-                downKeys = new List<Keys>();
-            }
-            public FoundryPage(FoundryInstance i, string file) : this(i)
-            {
-                fileName = file;
-            }
+                KeyDown += new KeyEventHandler(Internal_KeyDown);
+                KeyUp += new KeyEventHandler(Internal_KeyUp);
 
-            //external file interactions
-            public bool TrySetEdited()
-            {
-                if (fileName != null)
-                {
-                    if (status == Status.Opened)
-                    {
-                        status = Status.Opened_Edited;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                renderTimer.Start();
             }
-            public bool TryOpen(DockPanel workspace, DockState state)
-            {
-                if (status == Status.Closed)
-                {
-                    if (fileName != null)
-                    {
-                        //if the file exists, open it. else return false.
-                        if (File.Exists(fileName))
-                        {
-                            OnOpen(fileName);
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        OnOpen();
-                    }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    Show(workspace, state);
 
-                    status = Status.Opened;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            public bool TryClose()
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+            //internal events
+            private void InternalOnly_ControlAdded(object o, ControlEventArgs e)
             {
-                if (status == Status.Opened)
-                {
-                    Close();
+                e.Control.MouseMove += new MouseEventHandler(Internal_MouseMoved);
+                e.Control.MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
+                e.Control.MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
+                e.Control.MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
 
-                    return true;
-                }
-                else if (status == Status.Opened_Edited)
-                {
-                    DialogResult r = MessageBox.Show("Are you sure you want to close this file? Any unsaved progress will be lost.", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (r == DialogResult.Yes)
-                    {
-                        Close();
-                        status = Status.Closed;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                e.Control.KeyDown += new KeyEventHandler(Internal_KeyDown);
+                e.Control.KeyUp += new KeyEventHandler(Internal_KeyUp);
             }
-            public bool TrySave()
+            private void Internal_Closed(object o, FormClosingEventArgs e)
             {
-                if (fileName != null)
-                {
-                    if (status == Status.Opened_Edited)
-                    {
-                        OnSave(fileName);
-                        status = Status.Opened;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                Controls.Clear();
+                OnClose();
             }
-            public bool TrySaveAs(string file)
+            private void Internal_Resize(object o, EventArgs e)
             {
-                if (fileName != null)
+                if (!Disposing)
                 {
-                    fileName = file;
-                    OnSave(file);
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    OnResize();
                 }
             }
 
-            //internal page callbacks
-            private void Internal_GotFocus(object o, EventArgs e)
-            {
-                downKeys.Clear();
-            }
-            private void Internal_LostFocus(object o, EventArgs e)
-            {
-                downKeys.Clear();
-            }
-
+            //mouse
             protected struct MouseState
             {
-                public bool leftDown, rightDown;
-                public int mX, mY;
+                public bool leftDown, rightDown, middleDown;
+                public int x, y;
                 public int deltaX, deltaY, deltaScroll;
             }
             private MouseState mouseState;
             private void Internal_MouseMoved(object o, MouseEventArgs e)
             {
                 mouseState.deltaScroll = 0;
-                mouseState.deltaX = mouseState.mX - e.X;
-                mouseState.deltaY = mouseState.mY - e.Y;
-                mouseState.mX = e.X;
-                mouseState.mY = e.Y;
-                OnInput();
+                mouseState.deltaX = mouseState.x - e.X;
+                mouseState.deltaY = mouseState.y - e.Y;
+                mouseState.x = e.X;
+                mouseState.y = e.Y;
+                Internal_Tick();
             }
             private void Internal_MouseWheelMoved(object o, MouseEventArgs e)
             {
                 mouseState.deltaScroll = e.Delta;
-                OnInput();
+                Internal_Tick();
             }
             private void Internal_MouseButtonDown(object o, MouseEventArgs e)
             {
@@ -366,7 +307,11 @@ namespace Foundry
                 {
                     mouseState.rightDown = true;
                 }
-                OnInput();
+                if (e.Button == MouseButtons.Middle)
+                {
+                    mouseState.middleDown = true;
+                }
+                Internal_Tick();
             }
             private void Internal_MouseButtonUp(object o, MouseEventArgs e)
             {
@@ -379,22 +324,136 @@ namespace Foundry
                 {
                     mouseState.rightDown = false;
                 }
-                OnInput();
+                if (e.Button == MouseButtons.Middle)
+                {
+                    mouseState.middleDown = false;
+                }
+                Internal_Tick();
             }
+
+            //keyboard
             private List<Keys> downKeys;
             private void Internal_KeyDown(object o, KeyEventArgs e)
             {
                 if (!downKeys.Contains(e.KeyCode))
+                {
                     downKeys.Add(e.KeyCode);
-                OnInput();
+                }
+                Internal_Tick();
             }
             private void Internal_KeyUp(object o, KeyEventArgs e)
             {
                 if (downKeys.Contains(e.KeyCode))
+                {
                     downKeys.RemoveAll(x => x == e.KeyCode);
-                OnInput();
+                }
+                Internal_Tick();
             }
 
+            //tick - this function calls OnTick, and when enough time has passed, OnDraw().
+            private const int renderIntervalMilliseconds = 16;
+            private Stopwatch renderTimer = new Stopwatch();
+            private void Internal_Tick()
+            {
+                OnTick();
+                if(renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
+                {
+                    OnDraw();
+                    renderTimer.Restart();
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+            //external file interactions
+            public bool TrySetEdited()
+            {
+                if (loaded)
+                {
+                    if (!edited)
+                    {
+                        edited = true;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            public bool TryOpen(string file, DockPanel location, DockState state)
+            {
+                if (!loaded)
+                {
+                    if (File.Exists(file))
+                    {
+                        edited = false;
+
+                        if (OnLoadFile(file))
+                        {
+                            Show(location, state);
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return false;
+            }
+            public bool TryClose(bool force = false)
+            {
+                if (loaded)
+                {
+                    if (edited && !force)
+                    {
+                        if (MessageBox.Show("Are you sure you want to close this page? Any unsaved progress will be lost.", "Warning!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            edited = false;
+                            Close();
+                            return true;
+                        }
+                        return false;
+                    }
+                    else
+                    {
+                        Close();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            public bool TrySave(string file)
+            {
+                if (loaded)
+                {
+                    if (edited)
+                    {
+                        if (OnSaveFile(file))
+                        {
+                            edited = false;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            public bool TrySaveAs(string file)
+            {
+                if (loaded)
+                {
+                    if (OnSaveFile(file))
+                    {
+                        edited = false;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            public bool IsEdited()
+            {
+                return edited;
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
             //protected getters
             protected FoundryInstance Instance()
             {
@@ -408,176 +467,112 @@ namespace Foundry
             {
                 return downKeys.Contains(k);
             }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
             //page overridable functions
-            protected virtual void OnOpen(string file) { }
-            protected virtual void OnSave(string file) { }
-            protected virtual void OnInput() { }
-        }
-        private FoundryPage activePage;
-        public void SetActivePage(FoundryPage page)
-        {
-            activePage = page;
-        }
-        public void SaveActivePage()
-        {
-            if(activePage != null)
-            {
-                activePage.TrySave();
-            }
-        }
-
-        //content files
-        private Dictionary<string, FoundryPage> contentFiles = new Dictionary<string, FoundryPage>();
-        private void TryAddContentFile(string file)
-        {
-            if (!contentFiles.ContainsKey(file))
-            {
-                string ext = Path.GetExtension(file);
-                FoundryPage contentFile = null;
-                switch (ext)
-                {
-                    case FOUNDRYTRIGGERSCRIPT_EXT:
-                        contentFile = new TriggerscriptEditorPage(this, file);
-                        contentFiles.Add(file, contentFile);
-                        break;
-                    case FOUNDRYSCENARIO_EXT:
-                        contentFile = new ScenarioEditorPage(this, file);
-                        contentFiles.Add(file, contentFile);
-                        break;
-                    default:
-                        return;
-                }
-            }
+            protected virtual bool OnLoadFile(string file) { return true; }
+            protected virtual bool OnSaveFile(string file) { return true; }
+            protected virtual void OnResize() { }
+            protected virtual void OnClose() { }
+            protected virtual void OnTick() { }
+            protected virtual void OnDraw() { }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
         }
         public struct DiskEntryNode
         {
-            public DiskEntryNode(string name, string path, Image icon)
+            public DiskEntryNode(string name, string path, bool isFolder)
             {
-                _name = name;
-                _path = path;
-                _icon = icon;
-                _children = new List<DiskEntryNode>();
+                this.isFolder = isFolder;
+                this.name = name;
+                this.path = path;
+                children = new List<DiskEntryNode>();
             }
-            public string _name;
-            public string _path;
-            public Image _icon;
-            public List<DiskEntryNode> _children;
+            public bool isFolder;
+            public string name;
+            public string path;
+            public List<DiskEntryNode> children;
         }
         private void ScanProjectDirectoryRecursive(DiskEntryNode node)
         {
-            if (File.GetAttributes(node._path).HasFlag(FileAttributes.Directory))
+            if (File.GetAttributes(node.path).HasFlag(FileAttributes.Directory))
             {
                 //get child folders first
-                foreach (string dir in Directory.GetDirectories(node._path))
+                foreach (string dir in Directory.GetDirectories(node.path))
                 {
-                    DiskEntryNode child = new DiskEntryNode(Path.GetDirectoryName(dir), dir, Properties.Resources.folder);
-                    node._children.Add(child);
+                    DiskEntryNode child = new DiskEntryNode(Path.GetDirectoryName(dir), dir, true);
+                    node.children.Add(child);
                     ScanProjectDirectoryRecursive(child);
                 }
 
                 //get child files second
-                foreach (string file in Directory.GetFiles(node._path))
+                foreach (string file in Directory.GetFiles(node.path))
                 {
-                    Image image = Properties.Resources.page_white;
-
-                    //create a node for this file.
-                    DiskEntryNode child = new DiskEntryNode(Path.GetFileName(file), file, image);
-                    node._children.Add(child);
+                    DiskEntryNode child = new DiskEntryNode(Path.GetFileName(file), file, false);
+                    node.children.Add(child);
                 }
             }
         }
-        public DiskEntryNode ScanProjectDirectory()
+        public void ScanProjectDirectoryAndUpdate()
         {
-            DiskEntryNode root = new DiskEntryNode(openedName, openedDir, Properties.Resources.box);
+            DiskEntryNode root = new DiskEntryNode(openedName, openedDir, false);
             ScanProjectDirectoryRecursive(root);
 
-            return root;
-        }
-
-        public void ContentFileOpen(string file)
-        {
-            if (contentFiles.ContainsKey(file))
-            {
-                contentFiles[file].TryOpen(workspace, DockState.Document);
-            }
-        }
-        public void ContentFileSave(string file)
-        {
-            if (contentFiles.ContainsKey(file))
-            {
-                contentFiles[file].TrySave();
-            }
-        }
-        public void ContentFileClose(string file)
-        {
-            if (contentFiles.ContainsKey(file))
-            {
-                contentFiles[file].TryClose();
-            }
-        }
-        public void ContentFileSaveAll()
-        {
-            foreach (FoundryPage f in contentFiles.Values)
-            {
-                f.TrySave();
-            }
-        }
-        public void ContentFileCloseAll()
-        {
-            foreach (FoundryPage f in contentFiles.Values)
-            {
-                f.TryClose();
-            }
-        }
-        public bool ContentFileExists(string file)
-        {
-            return contentFiles.Keys.Contains(file);
-        }
-        public void ContentFileDelete(string file)
-        {
-            if(ContentFileExists(file))
-            {
-                contentFiles[file].TryClose();
-                if (contentFiles[file] == activePage)
-                {
-                    activePage = null;
-                }
-                contentFiles.Remove(file);
-            }
-        }
-        #endregion
-
-
-        //project explorers
-        private List<ProjectExplorer> projectExplorers = new List<ProjectExplorer>();
-        private void ProjectExplorer_OnClose(object o, FormClosedEventArgs e)
-        {
-            if (o is ProjectExplorer)
-            {
-                projectExplorers.Remove((ProjectExplorer)o);
-            }
-        }
-        public void AddProjectExplorer(DockPanel workspace, DockState state)
-        {
-            ProjectExplorer pe = new ProjectExplorer(this);
-            pe.FormClosed += new FormClosedEventHandler(ProjectExplorer_OnClose);
-            projectExplorers.Add(pe);
-            pe.Show(workspace, state);
-        }
-        public void UpdateAllProjectExplorers(DiskEntryNode root)
-        {
-            foreach (ProjectExplorer explorer in projectExplorers)
+            foreach(var explorer in projectExplorerPages)
             {
                 explorer.UpdateNodes(root);
             }
         }
-        public void ClearAllProjectExplorers()
+
+        private Dictionary<string, EditorPage> openEditors = new Dictionary<string, EditorPage>();
+        public bool EditorIsOpen(string file)
         {
-            foreach (ProjectExplorer explorer in projectExplorers)
+            return openEditors.ContainsKey(file);
+        }
+        public void EditorOpen(string file)
+        {
+            if (!EditorIsOpen(file))
             {
-                explorer.ClearNodes();
+                if (File.Exists(file))
+                {
+                    EditorPage page;
+                    switch (Path.GetExtension(file))
+                    {
+                        case TriggerscriptProjectExt:
+                            page = new TriggerscriptEditorPage(this);
+                            break;
+                        case ScenarioProjectExt:
+                            page = new ScenarioEditorPage(this);
+                            break;
+                        default:
+                            return;
+                    }
+                    if (page.TryOpen(file, workspace, DockState.Document))
+                    {
+                        page.Text = Path.GetFileName(file);
+                        openEditors.Add(file, page);
+                    }
+                }
             }
         }
+        public void EditorPageClose(string file)
+        {
+            if (EditorIsOpen(file))
+            {
+                if(openEditors[file].TryClose())
+                {
+                    openEditors.Remove(file);
+                }
+            }
+        }
+        public void EditorPageSave(string file)
+        {
+            if (EditorIsOpen(file))
+            {
+                openEditors[file].TrySave(file);
+            }
+        }
+        #endregion
     }
 }

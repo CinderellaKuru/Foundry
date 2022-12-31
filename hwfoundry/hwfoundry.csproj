@@ -73,6 +73,9 @@
     <EmbeddedResource Include="Project\Modules\ProjectExplorer.resx">
       <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Project\Modules\ScenarioEditor\ScenarioEditorPage.resx">
+      <DependentUpon>ScenarioEditorPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -81,6 +84,9 @@
     <EmbeddedResource Include="Project\FoundryInstance.resx">
       <DependentUpon>FoundryInstance.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
