@@ -86,6 +86,19 @@
           }
         }
       },
+      "jacobslusser.ScintillaNET/3.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
         "type": "package",
         "dependencies": {
@@ -136,19 +149,6 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
-          }
-        }
-      },
-      "OpenTK/3.3.3": {
-        "type": "package",
-        "compile": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
           }
         }
       },
@@ -648,6 +648,19 @@
           }
         }
       },
+      "jacobslusser.ScintillaNET/3.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
         "type": "package",
         "dependencies": {
@@ -698,19 +711,6 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
-          }
-        }
-      },
-      "OpenTK/3.3.3": {
-        "type": "package",
-        "compile": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
           }
         }
       },
@@ -1200,6 +1200,19 @@
           }
         }
       },
+      "jacobslusser.ScintillaNET/3.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
         "type": "package",
         "dependencies": {
@@ -1250,19 +1263,6 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
-          }
-        }
-      },
-      "OpenTK/3.3.3": {
-        "type": "package",
-        "compile": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
           }
         }
       },
@@ -1752,6 +1752,19 @@
           }
         }
       },
+      "jacobslusser.ScintillaNET/3.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/ScintillaNET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
         "type": "package",
         "dependencies": {
@@ -1802,19 +1815,6 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {
             "related": ".xml"
-          }
-        }
-      },
-      "OpenTK/3.3.3": {
-        "type": "package",
-        "compile": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net20/OpenTK.dll": {
-            "related": ".pdb;.xml"
           }
         }
       },
@@ -2322,6 +2322,19 @@
         "lib/netstandard2.0/HelixToolkit.SharpDX.Core.xml"
       ]
     },
+    "jacobslusser.ScintillaNET/3.6.3": {
+      "sha512": "lERpP3K4x1ge5sW5eG+Yhv9sEFF4MDiHd/nuXTu/xSgPGODQo7K8hCEivqulrFypzFPZ+TsLDZoqucmi5blbdg==",
+      "type": "package",
+      "path": "jacobslusser.scintillanet/3.6.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "jacobslusser.scintillanet.3.6.3.nupkg.sha512",
+        "jacobslusser.scintillanet.nuspec",
+        "lib/net40/ScintillaNET.dll",
+        "lib/net40/ScintillaNET.xml"
+      ]
+    },
     "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
       "sha512": "jek4XYaQ/PGUwDKKhwR8K47Uh1189PFzMeLqO83mXrXQVIpARZCcfuDedH50YDTepBkfijCZN5U/vZi++erxtg==",
       "type": "package",
@@ -2422,21 +2435,6 @@
         "newtonsoft.json.13.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "packageIcon.png"
-      ]
-    },
-    "OpenTK/3.3.3": {
-      "sha512": "KtnygHEuYj4+agNsZRtzh5iSiKlelDZvDB/OhfebEvIDX/97Pzygv8n5llZHgrI7Xa29vvkucVBeN55R6/k+4w==",
-      "type": "package",
-      "path": "opentk/3.3.3",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/OpenTK.dll.config",
-        "lib/net20/OpenTK.dll",
-        "lib/net20/OpenTK.pdb",
-        "lib/net20/OpenTK.xml",
-        "opentk.3.3.3.nupkg.sha512",
-        "opentk.nuspec"
       ]
     },
     "SharpDX/4.2.0": {
@@ -3416,12 +3414,12 @@
       "DockPanelSuite.ThemeVS2015 >= 3.1.0",
       "HelixToolkit.SharpDX.Core >= 2.23.0",
       "Newtonsoft.Json >= 13.0.2",
-      "OpenTK >= 3.3.3",
       "SharpDX.Desktop >= 4.2.0",
       "SharpDX.DirectInput >= 4.2.0",
       "System.Memory >= 4.5.5",
       "TreeViewAdv >= 1.7.0",
-      "YAXLib >= 4.0.0"
+      "YAXLib >= 4.0.0",
+      "jacobslusser.ScintillaNET >= 3.6.3"
     ]
   },
   "packageFolders": {
@@ -3478,10 +3476,6 @@
             "target": "Package",
             "version": "[13.0.2, )"
           },
-          "OpenTK": {
-            "target": "Package",
-            "version": "[3.3.3, )"
-          },
           "SharpDX.Desktop": {
             "target": "Package",
             "version": "[4.2.0, )"
@@ -3501,6 +3495,10 @@
           "YAXLib": {
             "target": "Package",
             "version": "[4.0.0, )"
+          },
+          "jacobslusser.ScintillaNET": {
+            "target": "Package",
+            "version": "[3.6.3, )"
           }
         }
       }

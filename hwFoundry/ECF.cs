@@ -17,6 +17,19 @@ namespace Foundry.ECF
     }
     class ECFFile
     {
+        public static uint CalcAdler32(byte[] barr, int offs, int len)
+        {
+            const int mod = 65521;
+            uint a = 1, b = 0;
+            for (int i = offs; i < len + offs; i++)
+            {
+                byte c = barr[i];
+                a = (a + c) % mod;
+                b = (b + a) % mod;
+            }
+            return (b << 16) | a;
+        }
+
         private List<ECFChunk> chunks = new List<ECFChunk>();
         public void AddChunk(ECFChunk chunk)
         {
@@ -56,7 +69,7 @@ namespace Foundry.ECF
             header[16] = chunkCount[1];
             header[17] = chunkCount[0];
 
-            uint adler = Util.CalcAdler32(header.ToArray(), 12, 20);
+            uint adler = CalcAdler32(header.ToArray(), 12, 20);
             header[8] = BitConverter.GetBytes(adler)[3];
             header[8] = BitConverter.GetBytes(adler)[2];
             header[8] = BitConverter.GetBytes(adler)[1];

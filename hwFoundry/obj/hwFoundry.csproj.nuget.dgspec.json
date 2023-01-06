@@ -54,10 +54,6 @@
               "target": "Package",
               "version": "[13.0.2, )"
             },
-            "OpenTK": {
-              "target": "Package",
-              "version": "[3.3.3, )"
-            },
             "SharpDX.Desktop": {
               "target": "Package",
               "version": "[4.2.0, )"
@@ -77,6 +73,10 @@
             "YAXLib": {
               "target": "Package",
               "version": "[4.0.0, )"
+            },
+            "jacobslusser.ScintillaNET": {
+              "target": "Package",
+              "version": "[3.6.3, )"
             }
           }
         }

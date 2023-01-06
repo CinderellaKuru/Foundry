@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{79C6C234-04E5-4543-B0CC-A6DEB8F1FDF5}</ProjectGuid>
     <OutputType>Exe</OutputType>
+    <AllowedReferenceRelatedFileExtensions>.dll</AllowedReferenceRelatedFileExtensions>
     <RootNamespace>Foundry</RootNamespace>
     <AssemblyName>hwfoundry</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -16,49 +17,85 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <DoNotCopyLocalIfInGac>true</DoNotCopyLocalIfInGac>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>false</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>Foundry.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>build\debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>full</DebugType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>build\release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>2EE6FB32E712835070F2ED1E1FEE79627B3033AE</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>hwfoundry_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Project\Modules\Base\BaseEditorPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Modules\XmlEditor\XmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Project\Modules\ScenarioEditor\ScenarioEditorPage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscriptCompiler.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscriptNodes.cs" />
-    <Compile Include="Project\Modules\Triggerscripter\TriggerscriptEditorPage.cs" />
-    <Compile Include="Project\Modules\ProjectExplorer.cs" />
-    <Compile Include="Project\Modules\PropertyEditor.cs">
+    <Compile Include="Project\Modules\Base\SceneEditorPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Modules\TriggerscriptEditor\TriggerscriptCompiler.cs" />
+    <Compile Include="Project\Modules\TriggerscriptEditor\TriggerscriptNodes.cs" />
+    <Compile Include="Project\Modules\TriggerscriptEditor\TriggerscriptEditorPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Modules\Workspace\ProjectExplorer.cs" />
+    <Compile Include="Project\Modules\Workspace\PropertyEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ECF.cs" />
@@ -70,12 +107,11 @@
     <Compile Include="Project\FoundryInstance.Designer.cs">
       <DependentUpon>FoundryInstance.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <EmbeddedResource Include="Project\Modules\ProjectExplorer.resx">
+    <EmbeddedResource Include="Project\Modules\Workspace\ProjectExplorer.resx">
       <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\Modules\ScenarioEditor\ScenarioEditorPage.resx">
-      <DependentUpon>ScenarioEditorPage.cs</DependentUpon>
+    <EmbeddedResource Include="Project\Modules\Base\SceneEditorPage.resx">
+      <DependentUpon>SceneEditorPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -104,48 +140,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ext\SMH-Icons\box.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\page_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\SMH-Icons\cog.png" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ext\CommandPositions\7.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y /E "$(ProjectDir)resources\shaders\" "$(TargetDir)shaders\"
-rmdir /q /s "$(TargetDir)\workingProject\"
+    <PreBuildEvent>rmdir /q /s "$(TargetDir)\workingProject\"
 xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProject\"</PreBuildEvent>
   </PropertyGroup>
   <ItemGroup>
@@ -167,11 +166,11 @@ xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProjec
     <PackageReference Include="HelixToolkit.SharpDX.Core">
       <Version>2.23.0</Version>
     </PackageReference>
+    <PackageReference Include="jacobslusser.ScintillaNET">
+      <Version>3.6.3</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="OpenTK">
-      <Version>3.3.3</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Desktop">
       <Version>4.2.0</Version>
@@ -233,6 +232,36 @@ xcopy /Y /E "$(ProjectDir)resources\workingProject\" "$(TargetDir)\workingProjec
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\var.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FastColoredTextBox">
+      <HintPath>..\ext\FastColoredTextBox-master\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="ScintillaNET">
+      <HintPath>..\ext\scintillaNET\ScintillaNET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\discord.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

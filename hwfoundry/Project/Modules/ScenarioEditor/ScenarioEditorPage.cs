@@ -1,131 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Cameras;
-using HelixToolkit.SharpDX.Core.Controls;
-using HelixToolkit.SharpDX.Core.Model;
+using Foundry.Project.Modules.Base;
 using HelixToolkit.SharpDX.Core.Model.Scene;
-using Vector3 = SharpDX.Vector3;
+using HelixToolkit.SharpDX.Core;
+using HelixToolkit.SharpDX.Core.Model;
 using SharpDX;
-using SharpDX.Windows;
-using SharpDX.DXGI;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using Device = SharpDX.Direct3D11.Device;
-using System.Runtime.Remoting.Contexts;
-using Color = SharpDX.Color;
-using System.Diagnostics;
-using static Foundry.Project.FoundryInstance;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Reflection;
 
 namespace Foundry.Project.Modules.ScenarioEditor
 {
-    public class ScenarioEditorPage : EditorPage
+    public enum TerrainSize
     {
-        private Panel renderControl;
-        private ViewportCore viewport;
-        private CameraCore camera;
-        private CameraController cameraController;
-        private EffectsManager effectsManager;
-
+        x512  = 8,
+        x768  = 12,
+        x1024 = 16,
+        x1536 = 24,
+        x2048 = 32,
+        x3072 = 48,
+        x4096 = 64,
+    }
+    public class ScenarioEditorPage : SceneEditorPage
+    {
         public ScenarioEditorPage(FoundryInstance i) : base(i)
         {
-            renderControl = new Panel();
-            renderControl.Width = 600;
-            renderControl.Height = 400;
-            renderControl.Location = new System.Drawing.Point(0, 0);
-            renderControl.Dock = DockStyle.Fill;
-            Controls.Add(renderControl);
-
-
-            //helix
-            viewport = new ViewportCore(renderControl.Handle);
-            cameraController = new CameraController(viewport);
-            cameraController.CameraMode = CameraMode.Inspect;
-            cameraController.CameraRotationMode = CameraRotationMode.Turntable;
-            camera = new PerspectiveCameraCore()
-            {
-                LookDirection = new Vector3(0, 0, 1),
-                Position = new Vector3(0, 0, -10),
-                FarPlaneDistance = 1000f,
-                NearPlaneDistance = .1f,
-                FieldOfView = 90,
-                UpDirection = new Vector3(0, 1, 0)
-            };
-            viewport.CameraCore = camera;
-            cameraController.CameraTarget = new Vector3(0, 0, 0);
-
-            effectsManager = new DefaultEffectsManager();
-            effectsManager.AddTechnique(new HelixToolkit.SharpDX.Core.Shaders.TechniqueDescription("technique"));
-            viewport.EffectsManager = effectsManager;
-
-            MaterialCore mat = new DiffuseMaterialCore()
-            {
-                DiffuseColor = Color.White
-            };
-            var builder = new MeshBuilder(true, false, false);
-            builder.AddBox(new Vector3(0, 0, 0), 1, 1, 1);
-            MeshNode node = new MeshNode()
-            {
-                ModelMatrix = Matrix.Translation(new Vector3(0, 0, 0)),
-                Geometry = builder.ToMesh(),
-                IsTransparent = false,
-                Material = mat,
-                CullMode = CullMode.Back,
-            };
-            viewport.Items.AddChildNode(node);
-
-            viewport.StartD3D(Width, Height);
+            InitTerrainMesh(TerrainSize.x4096);
         }
-        protected override bool OnLoadFile(string file)
-        {
-            return true;
-        }
-        protected override void OnTick()
-        {
-            MouseState mouseState = GetMouseState();
-            Vector2 mousePos = new Vector2(mouseState.x, mouseState.y);
 
-            cameraController.OnTimeStep();
-            cameraController.MouseMove(mousePos);
-            viewport.MouseMove(mousePos);
+		private class TerrainChunk
+		{
+			public MeshNode meshNode;
 
-            if (mouseState.middleDown && !GetKeyIsDown(Keys.ShiftKey))
+			private ScenarioEditorPage owner;
+			public TerrainChunk(ScenarioEditorPage owner, int worldX, int worldY, IEnumerable<Vector3> positions, IEnumerable<int> indices)
+			{
+				this.owner = owner;
+
+				MeshBuilder builder = new MeshBuilder();
+				builder.Positions.AddRange(positions);
+				builder.TriangleIndices.AddRange(indices);
+
+				meshNode = new MeshNode()
+				{
+					Geometry = builder.ToMesh(),
+					Material = new DiffuseMaterialCore() { DiffuseColor = Color.White },
+					ModelMatrix = Matrix.Translation(new Vector3(worldX, 0, worldY))
+				};
+				owner.viewport.Items.AddChildNode(meshNode);
+			}
+		}
+        private TerrainChunk[,] terrainChunks;
+        public void InitTerrainMesh(TerrainSize size)
+        {
+            const int numXVerts = 64;
+            terrainChunks = new TerrainChunk[(int)size, (int)size];
+
+            for (int chunkX = 0; chunkX < (int)size; chunkX++)
             {
-                cameraController.StartRotate(mousePos);
+                for (int chunkZ = 0; chunkZ < (int)size; chunkZ++)
+                {
+					List<Vector3> positions = new List<Vector3>();
+					List<int> indices = new List<int>();
+
+					//vertices
+					for (int x = 0; x < numXVerts; x++)
+                    {
+                        for (int z = 0; z < numXVerts; z++)
+                        {
+							positions.Add(new Vector3(x, 0, z));
+
+                            float uvu = (1f / (numXVerts - 1) * x);
+                            float uvv = 1 - (1f / (numXVerts - 1) * z);
+                            //builder.TextureCoordinates.Add(new Vector2(uvu, uvv));
+                        }
+                    }
+
+                    //indices
+                    for (int x = 0; x < numXVerts - 1; x++)
+                    {
+                        for (int z = 0; z < numXVerts - 1; z++)
+                        {
+                            int row0 = z * numXVerts;
+                            int row1 = (z + 1) * numXVerts;
+
+                            int i0 = row0 + x;
+                            int i1 = row0 + x + 1;
+                            int i2 = row1 + x;
+                            int i3 = row1 + x + 1;
+                            int i4 = row1 + x;
+                            int i5 = row0 + x + 1;
+
+                            indices.Add(i0);
+                            indices.Add(i1);
+                            indices.Add(i2);
+                            indices.Add(i3);
+                            indices.Add(i4);
+                            indices.Add(i5);
+                        }
+                    }
+
+                    int chunkWorldX = chunkX * (numXVerts - 1);
+                    int chunkWorldY = chunkZ * (numXVerts - 1);
+					terrainChunks[chunkX, chunkZ] = new TerrainChunk(this, chunkWorldX, chunkWorldY, positions, indices);
+                }
             }
-            else
-            {
-                cameraController.EndRotate(mousePos);
-            }
-
-            if (mouseState.middleDown && GetKeyIsDown(Keys.ShiftKey))
-            {
-                cameraController.StartPan(mousePos);
-            }
-            else
-            {
-                cameraController.EndPan(mousePos);
-            }
-        }
-        protected override void OnDraw()
-        {
-            viewport.Render();
-        }
-        protected override void OnResize()
-        {
-            viewport.Resize(Width, Height);
-        }
-        protected override void OnClose()
-        {
-            viewport.EndD3D();
         }
     }
 }

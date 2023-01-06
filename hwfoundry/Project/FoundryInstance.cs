@@ -1,35 +1,45 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Reflection;
-using WeifenLuo.WinFormsUI.Docking;
-using Foundry.Project.Modules.ScenarioEditor;
-using Foundry.Project.Modules.Triggerscripter;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
+using System.Linq;
+using WeifenLuo.WinFormsUI.Docking;
 using YAXLib.Attributes;
 using YAXLib.Enums;
 using YAXLib;
-using System.Drawing;
-using System.Linq;
-using Foundry.Project.Modules;
-using System.ComponentModel;
-using System.Diagnostics;
+using Foundry.Project.Modules.Base;
+using Foundry.Project.Modules.TriggerscriptEditor;
+using Foundry.Project.Modules.ScenarioEditor;
+using Foundry.Project.Modules.Workspace;
+using Foundry.Project.Modules.XmlEditor;
 
 namespace Foundry.Project
 {
     public partial class FoundryInstance : Form
     {
+        //////////////////////////////////////////////////////////////////////////////////////
         #region  foundry instance
         public FoundryInstance()
         {
-            Load += new System.EventHandler(FoundryInstance_OnLoad);
-            FormClosed += new FormClosedEventHandler(FoundryInstance_OnClose);
+            Load += new EventHandler(OnLoad);
+            FormClosed += new FormClosedEventHandler(OnClose);
 
             InitializeComponent();
-            versionReadout.Text = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.ToString();
+            versionReadout.Text = "v" + System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.ToString();
             workspace.Theme = new VS2015LightTheme();
+
+			memoryMonitorTicker = new Timer();
+			memoryMonitorTicker.Tick += (object o, EventArgs e) => {
+				memoryReadout.Text = (Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024)).ToString() + "mb";
+			};
+			memoryMonitorTicker.Interval = 1000; //2 seconds.
+			memoryMonitorTicker.Start();
         }
-        private void FoundryInstance_OnLoad(object o, EventArgs e)
+
+		//callbacks
+        private void OnLoad(object o, EventArgs e)
         {
             AddProjectExplorer(workspace, DockState.DockLeft);
 
@@ -37,7 +47,7 @@ namespace Foundry.Project
             ProjectOpen("workingProject/workingproj.fproject");
 #endif
         }
-        private void FoundryInstance_OnClose(object o, EventArgs e)
+        private void OnClose(object o, EventArgs e)
         {
             if (projectOpened)
             {
@@ -45,7 +55,8 @@ namespace Foundry.Project
             }
             Controls.Clear();
         }
-        private void ToolStripMenu_OpenProject_Click(object sender, EventArgs e)
+		private Timer memoryMonitorTicker;
+        private void ToolStrip_File_OpenProjectClicked(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -53,9 +64,22 @@ namespace Foundry.Project
                 ProjectOpen(ofd.FileName);
             }
         }
+        private void Footer_DiscordImageLink_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.gg/kfrCNUTaSc");
+        }
+        #endregion
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        #region config
+        private void LoadConfig()
+        {
+
+        }
         #endregion
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
         #region  log
         public enum LogEntryType
         {
@@ -63,7 +87,14 @@ namespace Foundry.Project
             Warning,
             Error,
         }
-        public void AppendLog(LogEntryType type, string message, bool displayAsStatus, string secondaryMessage = "")
+		/// <summary>
+		/// Writes text to the console.
+		/// </summary>
+		/// <param name="type">The type of message to send. Affects prefix.</param>
+		/// <param name="mainMessage">The main text to be written.</param>
+		/// <param name="displayAsStatus">If true, mainMessage will be written to the footer status bar, until another message overwrites it.</param>
+		/// <param name="secondaryMessage">If supplied, this will be written to the console, but not displayed on the status bar. Useful for things like exception info.</param>
+		public void AppendLog(LogEntryType type, string mainMessage, bool displayAsStatus, string secondaryMessage = null)
         {
             string prefix;
             switch(type)
@@ -81,13 +112,13 @@ namespace Foundry.Project
                     prefix = "";
                     break;
             }
-            string print = prefix + message;
+            string print = prefix + mainMessage;
 
             if(displayAsStatus)
                 logStatus.Text = print;
 
             Console.WriteLine(print);
-            if(secondaryMessage != "")
+            if(secondaryMessage != null)
             {
                 Console.WriteLine(secondaryMessage);
             }
@@ -95,9 +126,13 @@ namespace Foundry.Project
         #endregion
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
         #region property editors
         private List<PropertyEditor> propertyEditorPages = new List<PropertyEditor>();
-        public void AddPropertyEditor(DockState state)
+		/// <summary>
+		/// Adds a new property editor to the workspace.
+		/// </summary>
+        public void AddPropertyEditor()
         {
             PropertyEditor pe = new PropertyEditor();
             propertyEditorPages.Add(pe);
@@ -110,8 +145,12 @@ namespace Foundry.Project
         #endregion
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
         #region project explorers
         private List<ProjectExplorer> projectExplorerPages = new List<ProjectExplorer>();
+		/// <summary>
+		/// Callback to remove the explorer from the FoundryInstance upon closing.
+		/// </summary>
         private void ProjectExplorer_OnClose(object o, FormClosedEventArgs e)
         {
             if (o is ProjectExplorer)
@@ -119,6 +158,9 @@ namespace Foundry.Project
                 projectExplorerPages.Remove((ProjectExplorer)o);
             }
         }
+		/// <summary>
+		/// Adds a new project explorer to the desired panel, in the desired state.
+		/// </summary>
         public void AddProjectExplorer(DockPanel workspace, DockState state)
         {
             ProjectExplorer pe = new ProjectExplorer(this);
@@ -129,29 +171,30 @@ namespace Foundry.Project
         #endregion
 
 
+        //////////////////////////////////////////////////////////////////////////////////////
         #region project
         public const string FoundryProjectExt = ".fproject";
         public const string TriggerscriptProjectExt = ".fts";
         public const string ScenarioProjectExt = ".fsc";
+        public const string XmlExt = ".xml";
 
-        //contains info about project state, such as folded folders etc.
+        /// <summary>
+		/// Contains info about project state, such as folded folders etc.
+		/// </summary>
         private class ProjectData
         {
-            public ProjectData()
+			#region classes
+			public class FolderDataEntry
             {
-            }
-
-            //folder data
-            public class FolderDataEntry
-            {
-                public FolderDataEntry()
-                {
-                    folded = true;
-                }
                 [YAXSerializeAs("Folded")]
                 public bool folded { get; set; }
             }
-            [YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
+			#endregion
+			public ProjectData()
+            {
+            }
+            
+			[YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
             [YAXSerializeAs("FolderData")]
             public Dictionary<string, FolderDataEntry> FolderData { get; set; }
         }
@@ -181,6 +224,7 @@ namespace Foundry.Project
             openedName = Path.GetFileNameWithoutExtension(file);
             projectOpened = true;
 
+			//load the ProjectData from within the project file.
             try
             {
                 YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
@@ -193,6 +237,7 @@ namespace Foundry.Project
                 return;
             }
 
+			//get all present files and update the explorers.
             ScanProjectDirectoryAndUpdate();
 
             AppendLog(LogEntryType.Info, "Project '" + openedName + "' loaded.", true);
@@ -205,7 +250,7 @@ namespace Foundry.Project
         }
         public void ProjectClose()
         {
-            foreach (EditorPage p in openEditors.Values)
+            foreach (BaseSceneEditorPage p in openEditors.Values)
             {
                 p.TryClose(true);
                 //TODO: check for edited editors.
@@ -221,264 +266,9 @@ namespace Foundry.Project
             openedName = null;
         }
 
-        //the editor page is the base class for all editors. handles input, rendering, content file saving, etc.
-        public class EditorPage : DockContent
-        {
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            private FoundryInstance instance;
-            bool loaded = false;
-            bool edited = false;
-            public EditorPage(FoundryInstance i)
-            {
-                instance = i;
-
-                mouseState = new MouseState();
-                downKeys = new List<Keys>();
-
-                ControlAdded += new ControlEventHandler(InternalOnly_ControlAdded);
-                FormClosing += new FormClosingEventHandler(Internal_Closed);
-                Resize += new EventHandler(Internal_Resize);
-
-                MouseMove += new MouseEventHandler(Internal_MouseMoved);
-                MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
-                MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
-                MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
-
-                KeyDown += new KeyEventHandler(Internal_KeyDown);
-                KeyUp += new KeyEventHandler(Internal_KeyUp);
-
-                renderTimer.Start();
-            }
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            //internal events
-            private void InternalOnly_ControlAdded(object o, ControlEventArgs e)
-            {
-                e.Control.MouseMove += new MouseEventHandler(Internal_MouseMoved);
-                e.Control.MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
-                e.Control.MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
-                e.Control.MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
-
-                e.Control.KeyDown += new KeyEventHandler(Internal_KeyDown);
-                e.Control.KeyUp += new KeyEventHandler(Internal_KeyUp);
-            }
-            private void Internal_Closed(object o, FormClosingEventArgs e)
-            {
-                Controls.Clear();
-                OnClose();
-            }
-            private void Internal_Resize(object o, EventArgs e)
-            {
-                if (!Disposing)
-                {
-                    OnResize();
-                }
-            }
-
-            //mouse
-            protected struct MouseState
-            {
-                public bool leftDown, rightDown, middleDown;
-                public int x, y;
-                public int deltaX, deltaY, deltaScroll;
-            }
-            private MouseState mouseState;
-            private void Internal_MouseMoved(object o, MouseEventArgs e)
-            {
-                mouseState.deltaScroll = 0;
-                mouseState.deltaX = mouseState.x - e.X;
-                mouseState.deltaY = mouseState.y - e.Y;
-                mouseState.x = e.X;
-                mouseState.y = e.Y;
-                Internal_Tick();
-            }
-            private void Internal_MouseWheelMoved(object o, MouseEventArgs e)
-            {
-                mouseState.deltaScroll = e.Delta;
-                Internal_Tick();
-            }
-            private void Internal_MouseButtonDown(object o, MouseEventArgs e)
-            {
-                mouseState.deltaScroll = 0;
-                if (e.Button == MouseButtons.Left)
-                {
-                    mouseState.leftDown = true;
-                }
-                if (e.Button == MouseButtons.Right)
-                {
-                    mouseState.rightDown = true;
-                }
-                if (e.Button == MouseButtons.Middle)
-                {
-                    mouseState.middleDown = true;
-                }
-                Internal_Tick();
-            }
-            private void Internal_MouseButtonUp(object o, MouseEventArgs e)
-            {
-                mouseState.deltaScroll = 0;
-                if (e.Button == MouseButtons.Left)
-                {
-                    mouseState.leftDown = false;
-                }
-                if (e.Button == MouseButtons.Right)
-                {
-                    mouseState.rightDown = false;
-                }
-                if (e.Button == MouseButtons.Middle)
-                {
-                    mouseState.middleDown = false;
-                }
-                Internal_Tick();
-            }
-
-            //keyboard
-            private List<Keys> downKeys;
-            private void Internal_KeyDown(object o, KeyEventArgs e)
-            {
-                if (!downKeys.Contains(e.KeyCode))
-                {
-                    downKeys.Add(e.KeyCode);
-                }
-                Internal_Tick();
-            }
-            private void Internal_KeyUp(object o, KeyEventArgs e)
-            {
-                if (downKeys.Contains(e.KeyCode))
-                {
-                    downKeys.RemoveAll(x => x == e.KeyCode);
-                }
-                Internal_Tick();
-            }
-
-            //tick - this function calls OnTick, and when enough time has passed, OnDraw().
-            private const int renderIntervalMilliseconds = 16;
-            private Stopwatch renderTimer = new Stopwatch();
-            private void Internal_Tick()
-            {
-                OnTick();
-                if (renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
-                {
-                    OnDraw();
-                    renderTimer.Restart();
-                }
-            }
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            //external file interactions
-            public bool TrySetEdited()
-            {
-                if (loaded)
-                {
-                    if (!edited)
-                    {
-                        edited = true;
-                        return true;
-                    }
-                }
-                return false;
-            }
-            public bool TryOpen(string file, DockPanel location, DockState state)
-            {
-                if (!loaded)
-                {
-                    if (File.Exists(file))
-                    {
-                        edited = false;
-
-                        if (OnLoadFile(file))
-                        {
-                            Show(location, state);
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-                return false;
-            }
-            public bool TryClose(bool force = false)
-            {
-                if (loaded)
-                {
-                    if (edited && !force)
-                    {
-                        if (MessageBox.Show("Are you sure you want to close this page? Any unsaved progress will be lost.", "Warning!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            edited = false;
-                            Close();
-                            return true;
-                        }
-                        return false;
-                    }
-                    else
-                    {
-                        Close();
-                        return true;
-                    }
-                }
-                return false;
-            }
-            public bool TrySave(string file)
-            {
-                if (loaded)
-                {
-                    if (edited)
-                    {
-                        if (OnSaveFile(file))
-                        {
-                            edited = false;
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            public bool TrySaveAs(string file)
-            {
-                if (loaded)
-                {
-                    if (OnSaveFile(file))
-                    {
-                        edited = false;
-                        return true;
-                    }
-                }
-                return false;
-            }
-            public bool IsEdited()
-            {
-                return edited;
-            }
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            //protected getters
-            protected FoundryInstance Instance()
-            {
-                return instance;
-            }
-            protected MouseState GetMouseState()
-            {
-                return mouseState;
-            }
-            protected bool GetKeyIsDown(Keys k)
-            {
-                return downKeys.Contains(k);
-            }
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-            //page overridable functions
-            protected virtual bool OnLoadFile(string file) { return true; }
-            protected virtual bool OnSaveFile(string file) { return true; }
-            protected virtual void OnResize() { }
-            protected virtual void OnClose() { }
-            protected virtual void OnTick() { }
-            protected virtual void OnDraw() { }
-        }
-
+		/// <summary>
+		/// Nodes representing a file or folder on disk.
+		/// </summary>
         public struct DiskEntryNode
         {
             public DiskEntryNode(string name, string path, bool isFolder)
@@ -513,6 +303,9 @@ namespace Foundry.Project
                 }
             }
         }
+		/// <summary>
+		/// Scans the project directory for present files, and updates the explorers with this information.
+		/// </summary>
         public void ScanProjectDirectoryAndUpdate()
         {
             DiskEntryNode root = new DiskEntryNode(openedName, openedDir, false);
@@ -525,18 +318,22 @@ namespace Foundry.Project
         }
 
         //editors that are currently open.
-        private Dictionary<string, EditorPage> openEditors = new Dictionary<string, EditorPage>();
+        private Dictionary<string, BaseSceneEditorPage> openEditors = new Dictionary<string, BaseSceneEditorPage>();
         public bool EditorIsOpen(string file)
         {
             return openEditors.ContainsKey(file);
         }
-        public void EditorOpen(string file)
+		/// <summary>
+		/// Opens an editor from a file. If a file of the name file is already open, (TODO: bring the page to the front).
+		/// </summary>
+		/// <param name="file">The path to the file. Type of editor is determined by the file's extension.</param>
+        public void EditorTryOpen(string file)
         {
             if (!EditorIsOpen(file))
             {
                 if (File.Exists(file))
                 {
-                    EditorPage page;
+                    BaseSceneEditorPage page;
                     switch (Path.GetExtension(file))
                     {
                         case TriggerscriptProjectExt:
@@ -544,6 +341,9 @@ namespace Foundry.Project
                             break;
                         case ScenarioProjectExt:
                             page = new ScenarioEditorPage(this);
+                            break;
+                        case XmlExt:
+                            page = new XmlEditorPage(this);
                             break;
                         default:
                             return;
@@ -556,7 +356,10 @@ namespace Foundry.Project
                 }
             }
         }
-        public void EditorPageClose(string file)
+		/// <summary>
+		/// Tries closing the editor from its file name.
+		/// </summary>
+        public void EditorPageTryClose(string file)
         {
             if (EditorIsOpen(file))
             {
@@ -566,7 +369,10 @@ namespace Foundry.Project
                 }
             }
         }
-        public void EditorPageSave(string file)
+		/// <summary>
+		/// Tries saving the editor from its file name.
+		/// </summary>
+        public void EditorPageTrySave(string file)
         {
             if (EditorIsOpen(file))
             {
@@ -574,5 +380,7 @@ namespace Foundry.Project
             }
         }
         #endregion
+
+
     }
 }

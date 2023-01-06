@@ -36,11 +36,13 @@ namespace Foundry.Project
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.logStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.versionReadout = new System.Windows.Forms.ToolStripStatusLabel();
+            this.discordLink = new System.Windows.Forms.ToolStripStatusLabel();
             this.workspace = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.memoryReadout = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusBar.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -50,12 +52,15 @@ namespace Foundry.Project
             this.statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.logStatus,
-            this.versionReadout});
+            this.versionReadout,
+            this.discordLink,
+            this.memoryReadout});
             this.statusBar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusBar.Location = new System.Drawing.Point(0, 659);
+            this.statusBar.Location = new System.Drawing.Point(0, 656);
             this.statusBar.Name = "statusBar";
             this.statusBar.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusBar.Size = new System.Drawing.Size(1264, 22);
+            this.statusBar.Size = new System.Drawing.Size(1264, 25);
+            this.statusBar.SizingGrip = false;
             this.statusBar.TabIndex = 1;
             this.statusBar.Text = "statusBar";
             // 
@@ -63,17 +68,29 @@ namespace Foundry.Project
             // 
             this.logStatus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.logStatus.Name = "logStatus";
-            this.logStatus.Size = new System.Drawing.Size(0, 17);
+            this.logStatus.Size = new System.Drawing.Size(42, 20);
+            this.logStatus.Spring = true;
             this.logStatus.Text = "Ready.";
             // 
             // versionReadout
             // 
             this.versionReadout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.versionReadout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.versionReadout.ForeColor = System.Drawing.Color.White;
+            this.versionReadout.ForeColor = System.Drawing.Color.Black;
             this.versionReadout.Name = "versionReadout";
-            this.versionReadout.Size = new System.Drawing.Size(45, 17);
+            this.versionReadout.Size = new System.Drawing.Size(45, 20);
             this.versionReadout.Text = "version";
+            // 
+            // discordLink
+            // 
+            this.discordLink.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.discordLink.AutoToolTip = true;
+            this.discordLink.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.discordLink.Image = global::Foundry.Properties.Resources.discord;
+            this.discordLink.Name = "discordLink";
+            this.discordLink.Size = new System.Drawing.Size(20, 20);
+            this.discordLink.ToolTipText = "Join our discord!";
+            this.discordLink.Click += new System.EventHandler(this.Footer_DiscordImageLink_Click);
             // 
             // workspace
             // 
@@ -82,7 +99,7 @@ namespace Foundry.Project
             this.workspace.Location = new System.Drawing.Point(0, 24);
             this.workspace.Name = "workspace";
             this.workspace.ShowAutoHideContentOnHover = false;
-            this.workspace.Size = new System.Drawing.Size(1264, 635);
+            this.workspace.Size = new System.Drawing.Size(1264, 632);
             this.workspace.TabIndex = 3;
             // 
             // menuStrip
@@ -110,13 +127,20 @@ namespace Foundry.Project
             this.openProjectToolStripMenuItem.Name = "openProjectToolStripMenuItem";
             this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.openProjectToolStripMenuItem.Text = "Open Project";
-            this.openProjectToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenu_OpenProject_Click);
+            this.openProjectToolStripMenuItem.Click += new System.EventHandler(this.ToolStrip_File_OpenProjectClicked);
             // 
             // windowToolStripMenuItem
             // 
             this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
             this.windowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.windowToolStripMenuItem.Text = "Window";
+            // 
+            // memoryReadout
+            // 
+            this.memoryReadout.Alignment = ToolStripItemAlignment.Right;
+            this.memoryReadout.Name = "memoryReadout";
+            this.memoryReadout.Size = new System.Drawing.Size(52, 20);
+            this.memoryReadout.Text = "0mb";
             // 
             // FoundryInstance
             // 
@@ -149,5 +173,7 @@ namespace Foundry.Project
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
+        private ToolStripStatusLabel discordLink;
+        private ToolStripStatusLabel memoryReadout;
     }
 }
