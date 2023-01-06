@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hwfoundry", "hwfoundry.csproj", "{79C6C234-04E5-4543-B0CC-A6DEB8F1FDF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hwfoundry", "Foundry\hwfoundry.csproj", "{79C6C234-04E5-4543-B0CC-A6DEB8F1FDF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
