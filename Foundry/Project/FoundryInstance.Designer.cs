@@ -37,12 +37,13 @@ namespace Foundry.Project
             this.logStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.versionReadout = new System.Windows.Forms.ToolStripStatusLabel();
             this.discordLink = new System.Windows.Forms.ToolStripStatusLabel();
+            this.memoryReadout = new System.Windows.Forms.ToolStripStatusLabel();
             this.workspace = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.memoryReadout = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusBar.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -92,6 +93,13 @@ namespace Foundry.Project
             this.discordLink.ToolTipText = "Join our discord!";
             this.discordLink.Click += new System.EventHandler(this.Footer_DiscordImageLink_Click);
             // 
+            // memoryReadout
+            // 
+            this.memoryReadout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.memoryReadout.Name = "memoryReadout";
+            this.memoryReadout.Size = new System.Drawing.Size(31, 20);
+            this.memoryReadout.Text = "0mb";
+            // 
             // workspace
             // 
             this.workspace.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -117,7 +125,8 @@ namespace Foundry.Project
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openProjectToolStripMenuItem});
+            this.openProjectToolStripMenuItem,
+            this.importToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -125,22 +134,22 @@ namespace Foundry.Project
             // openProjectToolStripMenuItem
             // 
             this.openProjectToolStripMenuItem.Name = "openProjectToolStripMenuItem";
-            this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.openProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openProjectToolStripMenuItem.Text = "Open Project";
             this.openProjectToolStripMenuItem.Click += new System.EventHandler(this.ToolStrip_File_OpenProjectClicked);
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.ToolStrip_File_ImportClicked);
             // 
             // windowToolStripMenuItem
             // 
             this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
             this.windowToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.windowToolStripMenuItem.Text = "Window";
-            // 
-            // memoryReadout
-            // 
-            this.memoryReadout.Alignment = ToolStripItemAlignment.Right;
-            this.memoryReadout.Name = "memoryReadout";
-            this.memoryReadout.Size = new System.Drawing.Size(52, 20);
-            this.memoryReadout.Text = "0mb";
             // 
             // FoundryInstance
             // 
@@ -175,5 +184,6 @@ namespace Foundry.Project
         private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;
         private ToolStripStatusLabel discordLink;
         private ToolStripStatusLabel memoryReadout;
+        private ToolStripMenuItem importToolStripMenuItem;
     }
 }

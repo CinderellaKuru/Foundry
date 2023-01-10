@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Foundry.Project.Modules.XmlEditor
 {
-    public class XmlEditorPage : BaseSceneEditorPage
+    public class XmlEditorPage : BaseEditorPage
     {
         Scintilla editor;
         public XmlEditorPage(FoundryInstance i) : base(i)
@@ -42,5 +42,13 @@ namespace Foundry.Project.Modules.XmlEditor
 
             Controls.Add(editor);
         }
-    }
+		protected override string GetSaveExtension()
+		{
+			return FoundryInstance.SaveXmlExt;
+		}
+		protected override string GetImportExtension()
+		{
+			return null;
+		}
+	}
 }

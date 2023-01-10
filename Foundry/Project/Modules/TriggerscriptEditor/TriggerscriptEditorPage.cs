@@ -10,10 +10,9 @@ using Foundry.Project.Modules.Base;
 
 namespace Foundry.Project.Modules.TriggerscriptEditor
 {
-    public class TriggerscriptEditorPage : BaseSceneEditorPage
+    public class TriggerscriptEditorPage : BaseEditorPage
     {
-		#region editor page
-		#region classes
+		#region serialization
 		public class Input
 		{
 			public string name;
@@ -28,7 +27,7 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 			public bool optional;
 			public int sigId;
 		}
-		public class Effect
+		public class SerializedEffect
 		{
 			public string name;
 			public List<Input> inputs = new List<Input>();
@@ -37,7 +36,7 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 			public int dbid;
 			public int version;
 		}
-		public class Condition
+		public class SerializedCondition
 		{
 			public string name;
 			public List<Input> inputs = new List<Input>();
@@ -75,8 +74,8 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 			public bool selected;
 			public SerializedTrigger trigger;
 			public SerializedVariable variable;
-			public Effect effect;
-			public Condition condition;
+			public SerializedEffect effect;
+			public SerializedCondition condition;
 		}
 		public class SerializedTriggerscripter
 		{
@@ -86,6 +85,7 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 		}
 		#endregion
 
+		#region editor page
 		private ContextMenu contextMenu;
 
 		//TODO: load this from the config.
@@ -787,7 +787,6 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
             DoubleBuffered = true;
             Paint += new PaintEventHandler(DrawControl);
 
-
             #region Construct context menu
             contextMenu = new ContextMenu();
             ContextMenu = contextMenu;
@@ -811,10 +810,10 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
             };
 
             //deserialize and sort effects.
-            List<Tuple<Effect, string>> effsSorted = new List<Tuple<Effect, string>>();
-            foreach (Effect e in JsonConvert.DeserializeObject<List<Effect>>(Properties.Resources.eff))
+            List<Tuple<SerializedEffect, string>> effsSorted = new List<Tuple<SerializedEffect, string>>();
+            foreach (SerializedEffect e in JsonConvert.DeserializeObject<List<SerializedEffect>>(Properties.Resources.eff))
             {
-                effsSorted.Add(new Tuple<Effect, string>(e, nodeSubCategories[e.name + "Eff"]));
+                effsSorted.Add(new Tuple<SerializedEffect, string>(e, nodeSubCategories[e.name + "Eff"]));
             }
             effsSorted = effsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
             //create MenuItems for effects.
@@ -847,9 +846,9 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 
 
             //deserialize and sort conditions.
-            List<Tuple<Condition, string>> cndsSorted = new List<Tuple<Condition, string>>();
-            foreach (Condition c in JsonConvert.DeserializeObject<List<Condition>>(Properties.Resources.cnd))
-                cndsSorted.Add(new Tuple<Condition, string>(c, nodeSubCategories[c.name + "Cnd"]));
+            List<Tuple<SerializedCondition, string>> cndsSorted = new List<Tuple<SerializedCondition, string>>();
+            foreach (SerializedCondition c in JsonConvert.DeserializeObject<List<SerializedCondition>>(Properties.Resources.cnd))
+                cndsSorted.Add(new Tuple<SerializedCondition, string>(c, nodeSubCategories[c.name + "Cnd"]));
             cndsSorted = cndsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
             //create MenuItems for conditions
             foreach (var v in cndsSorted)
@@ -911,6 +910,14 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
             }
 			#endregion
 		}
+		protected override string GetSaveExtension()
+		{
+			return FoundryInstance.SaveTriggerscriptExt;
+		}
+		protected override string GetImportExtension()
+		{
+			return FoundryInstance.ImportTriggerscriptExt;
+		}
 		#endregion
 
 
@@ -956,18 +963,18 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 					if (s.PointIsIn(mx, my))
 					{
 						mouseState = CurrentMouseState.DraggingSocket;
-						if (!s.multiConnection)
+						if (!s.MultiConnection)
 						{
-							if (s.connectedSockets.Count > 0)
+							if (s.ConnectedSockets.Count > 0)
 							{
-								selectedSocket = s.connectedSockets[0];
+								selectedSocket = s.ConnectedSockets[0];
 								if (s is TriggerscripterSocket_Input)
 								{
-									((TriggerscripterSocket_Output)s.connectedSockets[0]).Disconnect((TriggerscripterSocket_Input)s);
+									((TriggerscripterSocket_Output)s.ConnectedSockets[0]).Disconnect((TriggerscripterSocket_Input)s);
 								}
 								else
 								{
-									((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)s.connectedSockets[0]);
+									((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)s.ConnectedSockets[0]);
 								}
 								return;
 							}
@@ -1166,133 +1173,6 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 		{
 		}
 		private int pasteOffset = 50;
-		private SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
-		public void CopyGraph()
-		{
-			copyBuffer = GetSerializedGraph();
-		}
-		public void PasteGraph()
-		{
-			foreach (TriggerscripterNode n in nodes)
-				n.selected = false;
-
-			Dictionary<int, TriggerscripterNode> trgMap = new Dictionary<int, TriggerscripterNode>();
-			Dictionary<int, TriggerscripterNode> effMap = new Dictionary<int, TriggerscripterNode>();
-			Dictionary<int, TriggerscripterNode> varMap = new Dictionary<int, TriggerscripterNode>();
-			Dictionary<int, TriggerscripterNode> cndMap = new Dictionary<int, TriggerscripterNode>();
-			foreach (SerializedNode sn in copyBuffer.nodes)
-			{
-				if (sn.selected)
-				{
-					if (sn.handleAs == "Trigger")
-					{
-						TriggerscripterNode n = CreateTriggerNode(sn.trigger, trgID, sn.x - pasteOffset, sn.y - pasteOffset);
-						n.selected = true;
-						trgMap.Add(sn.id, n);
-						trgID++;
-					}
-					if (sn.handleAs == "Effect")
-					{
-						TriggerscripterNode n = CreateEffectNode(sn.effect, effID, sn.x - pasteOffset, sn.y - pasteOffset);
-						n.selected = true;
-						effMap.Add(sn.id, n);
-						effID++;
-					}
-					if (sn.handleAs == "Condition")
-					{
-						TriggerscripterNode n = CreateConditionNode(sn.condition, cndID, sn.x - pasteOffset, sn.y - pasteOffset);
-						n.selected = true;
-						cndMap.Add(sn.id, n);
-						cndID++;
-					}
-					if (sn.handleAs == "Variable")
-					{
-						TriggerscripterNode n = CreateVarNode(sn.variable, varID, sn.x - pasteOffset, sn.y - pasteOffset);
-						n.selected = true;
-						varMap.Add(sn.id, n);
-						varID++;
-					}
-				}
-			}
-			foreach (SerializedNodeLink sl in copyBuffer.links)
-			{
-				try
-				{
-					if (sl.sourceType == "Trigger")
-					{
-						if (sl.targetType == "Effect")
-						{
-							((TriggerscripterSocket_Output)trgMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-					}
-
-					if (sl.sourceType == "Effect")
-					{
-						if (sl.targetType == "Variable")
-						{
-							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Effect")
-						{
-							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Condition")
-						{
-							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Trigger")
-						{
-							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-					}
-
-					if (sl.sourceType == "Condition")
-					{
-						if (sl.targetType == "Variable")
-						{
-							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Effect")
-						{
-							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Condition")
-						{
-							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Trigger")
-						{
-							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-					}
-
-					if (sl.sourceType == "Variable")
-					{
-						if (sl.targetType == "Effect")
-						{
-							((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-						if (sl.targetType == "Condition")
-						{
-							((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
-								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
-						}
-					}
-				}
-				catch { }
-				mouseState = CurrentMouseState.NodesSelected;
-			}
-		}
 
 		protected override void OnTick()
 		{
@@ -1322,7 +1202,7 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 							if (s is TriggerscripterSocket_Input)
 							{
 								//foreach output connected to this input
-								foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).connectedSockets.ToArray())
+								foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).ConnectedSockets.ToArray())
 								{
 									//disconnect this input from the output
 									((TriggerscripterSocket_Output)cs).Disconnect((TriggerscripterSocket_Input)s);
@@ -1333,7 +1213,7 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 							else
 							{
 								//foreach input connected to this output
-								foreach (TriggerscripterSocket cs in s.connectedSockets.ToArray())
+								foreach (TriggerscripterSocket cs in s.ConnectedSockets.ToArray())
 								{
 									((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)cs);
 								}
@@ -1516,9 +1396,9 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 			if (mouseState == CurrentMouseState.DraggingSocket)
 			{
 				//just a line. TODO: make this more uniform with the actual socket connections. Perhaps make the socket itself draw this?
-				e.Graphics.DrawLine(new Pen(selectedSocket.color, 5.0f), new Point(
-					selectedSocket.node.x + selectedSocket.rect.X + selectedSocket.rect.Width / 2,
-					selectedSocket.node.y + selectedSocket.rect.Y + selectedSocket.rect.Height / 2),
+				e.Graphics.DrawLine(new Pen(selectedSocket.Color, 5.0f), new Point(
+					selectedSocket.OwnerNode.PosX + selectedSocket.BoundingRect.X + selectedSocket.BoundingRect.Width / 2,
+					selectedSocket.OwnerNode.PosY + selectedSocket.BoundingRect.Y + selectedSocket.BoundingRect.Height / 2),
 					pos[0]);
 			}
 
@@ -1561,7 +1441,6 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
         public static Color trgColor = Color.FromArgb(255, 64, 117, 130);
         public static Color effColor = Color.FromArgb(255, 130, 64, 106);
 
-		//TODO: replace with xml serialization instead of json to match the rest of the project.
 		/// <summary>
 		/// Gets the serialized representation of the current graph.
 		/// </summary>
@@ -1572,9 +1451,9 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 			foreach (TriggerscripterNode n in nodes)
 			{
 				SerializedNode sn = new SerializedNode();
-				sn.handleAs = n.handleAs;
+				sn.handleAs = n.HandleAs;
 				sn.selected = n.selected;
-				if (n.handleAs == "Trigger")
+				if (n.HandleAs == "Trigger")
 				{
 					SerializedTrigger t = new SerializedTrigger();
 					t.active = ((TriggerscripterNode_Trigger)n).Active;
@@ -1582,23 +1461,23 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 					t.name = ((TriggerscripterNode_Trigger)n).Name;
 					sn.trigger = t;
 				}
-				if (n.handleAs == "Variable")
+				if (n.HandleAs == "Variable")
 				{
 					SerializedVariable v = new SerializedVariable();
 					v.value = ((TriggerscripterNode_Variable)n).Value;
 					v.name = ((TriggerscripterNode_Variable)n).Name;
-					v.type = n.typeTitle;
+					v.type = n.Type;
 					sn.variable = v;
 				}
-				if (n.handleAs == "Effect")
+				if (n.HandleAs == "Effect")
 				{
-					Effect e = (Effect)n.data;
+					SerializedEffect e = (SerializedEffect)n.Data;
 					sn.effect = e;
 				}
-				if (n.handleAs == "Condition")
+				if (n.HandleAs == "Condition")
 				{
-					Condition c = (Condition)n.data;
-					Console.WriteLine(n.id);
+					SerializedCondition c = (SerializedCondition)n.Data;
+					Console.WriteLine(n.Id);
 					sn.condition = c;
 				}
 
@@ -1606,23 +1485,23 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 				{
 					if (os is TriggerscripterSocket_Output)
 					{
-						foreach (TriggerscripterSocket s in os.connectedSockets)
+						foreach (TriggerscripterSocket s in os.ConnectedSockets)
 						{
 							SerializedNodeLink link = new SerializedNodeLink();
-							link.sourceId = n.id;
-							link.sourceSocketName = os.text;
+							link.sourceId = n.Id;
+							link.sourceSocketName = os.Text;
 
 							if (n is TriggerscripterNode_Variable)
 								link.sourceType = "Variable";
 							else
-								link.sourceType = n.typeTitle;
+								link.sourceType = n.Type;
 
-							link.targetId = s.node.id;
-							link.targetSocketName = s.text;
-							if (s.node is TriggerscripterNode_Variable)
+							link.targetId = s.OwnerNode.Id;
+							link.targetSocketName = s.Text;
+							if (s.OwnerNode is TriggerscripterNode_Variable)
 								link.targetType = "Variable";
 							else
-								link.targetType = s.node.typeTitle;
+								link.targetType = s.OwnerNode.Type;
 
 							sts.links.Add(link);
 						}
@@ -1631,9 +1510,9 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 					}
 				}
 
-				sn.x = n.x;
-				sn.y = n.y;
-				sn.id = n.id;
+				sn.x = n.PosX;
+				sn.y = n.PosY;
+				sn.id = n.Id;
 
 				sts.nodes.Add(sn);
 			}
@@ -1764,8 +1643,8 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 
 		private Point nodeAddLocation = new Point();
 		/// <summary>
-		/// An event that captures the mouse's position when it is fired.
-		/// This is called when the context menu is opened in order to capture the mouse's position when the node creation menu is first opened.
+		/// Callback that captures the mouse's position when it is fired.
+		/// This is called when the context menu is first opened to capture the mouse's position for copy/paste.
 		/// </summary>
         public void CaptureMousePos(object o, EventArgs e)
         {
@@ -1773,9 +1652,136 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
             viewMatrixInverted.TransformPoints(nodeAddLocationArr);
             nodeAddLocation = nodeAddLocationArr[0];
         }
+		private SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
+		public void CopyGraph()
+		{
+			copyBuffer = GetSerializedGraph();
+		}
+		public void PasteGraph()
+		{
+			foreach (TriggerscripterNode n in nodes)
+				n.selected = false;
 
-        //node id trackers
-        public int trgID = 0, varID = 0;
+			Dictionary<int, TriggerscripterNode> trgMap = new Dictionary<int, TriggerscripterNode>();
+			Dictionary<int, TriggerscripterNode> effMap = new Dictionary<int, TriggerscripterNode>();
+			Dictionary<int, TriggerscripterNode> varMap = new Dictionary<int, TriggerscripterNode>();
+			Dictionary<int, TriggerscripterNode> cndMap = new Dictionary<int, TriggerscripterNode>();
+			foreach (SerializedNode sn in copyBuffer.nodes)
+			{
+				if (sn.selected)
+				{
+					if (sn.handleAs == "Trigger")
+					{
+						TriggerscripterNode n = CreateTriggerNode(sn.trigger, trgID, sn.x - pasteOffset, sn.y - pasteOffset);
+						n.selected = true;
+						trgMap.Add(sn.id, n);
+						trgID++;
+					}
+					if (sn.handleAs == "Effect")
+					{
+						TriggerscripterNode n = CreateEffectNode(sn.effect, effID, sn.x - pasteOffset, sn.y - pasteOffset);
+						n.selected = true;
+						effMap.Add(sn.id, n);
+						effID++;
+					}
+					if (sn.handleAs == "Condition")
+					{
+						TriggerscripterNode n = CreateConditionNode(sn.condition, cndID, sn.x - pasteOffset, sn.y - pasteOffset);
+						n.selected = true;
+						cndMap.Add(sn.id, n);
+						cndID++;
+					}
+					if (sn.handleAs == "Variable")
+					{
+						TriggerscripterNode n = CreateVarNode(sn.variable, varID, sn.x - pasteOffset, sn.y - pasteOffset);
+						n.selected = true;
+						varMap.Add(sn.id, n);
+						varID++;
+					}
+				}
+			}
+			foreach (SerializedNodeLink sl in copyBuffer.links)
+			{
+				try
+				{
+					if (sl.sourceType == "Trigger")
+					{
+						if (sl.targetType == "Effect")
+						{
+							((TriggerscripterSocket_Output)trgMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+					}
+
+					if (sl.sourceType == "Effect")
+					{
+						if (sl.targetType == "Variable")
+						{
+							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Effect")
+						{
+							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Condition")
+						{
+							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Trigger")
+						{
+							((TriggerscripterSocket_Output)effMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+					}
+
+					if (sl.sourceType == "Condition")
+					{
+						if (sl.targetType == "Variable")
+						{
+							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)varMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Effect")
+						{
+							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Condition")
+						{
+							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Trigger")
+						{
+							((TriggerscripterSocket_Output)cndMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)trgMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+					}
+
+					if (sl.sourceType == "Variable")
+					{
+						if (sl.targetType == "Effect")
+						{
+							((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)effMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+						if (sl.targetType == "Condition")
+						{
+							((TriggerscripterSocket_Output)varMap[sl.sourceId].sockets[sl.sourceSocketName]).Connect(
+								(TriggerscripterSocket_Input)cndMap[sl.targetId].sockets[sl.targetSocketName]);
+						}
+					}
+				}
+				catch { }
+				mouseState = CurrentMouseState.NodesSelected;
+			}
+		}
+
+		//node id trackers
+		public int trgID = 0, varID = 0;
         public int cndID = 0, effID = 0;
 
         //context menu callbacks
@@ -1797,114 +1803,38 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
         }
         public void CreateNewEffectPressed(object o, EventArgs e)
         {
-            CreateEffectNode((Effect)((MenuItem)o).Tag, effID++, nodeAddLocation.X, nodeAddLocation.Y);
+            CreateEffectNode((SerializedEffect)((MenuItem)o).Tag, effID++, nodeAddLocation.X, nodeAddLocation.Y);
         }
         public void CreateNewConditionPressed(object o, EventArgs e)
         {
-            CreateConditionNode((Condition)((MenuItem)o).Tag, cndID++, nodeAddLocation.X, nodeAddLocation.Y);
+            CreateConditionNode((SerializedCondition)((MenuItem)o).Tag, cndID++, nodeAddLocation.X, nodeAddLocation.Y);
         }
 
         //actual creation functions
         public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, int x, int y)
         {
-            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, x, y);
-            n.headerColor = trgColor;
-
-            n.id = id;
-            n.data = t;
-
-            n.Active = t.active;
-            n.ConditionalOr = t.cndIsOr;
-            n.Name = t.name;
-
-            n.id = id;
+            TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, t, x, y, id);
             nodes.Add(n);
             return n;
         }
         public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, int x, int y)
         {
-            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, x, y);
-            n.headerColor = requiredVarColor;
-
-            n.data = v;
-            n.id = id;
-
-            n.nodeTitle = v.name;
-            n.Name = v.name;
-            n.Value = v.value;
-
-            n.typeTitle = v.type;
-            n.AddSocket(true, "Set", v.type, requiredVarColor, false);
-            n.AddSocket(false, "Use", v.type, requiredVarColor, false);
-
-            n.bottomPadding = 50;
-
+            TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, v, x, y, id);
             nodes.Add(n);
             return n;
         }
-        public TriggerscripterNode CreateEffectNode(Effect e, int id, int x, int y)
+        public TriggerscripterNode CreateEffectNode(SerializedEffect e, int id, int x, int y)
         {
-            TriggerscripterNode n = new TriggerscripterNode(this, x, y);
-            n.headerColor = effColor;
-
-            n.data = e;
-            n.id = id;
-
-            n.nodeTitle = e.name + " v" + e.version;
-            n.typeTitle = "Effect";
-            n.handleAs = "Effect";
-            n.AddSocket(true, "Caller", "EFF", effColor, false, false);
-            n.AddSocket(false, "Call", "EFF", effColor, false, false);
-
-            if (!e.name.Contains("Trigger"))
-            {
-                foreach (Input i in e.inputs)
-                {
-                    Color color = i.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(true, i.name, i.valueType, color, true, false);
-                }
-                foreach (Output ou in e.outputs)
-                {
-                    Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                    n.AddSocket(false, ou.name, ou.valueType, color, true, false);
-                }
-            }
-            else
-            {
-                n.AddSocket(false, "Trigger", "TRG", trgColor, false, false);
-            }
-
+			TriggerscripterNode_Effect n = new TriggerscripterNode_Effect(this, e, x, y, id);
             nodes.Add(n);
-
             return n;
         }
-        public TriggerscripterNode CreateConditionNode(Condition c, int id, int x, int y)
+        public TriggerscripterNode CreateConditionNode(SerializedCondition c, int id, int x, int y)
         {
-            TriggerscripterNode_Condition n = new TriggerscripterNode_Condition(this, x, y);
-            n.headerColor = cndColor;
-
-            n.data = c;
-            n.id = id;
-            n.nodeTitle = c.name + " v" + c.version;
-            n.handleAs = "Condition";
-
-            n.AddSocket(false, "Result", "CND", cndColor, false, false);
-
-            foreach (Input i in c.inputs)
-            {
-                Color color = i.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(true, i.name, i.valueType, color, true, false);
-            }
-            foreach (Output ou in c.outputs)
-            {
-                Color color = ou.optional ? optionalVarColor : requiredVarColor;
-                n.AddSocket(false, ou.name, ou.valueType, color, true, false);
-            }
-
+            TriggerscripterNode_Condition n = new TriggerscripterNode_Condition(this, c, x, y, id);
             nodes.Add(n);
-
             return n;
         }
 		#endregion
-    }
+	}
 }

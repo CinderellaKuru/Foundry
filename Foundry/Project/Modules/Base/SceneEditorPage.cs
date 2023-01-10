@@ -17,7 +17,7 @@ using SharpDX;
 
 namespace Foundry.Project.Modules.Base
 {
-    public abstract class SceneEditorPage : BaseSceneEditorPage
+    public abstract class SceneEditorPage : BaseEditorPage
     {
         protected Panel renderControl;
         protected ViewportCore viewport;
@@ -55,7 +55,6 @@ namespace Foundry.Project.Modules.Base
             effectsManager.AddTechnique(new HelixToolkit.SharpDX.Core.Shaders.TechniqueDescription("technique"));
             viewport.EffectsManager = effectsManager;
 
-
             viewport.StartD3D(Width, Height);
         }
 
@@ -64,64 +63,58 @@ namespace Foundry.Project.Modules.Base
         {
             allowPan = pan;
         }
-        protected override void OnTick()
-        {
+		protected override void OnTick()
+		{
+			MouseState mouseState = GetMouseState();
+			Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
 
-            MouseState mouseState = GetMouseState();
-            Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+			if (mouseState.middleDown)
+			{
+				if (GetKeyIsDown(Keys.ShiftKey))
+				{
+					if (cameraController.IsRotating)
+					{
+						cameraController.EndRotate(mousePos);
+					}
+					if (!cameraController.IsPanning)
+					{
+						if (allowPan)
+						{
+							cameraController.StartPan(mousePos);
+						}
+					}
+				}
+				if (!GetKeyIsDown(Keys.ShiftKey))
+				{
+					if (cameraController.IsPanning)
+					{
+						cameraController.EndPan(mousePos);
+					}
+					if (!cameraController.IsRotating)
+					{
+						cameraController.StartRotate(mousePos);
+					}
+				}
+			}
+			else
+			{
+				if (cameraController.IsPanning)
+				{
+					cameraController.EndPan(mousePos);
+				}
+				if (cameraController.IsRotating)
+				{
+					cameraController.EndRotate(mousePos);
+				}
+			}
 
-            cameraController.OnTimeStep();
-            cameraController.MouseMove(mousePos);
-            viewport.MouseMove(mousePos);
-
-            if (mouseState.middleDown)
-            {
-                if(GetKeyIsDown(Keys.ShiftKey))
-                {
-                    if (cameraController.IsRotating)
-                    {
-                        cameraController.EndRotate(mousePos);
-                    }
-                    if (!cameraController.IsPanning)
-                    {
-                        if (allowPan)
-                        {
-                            cameraController.StartPan(mousePos);
-                        }
-                    }
-                }
-                if(!GetKeyIsDown(Keys.ShiftKey))
-                    {
-                    if (cameraController.IsPanning)
-                    {
-                        cameraController.EndPan(mousePos);
-                    }
-                    if (!cameraController.IsRotating)
-                    {
-                        cameraController.StartRotate(mousePos);
-                    }
-                }
-            }
-            else
-            {
-                if (cameraController.IsPanning)
-                {
-                    cameraController.EndPan(mousePos);
-                }
-                if (cameraController.IsRotating)
-                {
-                    cameraController.EndRotate(mousePos);
-                }
-            }
-        }
-        protected override void OnDraw()
+			cameraController.OnTimeStep();
+			cameraController.MouseMove(mousePos);
+			viewport.MouseMove(mousePos);
+		}
+		protected override void OnDraw()
         {
             viewport.Render();
-        }
-
-        protected override bool OnLoadFile(string file)
-        {
-            return true;
         }
         protected override void OnResize()
         {

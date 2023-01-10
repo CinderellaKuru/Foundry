@@ -118,13 +118,12 @@ namespace Foundry.Project.Modules.Workspace
 
         }
 
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // nodes
         private Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
         {
-            { TriggerscriptProjectExt,   Properties.Resources.page_white },
-            { ScenarioProjectExt,        Properties.Resources.page_white },
+            { SaveTriggerscriptExt,   Properties.Resources.page_white },
+            { SaveScenarioExt,        Properties.Resources.page_white },
         };
         private void CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
         {
@@ -177,7 +176,7 @@ namespace Foundry.Project.Modules.Workspace
         {
             if (e.Node.Tag is ExplorerNode)
             {
-                instance.EditorTryOpen(((ExplorerNode)e.Node.Tag).FullPath);
+                instance.NewEditorFromProjectFile(((ExplorerNode)e.Node.Tag).FullPath);
             }
         }
         private void ButtonRefresh_Clicked(object o, EventArgs e)
