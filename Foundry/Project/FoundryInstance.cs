@@ -35,7 +35,7 @@ namespace Foundry.Project
 			{
 				memoryReadout.Text = (Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024)).ToString() + "mb";
 			};
-			memoryMonitorTicker.Interval = 1000; //2 seconds.
+			memoryMonitorTicker.Interval = 1000;
 			memoryMonitorTicker.Start();
 		}
 
@@ -46,6 +46,7 @@ namespace Foundry.Project
 
 #if DEBUG
 			ProjectOpen("workingProject/workingproj.fproject");
+
 #endif
 		}
 		private void OnClose(object o, EventArgs e)
@@ -386,7 +387,6 @@ namespace Foundry.Project
 				page.TryShow(workspace, DockState.Document);
 			}
 		}
-
 
 		#endregion
 

@@ -18,6 +18,24 @@ using Foundry.Project.Util;
 
 namespace Foundry.Project.Modules.ScenarioEditor
 {
+	public class ScenarioTool
+	{
+		private ScenarioEditorPage page;
+		public ScenarioTool(ScenarioEditorPage p)
+		{
+			page = p;
+		}
+
+		public class ToolParams
+		{
+			float x, y;
+		}
+		public virtual void Use(ToolParams p)
+		{
+			
+		}
+	}
+
 	public class ScenarioEditorPage : SceneEditorPage
 	{
 		public ScenarioEditorPage(FoundryInstance i, int numXChunks = 16): base(i)
