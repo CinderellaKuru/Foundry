@@ -118,16 +118,47 @@ namespace Foundry.Project.Modules.Workspace
 
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // nodes
-        private Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// nodes
+		/// <summary>
+		/// Only files ending with these extensions are allowed.
+		/// Also (not listed here) any folder starting with a . is excluded too.
+		/// </summary>
+		private static List<string> allowedExtensions = new List<string>()
+		{
+			//imports
+			FoundryInstance.ExtImportScenario,
+			FoundryInstance.ExtImportTerrain,
+			FoundryInstance.ExtImportTriggerscript,
+
+			//save
+			FoundryInstance.ExtSerializeTerrain,
+			FoundryInstance.ExtSerializeScenario,
+			FoundryInstance.ExtSerializeTriggerscript,
+			FoundryInstance.ExtSerializeXml
+		};
+		/// <summary>
+		/// The file extension of each node is compared to this map of icons.
+		/// </summary>
+		private Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
         {
-            { SaveTriggerscriptExt,   Properties.Resources.page_white },
-            { SaveScenarioExt,        Properties.Resources.page_white },
+            { ExtSerializeTriggerscript,   Properties.Resources.page_white },
+            { ExtSerializeScenario,        Properties.Resources.page_white },
         };
-        private void CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
+        private void UpdateNodes_CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
         {
-            foreach(DiskEntryNode child in diskNode.children)
+			foreach (DiskEntryNode child in diskNode.children.Where(x =>
+			{
+				//filter folder names starting with a dot.
+				if (x.isFolder)
+					if (x.name[0] == '.')
+						return false;
+				//filter out file extensions.
+				if (!x.isFolder)
+					if (!allowedExtensions.Contains(Path.GetExtension(x.name)))
+						return false;
+				return true;
+			}))
             {
                 Image img = Properties.Resources.page_white;
                 if (child.isFolder)
@@ -136,14 +167,14 @@ namespace Foundry.Project.Modules.Workspace
                     img = nodeImages.ContainsKey(Path.GetExtension(child.path)) ? nodeImages[Path.GetExtension(child.path)] : Properties.Resources.page_white;
 
                 ExplorerNode newNode = new ExplorerNode(child.name, child.path, img);
-                CreateExplorerNodeRecursive(child, newNode);
+                UpdateNodes_CreateExplorerNodeRecursive(child, newNode);
                 explorerNode.Nodes.Add(newNode);
             }
         }
         public void UpdateNodes(DiskEntryNode root)
         {
             ExplorerNode rootExplorerNode = new ExplorerNode(root.name, root.path, Properties.Resources.box);
-            CreateExplorerNodeRecursive(root, rootExplorerNode);
+            UpdateNodes_CreateExplorerNodeRecursive(root, rootExplorerNode);
             
             treeView.BeginUpdate();
             treeModel.Nodes.Clear();
@@ -155,7 +186,7 @@ namespace Foundry.Project.Modules.Workspace
         }
         public void RefreshNodes()
         {
-            instance.ScanProjectDirectoryAndUpdate();
+            instance.UpdateDirectory();
         }
         public void ClearNodes()
         {

@@ -14,13 +14,18 @@ using Foundry.Project.Modules.TriggerscriptEditor;
 using Foundry.Project.Modules.ScenarioEditor;
 using Foundry.Project.Modules.Workspace;
 using Foundry.Project.Modules.XmlEditor;
+using System.Xml;
+using static Foundry.Project.FoundryInstance.Project.ProjectData;
+using SharpDX.Text;
+using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace Foundry.Project
 {
 	public partial class FoundryInstance : Form
 	{
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region  foundry instance
+#region  foundry instance
 		public FoundryInstance()
 		{
 			Load += new EventHandler(OnLoad);
@@ -46,12 +51,12 @@ namespace Foundry.Project
 
 #if DEBUG
 			ProjectOpen("workingProject/workingproj.fproject");
-
+			//NewEditorFromImportedFile("S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\scenario\\skirmish\\design\\chasms\\chasms.xtd");
 #endif
 		}
 		private void OnClose(object o, EventArgs e)
 		{
-			if (projectOpened)
+			if (ProjectIsOpen())
 			{
 				ProjectClose();
 			}
@@ -61,14 +66,25 @@ namespace Foundry.Project
 		private void ToolStrip_File_OpenProjectClicked(object sender, EventArgs e)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "Foundry Project (.fproject)|*.fproject";
 			if (ofd.ShowDialog() == DialogResult.OK)
 			{
 				ProjectOpen(ofd.FileName);
 			}
 		}
-		private void ToolStrip_File_ImportClicked(object sender, EventArgs e)
+		private void ToolStrip_File_ImportTerrainClicked(object sender, EventArgs e)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "Terrain Visual (.xtd)|*.xtd";
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				NewEditorFromImportedFile(ofd.FileName);
+			}
+		}
+		private void ToolStrip_File_ImportObjectClicked(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "Object (.xml)|*.xml";
 			if (ofd.ShowDialog() == DialogResult.OK)
 			{
 				NewEditorFromImportedFile(ofd.FileName);
@@ -78,28 +94,30 @@ namespace Foundry.Project
 		{
 			Process.Start("https://discord.gg/kfrCNUTaSc");
 		}
-		#endregion
+#endregion
 
 
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region config
+#region config
 		private void LoadConfig()
 		{
 
 		}
-		#endregion
+#endregion
 
 
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region  log
+#region  log
 		public enum LogEntryType
 		{
 			Info,
 			Warning,
 			Error,
+			DebugInfo,
+			DebugError,
 		}
 		/// <summary>
-		/// Writes text to the console.
+		/// Writes text to the window status bar and console.
 		/// </summary>
 		/// <param name="type">The type of message to send. Affects prefix.</param>
 		/// <param name="mainMessage">The main text to be written.</param>
@@ -107,16 +125,21 @@ namespace Foundry.Project
 		/// <param name="secondaryMessage">If supplied, this will be written to the console, but not displayed on the status bar. Useful for things like exception info.</param>
 		public void AppendLog(LogEntryType type, string mainMessage, bool displayAsStatus, string secondaryMessage = null)
 		{
+#if !DEBUG
+			if(type == LogEntryType.DebugInfo || type == LogEntryType.DebugWarning || type == LogEntryType.DebugError) return;
+#endif
 			string prefix;
 			switch (type)
 			{
 				case LogEntryType.Info:
+				case LogEntryType.DebugInfo:
 					prefix = "[Info] ";
 					break;
 				case LogEntryType.Warning:
 					prefix = "[Warning] ";
 					break;
 				case LogEntryType.Error:
+				case LogEntryType.DebugError:
 					prefix = "[Error] ";
 					break;
 				default:
@@ -133,12 +156,18 @@ namespace Foundry.Project
 			{
 				Console.WriteLine(secondaryMessage);
 			}
+
+			//just for debug error:
+			if(type == LogEntryType.DebugError)
+			{
+				MessageBox.Show(mainMessage, "Hey!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
 		}
-		#endregion
+#endregion
 
 
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region property editors
+#region property editors
 		private List<PropertyEditor> propertyEditorPages = new List<PropertyEditor>();
 		/// <summary>
 		/// Adds a new property editor to the workspace.
@@ -153,11 +182,11 @@ namespace Foundry.Project
 		{
 
 		}
-		#endregion
+#endregion
 
 
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region project explorers
+#region project explorers
 		private List<ProjectExplorer> projectExplorerPages = new List<ProjectExplorer>();
 		/// <summary>
 		/// Callback to remove the explorer from the FoundryInstance upon closing.
@@ -179,91 +208,175 @@ namespace Foundry.Project
 			projectExplorerPages.Add(pe);
 			pe.Show(workspace, state);
 		}
-		#endregion
+#endregion
 
 
 		//////////////////////////////////////////////////////////////////////////////////////
-		#region project
-		public const string SaveFoundryProjectExt = ".fproject";
-		public const string SaveTriggerscriptExt = ".fts";
-		public const string SaveTerrainExt = ".ftr";
-		public const string SaveScenarioExt = ".fsc";
-		public const string SaveXmlExt = ".xml";
+#region project
+		//extension for project file.
+		public const string ExtProject = ".fproject";
 
-		public const string ImportTriggerscriptExt = ".triggerscript";
-		public const string ImportTerrainExt = ".xtd";
-		public const string ImportScenarioExt = ".scn";
+		//extensions for serialized editors' files.
+		public const string ExtSerializeTriggerscript = ".ftsr";
+		public const string ExtSerializeTerrain = ".ftrn";
+		public const string ExtSerializeScenario = ".fscn";
+		public const string ExtSerializeObject = ".fobj";
+		public const string ExtSerializeSquad = ".fsqd";
+		public const string ExtSerializeTech = ".ftch";
 
+		//extensions for imported files.
+		public const string ExtImportTriggerscript = ".triggerscript";
+		public const string ExtImportTerrain = ".xtd";
+		public const string ExtImportScenario = ".scn";
+		public const string ExtImportXml = ".xml";
 
-		/// <summary>
-		/// Contains info about project state, such as folded folders etc.
-		/// </summary>
-		private class ProjectData
+		//full file names for specific source files.
+		public const string FileSourceObjectsXml = "objects.xml";
+		public const string FileSourceSquadsXml = "squads.xml";
+		public const string FileSourceTechsXml = "techs.xml";
+		public const string FileSourceObjectsUpdateXml = "objects_update.xml";
+		public const string FileSourceSquadsUpdateXml = "squads_update.xml";
+		public const string FileSourceTechsUpdateXml = "techs_update.xml";
+
+		//folder names for special directories.
+		public const string DirReferenceName = ".ref"; //this is supposed to have a dot before it.
+
+		public class Project
 		{
-			#region classes
-			public class FolderDataEntry
+			//private ctor
+			private Project(){ }
+
+			public enum OpenResult
 			{
-				[YAXSerializeAs("Folded")]
-				public bool Folded { get; set; }
+				Success = 0,
+				IncorrectExt,
+				FileNull,
+				BadFileData,
 			}
-			#endregion
-			public ProjectData()
+			public static OpenResult Open(string file, out Project project)
 			{
+				if (!File.Exists(file))
+				{
+					project = null;
+					return OpenResult.FileNull;
+				}
+
+				if (!Path.HasExtension(file) || Path.GetExtension(file) != ExtProject)
+				{
+					project = null;
+					return OpenResult.IncorrectExt;
+				}
+
+				string fullFile = Path.GetFullPath(file);
+				project = new Project();
+				project.FilePath = fullFile;
+				project.Name = Path.GetFileNameWithoutExtension(fullFile);
+				project.FileDir = Path.GetDirectoryName(fullFile);
+
+				//read project file.
+				YAXSerializer ser = new YAXSerializer(typeof(ProjectData),
+					new YAXLib.Options.SerializerOptions() { ExceptionBehavior = YAXExceptionTypes.Ignore });
+				project.Data = (ProjectData)ser.DeserializeFromFile(project.FilePath);
+
+				return OpenResult.Success;
+			}
+			public void Save()
+			{
+				YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
+				string xml = ser.Serialize(Data);
+				File.WriteAllText(FilePath, xml);
 			}
 
-			[YAXDictionary(EachPairName = "Folder", KeyName = "Name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
-			[YAXSerializeAs("FolderData")]
-			public Dictionary<string, FolderDataEntry> FolderData { get; set; }
+			public class ProjectData
+			{
+				public ProjectData() { }
+
+				//folder info
+				public class FolderDataEntry
+				{
+					[YAXAttributeForClass()]
+					public bool Folded { get; set; }
+				}
+				[YAXDictionary(EachPairName = "Folder", KeyName = "name", ValueName = "Data", SerializeKeyAs = YAXNodeTypes.Attribute, SerializeValueAs = YAXNodeTypes.Element)]
+				[YAXDontSerializeIfNull()]
+				//dont use auto property so that if the value is null, we can create a list.
+				private Dictionary<string, FolderDataEntry> _folderData;
+				public Dictionary<string, FolderDataEntry> FolderData
+				{
+					get
+					{
+						if (_folderData == null)
+							_folderData = new Dictionary<string, FolderDataEntry>();
+						return _folderData;
+					}
+					set
+					{
+						_folderData = value;
+					}
+				}
+			}
+			public ProjectData Data { get; private set; }
+
+			public string Name { get; private set; }
+			public string FilePath { get; private set; }
+			public string FileDir { get; private set; }
+			public string RefFolderDir { get { return string.Format("{0}\\{1}", FileDir, DirReferenceName); } }
+
+			/// <summary>
+			/// Returns the full path on-disk from the relative directory.
+			/// </summary>
+			/// <returns>The full path of the specified relative path. Returns null for invalid paths.</returns>
+			public string TryGetFullPathFromRelativePath(string relativePath)
+			{
+				string tryFull = FileDir + relativePath;
+				if (Directory.Exists(tryFull))
+				{
+					return tryFull;
+				}
+
+				return null;
+			}
 		}
-		private ProjectData openedData;
-		private string openedDir;
-		private string openedFile;
-		private string openedName;
-		private bool projectOpened = false;
+		public Project OpenedProject { get; private set; }
 
+		public bool ProjectIsOpen()
+		{
+			return OpenedProject != null;
+		}
 		public void ProjectCreate(string file)
 		{
-			//TODO
+			//TODO:
 		}
 		public void ProjectOpen(string file)
 		{
-			if (projectOpened)
-				ProjectClose();
-
-			if (!File.Exists(file))
-				return;
-
-			if (Path.GetExtension(file) != SaveFoundryProjectExt)
-				return;
-
-			openedDir = Path.GetDirectoryName(file);
-			openedFile = Path.GetFullPath(file);
-			openedName = Path.GetFileNameWithoutExtension(file);
-			projectOpened = true;
-
-			//load the ProjectData from within the project file.
-			try
-			{
-				YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
-				openedData = (ProjectData)ser.DeserializeFromFile(openedFile);
-			}
-			catch (Exception e)
+			if (ProjectIsOpen())
 			{
 				ProjectClose();
-				AppendLog(LogEntryType.Error, "Project '" + openedName + "' failed to load. Open the log for more info.", true, e.Message);
+			}
+
+			Project info;
+			Project.OpenResult result = Project.Open(file, out info);
+			if(result != Project.OpenResult.Success)
+			{
+				AppendLog(LogEntryType.Warning, string.Format("The project file could not be opened: {0}", result.ToString()), true);
+				ProjectClose();
 				return;
 			}
+			OpenedProject = info;
+			//save it in case the file does not have all of the required attributes.
+			ProjectSave();
+
+			AppendLog(LogEntryType.Info, string.Format("Project '{0}' loaded.", OpenedProject.Name), true);
 
 			//get all present files and update the explorers.
-			ScanProjectDirectoryAndUpdate();
-
-			AppendLog(LogEntryType.Info, "Project '" + openedName + "' loaded.", true);
+			UpdateDirectory();
 		}
 		public void ProjectSave()
 		{
-			YAXSerializer ser = new YAXSerializer(typeof(ProjectData));
-			string serStr = ser.Serialize(openedData);
-			File.WriteAllText(openedFile, serStr);
+			if(ProjectIsOpen())
+			{
+				OpenedProject.Save();
+			}
 		}
 		public void ProjectClose()
 		{
@@ -277,10 +390,12 @@ namespace Foundry.Project
 				//}
 			}
 			openEditors.Clear();
-			projectOpened = false;
-			openedDir = null;
-			openedFile = null;
-			openedName = null;
+			OpenedProject = null;
+
+			if(ProjectIsOpen())
+			{
+				AppendLog(LogEntryType.DebugError, "The project is still considered open after calling ProjectClose()!", true);
+			}
 		}
 
 		/// <summary>
@@ -300,16 +415,16 @@ namespace Foundry.Project
 			public string path;
 			public List<DiskEntryNode> children;
 		}
-		private void ScanProjectDirectoryRecursive(DiskEntryNode node)
+		private void UpdateDirectory_ScanDirRecursive(DiskEntryNode node)
 		{
 			if (File.GetAttributes(node.path).HasFlag(FileAttributes.Directory))
 			{
 				//get child folders first
 				foreach (string dir in Directory.GetDirectories(node.path))
 				{
-					DiskEntryNode child = new DiskEntryNode(Path.GetDirectoryName(dir), dir, true);
+					DiskEntryNode child = new DiskEntryNode(Path.GetFileName(dir), dir, true);
 					node.children.Add(child);
-					ScanProjectDirectoryRecursive(child);
+					UpdateDirectory_ScanDirRecursive(child);
 				}
 
 				//get child files second
@@ -323,10 +438,10 @@ namespace Foundry.Project
 		/// <summary>
 		/// Scans the project directory for present files, and updates the explorers with this information.
 		/// </summary>
-		public void ScanProjectDirectoryAndUpdate()
+		public void UpdateDirectory()
 		{
-			DiskEntryNode root = new DiskEntryNode(openedName, openedDir, false);
-			ScanProjectDirectoryRecursive(root);
+			DiskEntryNode root = new DiskEntryNode(OpenedProject.Name, OpenedProject.FileDir, true);
+			UpdateDirectory_ScanDirRecursive(root);
 
 			foreach (var explorer in projectExplorerPages)
 			{
@@ -344,13 +459,13 @@ namespace Foundry.Project
 			BaseEditorPage page;
 			switch (Path.GetExtension(file))
 			{
-				case SaveTriggerscriptExt:
+				case ExtSerializeTriggerscript:
 					page = new TriggerscriptEditorPage(this);
 					break;
-				case SaveScenarioExt:
+				case ExtSerializeScenario:
 					page = new ScenarioEditorPage(this);
 					break;
-				case SaveXmlExt:
+				case ExtSerializeXml:
 					page = new XmlEditorPage(this);
 					break;
 				default:
@@ -366,29 +481,11 @@ namespace Foundry.Project
 		/// <summary>
 		/// Opens an editor from an imported file.
 		/// </summary>
-		public void NewEditorFromImportedFile(string file)
+		public void NewTerrainEditorImport(string file)
 		{
-			BaseEditorPage page;
-			switch (Path.GetExtension(file))
-			{
-				case ImportTriggerscriptExt:
-					page = new TriggerscriptEditorPage(this);
-					break;
-				case ImportTerrainExt:
-					page = new ScenarioEditorPage(this);
-					break;
-				default:
-					return;
-			}
-			if (page.TryImport(file))
-			{
-				openEditors.Add(page);
-				page.Text = Path.GetFileName(file);
-				page.TryShow(workspace, DockState.Document);
-			}
+			ScenarioEditorPage page = new ScenarioEditorPage(this);
+			page.TryImport(file);
 		}
-
-		#endregion
-
+#endregion
 	}
 }

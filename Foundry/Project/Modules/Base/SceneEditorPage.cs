@@ -14,6 +14,7 @@ using HelixToolkit.SharpDX.Core.Model;
 using HelixToolkit.SharpDX.Core.Model.Scene;
 using Vector3 = SharpDX.Vector3;
 using SharpDX;
+using Color = SharpDX.Color;
 
 namespace Foundry.Project.Modules.Base
 {
@@ -23,7 +24,9 @@ namespace Foundry.Project.Modules.Base
         protected ViewportCore viewport;
         protected CameraCore camera;
         protected CameraController cameraController;
-        protected EffectsManager effectsManager;
+		protected AmbientLightNode ambientLight;
+		protected LightNode directionalLight;
+		protected EffectsManager effectsManager;
 
         public SceneEditorPage(FoundryInstance i) : base(i)
         {
@@ -34,28 +37,42 @@ namespace Foundry.Project.Modules.Base
             renderControl.Dock = DockStyle.Fill;
             Controls.Add(renderControl);
 
-            //helix
-            viewport = new ViewportCore(renderControl.Handle);
-            cameraController = new CameraController(viewport);
+			//helix
+			viewport = new ViewportCore(renderControl.Handle);
+
+			cameraController = new CameraController(viewport);
             cameraController.CameraMode = CameraMode.Inspect;
             cameraController.CameraRotationMode = CameraRotationMode.Turntable;
+			cameraController.SpinReleaseTime = 0;
             camera = new PerspectiveCameraCore()
             {
                 LookDirection = new Vector3(0, 0, 1),
-                Position = new Vector3(0, 0, -10),
+                Position = new Vector3(0, 50, -10),
                 FarPlaneDistance = 7500f,
                 NearPlaneDistance = .1f,
                 FieldOfView = 90,
                 UpDirection = new Vector3(0, 1, 0),
             };
             viewport.CameraCore = camera;
-            cameraController.CameraTarget = new Vector3(0, 0, 0);
 
-            effectsManager = new DefaultEffectsManager();
-            effectsManager.AddTechnique(new HelixToolkit.SharpDX.Core.Shaders.TechniqueDescription("technique"));
-            viewport.EffectsManager = effectsManager;
+			directionalLight = new PointLightNode()
+			{
+				Color = Color.White.ToColor4(),
+				ModelMatrix = Matrix.Translation(new Vector3(0, 0, 0)),
+			};
+			viewport.Items.AddChildNode(directionalLight);
 
-            viewport.StartD3D(Width, Height);
+			ambientLight = new AmbientLightNode()
+			{
+				Color = Color.White.ToColor4().ChangeIntensity(.2f),
+				ModelMatrix = Matrix.Translation(new Vector3(512, 100, 512)),
+			};
+			viewport.Items.AddChildNode(ambientLight);
+
+			effectsManager = new DefaultEffectsManager();
+			viewport.EffectsManager = effectsManager;
+
+			viewport.StartD3D(Width, Height);
         }
 
         private bool allowPan = true;
@@ -114,7 +131,7 @@ namespace Foundry.Project.Modules.Base
 		}
 		protected override void OnDraw()
         {
-            viewport.Render();
+			viewport.Render();
         }
         protected override void OnResize()
         {
@@ -124,6 +141,5 @@ namespace Foundry.Project.Modules.Base
         {
             viewport.EndD3D();
         }
-
     }
 }

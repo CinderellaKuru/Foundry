@@ -44,11 +44,11 @@ namespace Foundry.Project.Modules.XmlEditor
         }
 		protected override string GetSaveExtension()
 		{
-			return FoundryInstance.SaveXmlExt;
+			return FoundryInstance.ExtSerializeObject;
 		}
 		protected override string GetImportExtension()
 		{
-			return null;
+			return FoundryInstance.ExtImportXml;
 		}
 	}
 }

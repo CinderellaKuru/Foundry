@@ -216,12 +216,17 @@ namespace Foundry.Project.Modules.Base
 		}
 		public bool TryOpen(string file)
 		{
+			if(loaded)
+			{
+				TryClose(true);
+			}
 			if (File.Exists(file) && Path.GetExtension(file) == GetSaveExtension() && !loaded)
 			{
 				try
 				{
 					if (OnLoadFile(file))
 					{
+						Instance().AppendLog(LogEntryType.Info, "File " + file + " opened.", true);
 						edited = false;
 						loaded = true;
 						cachedFileName = file;
@@ -245,6 +250,7 @@ namespace Foundry.Project.Modules.Base
 				{
 					if (OnImportFile(file))
 					{
+						Instance().AppendLog(LogEntryType.Info, "File " + file + " imported.", true);
 						edited = true;
 						loaded = true;
 						return true;
@@ -299,6 +305,7 @@ namespace Foundry.Project.Modules.Base
 			return false;
 
 			CLOSE_ROUTINE:
+			Close();
 			try
 			{
 				OnClose();
@@ -309,7 +316,6 @@ namespace Foundry.Project.Modules.Base
 				string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}", GetType().Name, cachedFileName, e.Message));
 				return false;
 			}
-			Close();
 			edited = false;
 			loaded = false;
 			cachedFileName = null;
@@ -326,7 +332,7 @@ namespace Foundry.Project.Modules.Base
 					if (ofd.ShowDialog() == DialogResult.OK)
 					{
 						cachedFileName = ofd.FileName;
-						Instance().ScanProjectDirectoryAndUpdate();
+						Instance().UpdateDirectory();
 					}
 				}
 				if (Path.GetExtension(cachedFileName) == GetSaveExtension())

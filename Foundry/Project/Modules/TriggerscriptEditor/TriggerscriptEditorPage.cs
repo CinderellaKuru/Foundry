@@ -912,11 +912,11 @@ namespace Foundry.Project.Modules.TriggerscriptEditor
 		}
 		protected override string GetSaveExtension()
 		{
-			return FoundryInstance.SaveTriggerscriptExt;
+			return FoundryInstance.ExtSerializeTriggerscript;
 		}
 		protected override string GetImportExtension()
 		{
-			return FoundryInstance.ImportTriggerscriptExt;
+			return FoundryInstance.ExtImportTriggerscript;
 		}
 		#endregion
 

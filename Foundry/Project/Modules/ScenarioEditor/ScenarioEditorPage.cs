@@ -14,7 +14,11 @@ using Color = SharpDX.Color;
 using Foundry.Project.Modules.Base;
 using MessagePack;
 using System.Diagnostics;
-using Foundry.Project.Util;
+using System.Buffers.Binary;
+using Newtonsoft.Json.Linq;
+using SharpDX.Direct2D1;
+using ScintillaNET;
+using Foundry.Project.Util.ECF;
 
 namespace Foundry.Project.Modules.ScenarioEditor
 {
@@ -38,24 +42,23 @@ namespace Foundry.Project.Modules.ScenarioEditor
 
 	public class ScenarioEditorPage : SceneEditorPage
 	{
-		public ScenarioEditorPage(FoundryInstance i, int numXChunks = 16): base(i)
+		//page
+		private const int numXVerts = 64;
+		public ScenarioEditorPage(FoundryInstance i): base(i)
 		{
-			chunks = new TerrainChunk[0, 0];
-			SetTerrainSize(numXChunks);
 		}
 		protected override string GetSaveExtension()
 		{
-			return FoundryInstance.SaveScenarioExt;
+			return FoundryInstance.ExtSerializeScenario;
 		}
 		protected override string GetImportExtension()
 		{
-			return FoundryInstance.ImportTerrainExt;
+			return FoundryInstance.ExtImportTerrain;
 		}
 
+		//chunk
 		public class TerrainChunk
 		{
-			private const int numXVerts = 64;
-
 			public MeshNode meshNode;
 			private ScenarioEditorPage owner;
 			public TerrainChunk(ScenarioEditorPage owner, int chunkX, int chunkZ)
@@ -64,11 +67,11 @@ namespace Foundry.Project.Modules.ScenarioEditor
 				MeshBuilder builder = new MeshBuilder();
 
 				//vertices
-				for (int x = 0; x < numXVerts; x++)
+				for (int z = 0; z < numXVerts; z++)
 				{
-					for (int z = 0; z < numXVerts; z++)
+					for (int x = 0; x < numXVerts; x++)
 					{
-						builder.Positions.Add(new Vector3(x, 0, z));
+						builder.Positions.Add(new Vector3(x + (chunkX * numXVerts), 0, z + (chunkZ * numXVerts)));
 
 						float uvu = (1f / (numXVerts - 1) * x);
 						float uvv = 1 - (1f / (numXVerts - 1) * z);
@@ -76,9 +79,9 @@ namespace Foundry.Project.Modules.ScenarioEditor
 					}
 				}
 				//indices
-				for (int x = 0; x < numXVerts - 1; x++)
+				for (int z = 0; z < numXVerts - 1; z++)
 				{
-					for (int z = 0; z < numXVerts - 1; z++)
+					for (int x = 0; x < numXVerts - 1; x++)
 					{
 						int row0 = z * numXVerts;
 						int row1 = (z + 1) * numXVerts;
@@ -101,30 +104,39 @@ namespace Foundry.Project.Modules.ScenarioEditor
 
 				meshNode = new MeshNode()
 				{
-					Geometry = builder.ToMesh(),
-					Material = new DiffuseMaterialCore() { DiffuseColor = Color.White },
+					Geometry = builder.ToMeshGeometry3D(),
+					Material = new PhongMaterialCore() { DiffuseColor = Color.White },
 					ModelMatrix = Matrix.Translation(new Vector3(chunkX * (numXVerts - 1), 0, chunkZ * (numXVerts - 1)))
 				};
+
 				owner.viewport.Items.AddChildNode(meshNode);
+			}
+
+			public void SetVertex(int x, int z, Vector3 v)
+			{
+				meshNode.Geometry.Positions[(z * numXVerts) + x] = new Vector3(x + v.X, v.Y, z + v.Z);
+			}
+			public Vector3 GetVertex(int x, int z)
+			{
+				return meshNode.Geometry.Positions[(z * numXVerts) + x] - new Vector3(x, 0 , z);
+			}
+			public void UpdateNormals()
+			{
+				((MeshGeometry3D)meshNode.Geometry).Normals = MeshGeometryHelper.CalculateNormals((MeshGeometry3D)meshNode.Geometry);
 			}
 		}
 		private TerrainChunk[,] chunks;
 		private int NumXChunks { get { return chunks != null ? chunks.GetLength(0) : 0; } }
-		private int NumYChunks { get { return chunks != null ? chunks.GetLength(1) : 0; } }
-		public void SetTerrainSize(int numXChunks)
+		private int NumZChunks { get { return chunks != null ? chunks.GetLength(1) : 0; } }
+		public void TerrainSetTotalSize(int numXChunks)
 		{
 			//terrain is guaranteed to always be square right now. this might change in the future.
-			int currentChunksX = chunks.GetLength(0);
-			int currentChunksZ = chunks.GetLength(1);
-			int desiredChunksX = numXChunks;
-			int desiredChunksZ = numXChunks;
-
-			TerrainChunk[,] newChunks = new TerrainChunk[desiredChunksX, desiredChunksZ];
-			for (int x = 0; x < desiredChunksX; x++)
+			TerrainChunk[,] newChunks = new TerrainChunk[numXChunks, numXChunks];
+			for (int x = 0; x < numXChunks; x++)
 			{
-				for (int z = 0; z < desiredChunksZ; z++)
+				for (int z = 0; z < numXChunks; z++)
 				{
-					if (x < currentChunksX && z < currentChunksZ)
+					if (x < NumXChunks && z < NumZChunks)
 					{
 						newChunks[x, z] = chunks[x, z];
 					}
@@ -136,7 +148,35 @@ namespace Foundry.Project.Modules.ScenarioEditor
 			}
 			chunks = newChunks;
 		}
+		/// <summary>
+		/// Sets a vertex's value at selected world-space coords.
+		/// </summary>
+		public void TerrainSetVertex(int x, int z, Vector3 value)
+		{
+			int chunkX = x / numXVerts;
+			int chunkZ = z / numXVerts;
+			int vertexX = x % numXVerts;
+			int vertexZ = z % numXVerts;
 
+			if (chunkX >= NumXChunks) return;
+			if (chunkZ >= NumZChunks) return;
+			if (vertexX >= numXVerts) return;
+			if (vertexZ >= numXVerts) return;
+
+			TerrainChunk chunk = chunks[chunkX, chunkZ];
+			chunk.SetVertex(vertexX, vertexZ, value);
+
+			//if (vertexX == 0 && chunkX > 0)
+			//{
+			//	TerrainChunk neighbor = chunks[chunkX - 1, chunkZ];
+			//	neighbor.SetVertex(numXVerts - 1, vertexZ, value);
+			//}
+			//if (vertexZ == 0 && chunkZ > 0)
+			//{
+			//	TerrainChunk neighbor = chunks[chunkX, chunkZ - 1];
+			//	neighbor.SetVertex(vertexX, numXVerts - 1 , value);
+			//}
+		}
 
 		#region serialization
 		[MessagePackObject(keyAsPropertyName: true)]
@@ -172,7 +212,7 @@ namespace Foundry.Project.Modules.ScenarioEditor
 			}
 			public SerializedTerrain(ScenarioEditorPage page)
 			{
-				Chunks = new SerializedTerrainChunk[page.NumXChunks, page.NumYChunks];
+				Chunks = new SerializedTerrainChunk[page.NumXChunks, page.NumZChunks];
 				for (int x = 0; x < page.chunks.GetLength(0); x++)
 				{
 					for (int z = 0; z < page.chunks.GetLength(0); z++)
@@ -183,6 +223,12 @@ namespace Foundry.Project.Modules.ScenarioEditor
 			}
 		}
 
+		private const long XTDHeaderId	  = 0x1111;
+		private const long TerrainChunkId = 0x2222;
+		private const long AtlasChunkId   = 0x8888;
+		private const long AOChunkID	  = 0xCCCC;
+		private const long AlphaChunkID	  = 0xDDDD;
+		private const long TessChunkID    = 0xAAAA;
 		protected override bool OnLoadFile(string file)
 		{
 			return true;
@@ -194,8 +240,51 @@ namespace Foundry.Project.Modules.ScenarioEditor
 		}
 		protected override bool OnImportFile(string file)
 		{
-			ECF ecf = new ECF();
-			ecf.Open(file);
+			var ecfChunks = ECF.ReadChunks(file);
+
+			byte[] xtdHeader = ecfChunks[XTDHeaderId][0];
+			int thisNumXVerts = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 4));
+			int thisNumXChunks = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 8));
+			
+			TerrainSetTotalSize(thisNumXChunks);
+			
+			byte[] atlas = ecfChunks[AtlasChunkId][0];
+			Vector3 posCompMin = new Vector3(
+				BitConverter.ToSingle(atlas.Skip(0).Take(4).Reverse().ToArray(), 0),
+				BitConverter.ToSingle(atlas.Skip(4).Take(4).Reverse().ToArray(), 0),
+				BitConverter.ToSingle(atlas.Skip(8).Take(4).Reverse().ToArray(), 0));
+			Vector3 posCompRange = new Vector3(
+				BitConverter.ToSingle(atlas.Skip(16).Take(4).Reverse().ToArray(), 0),
+				BitConverter.ToSingle(atlas.Skip(20).Take(4).Reverse().ToArray(), 0),
+				BitConverter.ToSingle(atlas.Skip(24).Take(4).Reverse().ToArray(), 0));
+
+			const int positionsOffset = 32;
+			const uint  kBitMask10 = (1 << 10) - 1;
+			const float kBitMask10Rcp = 1.0f / kBitMask10;
+			for (int i = 0; i < thisNumXVerts * thisNumXVerts; i++)
+			{
+				uint v = BitConverter.ToUInt32(atlas, (i * 4) + positionsOffset);
+				
+				uint x = (v >> 20) & kBitMask10;
+				uint y = (v >> 10) & kBitMask10;
+				uint z = (v >> 00) & kBitMask10;
+				float fx = (x * kBitMask10Rcp * posCompRange.X) - posCompMin.X;
+				float fy = (y * kBitMask10Rcp * posCompRange.Y) - posCompMin.Y;
+				float fz = (z * kBitMask10Rcp * posCompRange.Z) - posCompMin.Z;
+
+				int row = i / (thisNumXVerts);
+				int col = i % (thisNumXVerts);
+				TerrainSetVertex(col, row, new Vector3(fx, fy, fz));
+			}
+
+			foreach(TerrainChunk c in chunks)
+			{
+				c.UpdateNormals();
+				c.meshNode.ForceUpdateTransformsAndBounds();
+			}
+
+			directionalLight.ModelMatrix = Matrix.Translation(new Vector3(thisNumXVerts / 2, -100, thisNumXVerts / 2));
+
 			return true;
 		}
 		#endregion
