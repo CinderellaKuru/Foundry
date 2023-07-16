@@ -185,6 +185,16 @@ namespace Foundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap icon_skirt {
+            get {
+                object obj = ResourceManager.GetObject("icon_skirt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap lock_open {
             get {
                 object obj = ResourceManager.GetObject("lock_open", resourceCulture);

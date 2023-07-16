@@ -176,16 +176,39 @@
         mwAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="box" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALMSURBVDhPpZPJTxNxHMX7B3giFGTpcjVeFFFRUUBN
+        cGErtkAp0FJBIAQEBQqllEJBttLSWmobEBCwIoggaNCIW4wGEBAiKpRVym7EwXp//tqD0UQOxMObSSbz
+        3nx+7/sdGoD/0j8f7kSOi/Eie9cNMbvVIGZtGeJZtloivYhl0wmZNm0c01YTy7BpYhi2aoGnTSXwXK2M
+        9pD9DiBmJ2LebJP6of+6CP36eHKPx1OdCE+0IvTViPBII0KvWohulRAd5dEwpvmgLNJd6Qgg5ul2WQCe
+        GxJgvrwXt5LZaExkoz6BDZOYhVoRC1ohE5pYJir5DBgz/GAuEUCf6oMSnlsXjWBTUw8kaE3fg7p4V5ji
+        XGGIcYVO4AI1n46qCDrKuM4o5jhDHuIEaZATVMlH0K1OQjHXDTRyXmpzWIOfRD/elGHrtRLfXyiw2V+A
+        r4+l2HiYjbXuTKx0pGP5TgqsLZfwpUEMa6cCRRd2g0bKor4NVJOXE7HeI8DqfT6W70bCepuLxSYO5upC
+        MWMIgkV7FpOqQHwqO4WJYn8stMlRGE4CSNPUxtsqrPeKsdIehSUzD4vN4VioD8WsMRjTunOYqg7E54rT
+        +KgMwIdCP4zl+2KuJR9yjitoZEzU2qtyrNyLI3hcgheGOVMwZvTnYdGcwWQlMZaexITCH+Oy43gvOYaR
+        qz6YbcyFLIwEaGIZ1MqzUlhb+dvijhecwJjUF6NZPhjOPIx36d6YrstBfqgLaOoYBrXcp8T8Td62uKM5
+        RzFyxW48iKHUAxhM9oLFmA1pCAkgm0VZexQEmbMt7nDGIQyleWMwxQsDSfsxkLiPBGQhL5gEVEV7Ugud
+        cix1FWGxo9DR7rxZhrlmKWab8jDTIHHgWkzZDtOfyg2mg1bB9+grj/LAtQh3lPLcoSTLYV8QBZmxfUz2
+        pgtIWfbz2pHz7CJftpslQfSXf/1ZOxdovwB+v5Cv/CnmNAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="discord" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wQAADsEBuJFr7QAAAetJREFUWEftlr9LHFEUhVfiH6CFpYWNkDLYiIWNgo0gWEiKpIqpJH9CQIggCLai
+        BIJgk8I01sYuEBCSKk1A1CaiYJFACARRvzOckct7o7vqiM0c+Ng395x7Hzu/dluNGjXqVM9f/xmAFzDq
+        Uia8MWcGXLqfGNQPb+EHnMMF7MEzmIJpo7Vqh6CMsupRb7/H3U40jsB/0MD7oBkjHtuZaOiG7x5QB5rV
+        7fHtRXg2NNfFrMffLIL69j9DY13o3ml/FgjNhKa6mfE214vQVtJUJ1veploEeuBfaIj8ho/wLdRS5Cmj
+        bJWv2T3eLhfmZAhHfkHxPPPZBSuuR9agyxm9P9STZsSkMpXCXEzCJfOOFOK4D8oXk9C6z3YhjueDH1lw
+        JBfmZhIumXOkEMd6UuKl+gtPbBfi+E3wI5uO5MLcTcIl21CcXol11aW6OrWsdZnUk2bErmO5MPeTcGQd
+        JuAVnLoWUU3eOGy4VsW+t8uFeZSEH4Ijb5cLs/w1e0gOvV0uzJ0kLHSHv4PPcObaTSijrHqq/B1vlwuz
+        F96HcMkJ6LHSn5KXsAyf4At89XoJ5Cmj7DGkcz5Ar7e7XoSGIT0b27bbStmkV7OGbXcumoZgFQ5g0OW2
+        IvvUPeodcvnuYsjVO6BT3aWnUaNHUKt1CQWTLd5vwXPrAAAAAElFTkSuQmCC
+</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lock_open" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lock_open.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_lock" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="box" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="cnd" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cnd.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -194,8 +217,5 @@
   </data>
   <data name="var" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\var.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="discord" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\discord.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

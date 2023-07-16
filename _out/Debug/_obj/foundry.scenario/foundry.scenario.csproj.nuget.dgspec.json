@@ -1,0 +1,163 @@
+{
+  "format": 1,
+  "restore": {
+    "R:\\foundry\\foundry.scenario\\foundry.scenario.csproj": {}
+  },
+  "projects": {
+    "R:\\foundry\\foundry.scenario\\foundry.scenario.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "R:\\foundry\\foundry.scenario\\foundry.scenario.csproj",
+        "projectName": "foundry.scenario",
+        "projectPath": "R:\\foundry\\foundry.scenario\\foundry.scenario.csproj",
+        "packagesPath": "C:\\Users\\Jake\\.nuget\\packages\\",
+        "outputPath": "R:\\foundry\\_out\\Debug\\_obj\\foundry.scenario\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Jake\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {
+              "R:\\foundry\\foundry\\foundry.csproj": {
+                "projectPath": "R:\\foundry\\foundry\\foundry.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "R:\\foundry\\foundry\\foundry.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "R:\\foundry\\foundry\\foundry.csproj",
+        "projectName": "foundry",
+        "projectPath": "R:\\foundry\\foundry\\foundry.csproj",
+        "packagesPath": "C:\\Users\\Jake\\.nuget\\packages\\",
+        "outputPath": "R:\\foundry\\_out\\Debug\\_obj\\foundry\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Jake\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "AdamsLair.TreeViewAdv": {
+              "target": "Package",
+              "version": "[1.7.7, )"
+            },
+            "DockPanelSuite": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "DockPanelSuite.ThemeVS2015": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "HelixToolkit": {
+              "target": "Package",
+              "version": "[2.24.0, )"
+            },
+            "HelixToolkit.SharpDX.Core": {
+              "target": "Package",
+              "version": "[2.24.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "YAXLib": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Foundry.Properties {
+namespace foundry.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

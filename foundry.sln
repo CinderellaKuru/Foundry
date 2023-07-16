@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "foundry", "foundry\foundry.csproj", "{FE9BDE09-102E-41DD-8762-74FC6D505CDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "foundry.scenario", "foundry.scenario\foundry.scenario.csproj", "{AEBB847B-8D15-4DC5-9498-79B7D2F66DF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptComb2", "tools\ScriptComb2\ScriptComb2.csproj", "{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7CFEAF52-CA11-41D6-92CB-91347A40B607}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "foundry.triggerscript", "foundry.triggerscript\foundry.triggerscript.csproj", "{94DA241D-FD6C-46E4-BC66-D988F2E79CC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F582DA9A-1EB9-4C22-A23E-89F2FDAACE40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE9BDE09-102E-41DD-8762-74FC6D505CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE9BDE09-102E-41DD-8762-74FC6D505CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE9BDE09-102E-41DD-8762-74FC6D505CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE9BDE09-102E-41DD-8762-74FC6D505CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEBB847B-8D15-4DC5-9498-79B7D2F66DF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEBB847B-8D15-4DC5-9498-79B7D2F66DF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEBB847B-8D15-4DC5-9498-79B7D2F66DF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEBB847B-8D15-4DC5-9498-79B7D2F66DF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94DA241D-FD6C-46E4-BC66-D988F2E79CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94DA241D-FD6C-46E4-BC66-D988F2E79CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94DA241D-FD6C-46E4-BC66-D988F2E79CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94DA241D-FD6C-46E4-BC66-D988F2E79CC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E10B82BD-8AE4-4272-9B72-E92AB2ADFD53} = {F582DA9A-1EB9-4C22-A23E-89F2FDAACE40}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98079B37-734A-4A44-BB5F-CF75C17CA16C}
+	EndGlobalSection
+EndGlobal

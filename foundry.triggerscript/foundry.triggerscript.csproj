@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\foundry\foundry.csproj">
+      <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+</Project>
