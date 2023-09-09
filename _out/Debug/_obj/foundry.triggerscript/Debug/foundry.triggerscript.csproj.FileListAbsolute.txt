@@ -1,10 +1,8 @@
-R:\foundry\_out\Debug\plugins\foundry.triggerscript.deps.json
-R:\foundry\_out\Debug\plugins\foundry.triggerscript.dll
-R:\foundry\_out\Debug\plugins\foundry.triggerscript.pdb
+R:\foundry\_out\Debug\modules\foundry.triggerscript.deps.json
+R:\foundry\_out\Debug\modules\foundry.triggerscript.dll
+R:\foundry\_out\Debug\modules\foundry.triggerscript.pdb
 R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.csproj.AssemblyReference.cache
 R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.GeneratedMSBuildEditorConfig.editorconfig
-R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.AssemblyInfoInputs.cache
-R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.AssemblyInfo.cs
 R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.csproj.CoreCompileInputs.cache
 R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\foundry.triggerscript.dll
 R:\foundry\_out\Debug\_obj\foundry.triggerscript\Debug\refint\foundry.triggerscript.dll

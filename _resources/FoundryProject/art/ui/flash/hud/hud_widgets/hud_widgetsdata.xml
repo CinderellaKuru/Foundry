@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<FlashMovieDefinition>
+	<Properties>
+		<Size Width="1280" Height="720" SafeAreaWidth="1152" SafeAreaHeight="648" />
+		<Data type="bool" name="FitViewportToDisplay">true</Data>
+	</Properties>
+	<Resolution>
+		<Control x="0.720000029" y="0.680000007" AnchorRight="32" AnchorOffsetX="182">_root.mObjectiveWidgets</Control>
+		<Control x="0.629999995" y="0.560000002" AnchorRight="97" AnchorOffsetX="302" AnchorTop="50" AnchorOffsetY="352.299988">_root.mObjectiveProgressWidget</Control>
+		<Control x="0.5" y="0.150000006" AnchorTop="97" AnchorOffsetY="26">_root.mTimer</Control>
+		<Control x="0.5" y="0.300000012" AnchorTop="73" AnchorOffsetY="187">_root.mUserMessage</Control>
+		<Control x="0.310000002" y="0.129999995" AnchorLeft="51.5" AnchorOffsetX="242" AnchorTop="37.5" AnchorOffsetY="63.7999992">_root.mTugOfWar</Control>
+	</Resolution>
+</FlashMovieDefinition>

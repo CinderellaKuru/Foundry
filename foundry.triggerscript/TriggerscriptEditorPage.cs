@@ -6,89 +6,16 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.IO;
 using Newtonsoft.Json;
-using Foundry;
+using foundry;
 using System.Numerics;
-using Foundry.Util;
+using foundry.Util;
+using foundry.util;
 
-namespace hwfoundry.scenario
+namespace foundry.triggerscript
 {
 	//TODO: Clean this shit up!!!!!
     public class TriggerscriptEditorPage : BaseEditorPage
     {
-		#region serialization
-		public class Input
-		{
-			public string name;
-			public string valueType;
-			public bool optional;
-			public int sigId;
-		}
-		public class Output
-		{
-			public string name;
-			public string valueType;
-			public bool optional;
-			public int sigId;
-		}
-		public class SerializedEffect
-		{
-			public string name;
-			public List<Input> inputs = new List<Input>();
-			public List<Output> outputs = new List<Output>();
-			public List<string> sources = new List<string>();
-			public int dbid;
-			public int version;
-		}
-		public class SerializedCondition
-		{
-			public string name;
-			public List<Input> inputs = new List<Input>();
-			public List<Output> outputs = new List<Output>();
-			public int dbid;
-			public int version;
-		}
-		public class SerializedVariable
-		{
-			public string name;
-			public string value;
-			public string type;
-		}
-		public class SerializedTrigger
-		{
-			public string name;
-			public bool cndIsOr;
-			public bool active;
-		}
-		public class SerializedNodeLink
-		{
-			public int sourceId;
-			public string sourceType;
-			public string sourceSocketName;
-
-			public int targetId;
-			public string targetType;
-			public string targetSocketName;
-		}
-		public class SerializedNode
-		{
-			public int id;
-			public int x, y;
-			public string handleAs;
-			public bool selected;
-			public SerializedTrigger trigger;
-			public SerializedVariable variable;
-			public SerializedEffect effect;
-			public SerializedCondition condition;
-		}
-		public class SerializedTriggerscripter
-		{
-			public int lastTrg, lastVar, lastEff, lastCnd;
-			public List<SerializedNode> nodes = new List<SerializedNode>();
-			public List<SerializedNodeLink> links = new List<SerializedNodeLink>();
-		}
-		#endregion
-
-
 		#region editor page
 		private ContextMenuStrip contextMenu;
 
@@ -788,8 +715,9 @@ namespace hwfoundry.scenario
 
 		public TriggerscriptEditorPage()
         {
+			SetRenderInterval(0);
+
             DoubleBuffered = true;
-            Paint += new PaintEventHandler(DrawControl);
 
             #region Construct context menu
             contextMenu = new ContextMenuStrip();
@@ -815,7 +743,7 @@ namespace hwfoundry.scenario
 
             //deserialize and sort effects.
             List<Tuple<SerializedEffect, string>> effsSorted = new List<Tuple<SerializedEffect, string>>();
-            foreach (SerializedEffect e in JsonConvert.DeserializeObject<List<SerializedEffect>>(Foundry.Properties.Resources.eff))
+            foreach (SerializedEffect e in JsonConvert.DeserializeObject<List<SerializedEffect>>(foundry.Properties.Resources.eff))
             {
                 effsSorted.Add(new Tuple<SerializedEffect, string>(e, nodeSubCategories[e.name + "Eff"]));
             }
@@ -851,7 +779,7 @@ namespace hwfoundry.scenario
 
             //deserialize and sort conditions.
             List<Tuple<SerializedCondition, string>> cndsSorted = new List<Tuple<SerializedCondition, string>>();
-            foreach (SerializedCondition c in JsonConvert.DeserializeObject<List<SerializedCondition>>(Foundry.Properties.Resources.cnd))
+            foreach (SerializedCondition c in JsonConvert.DeserializeObject<List<SerializedCondition>>(foundry.Properties.Resources.cnd))
                 cndsSorted.Add(new Tuple<SerializedCondition, string>(c, nodeSubCategories[c.name + "Cnd"]));
             cndsSorted = cndsSorted.OrderBy(x => (x.Item2 + "|" + x.Item1.name)).ToList();
             //create ToolStripMenuItems for conditions
@@ -884,7 +812,7 @@ namespace hwfoundry.scenario
 
 
             //deserialize and sort variable types.
-            List<string> vs = JsonConvert.DeserializeObject<List<string>>(Foundry.Properties.Resources.var);
+            List<string> vs = JsonConvert.DeserializeObject<List<string>>(foundry.Properties.Resources.var);
             vs.Sort();
             foreach (string v in vs)
             {
@@ -913,14 +841,12 @@ namespace hwfoundry.scenario
                 last.DropDownItems.Add(varItem);
             }
 			#endregion
-		}
-		protected override string GetSaveExtension()
-		{
-			return FoundryInstance.ExtSerializeTriggerscript;
-		}
-		protected override string GetImportExtension()
-		{
-			return FoundryInstance.ExtImportTriggerscript;
+
+			OnPageTick += OnTick;
+			OnPageClickL += OnClickL;
+			OnPageDragL += OnDragL;
+			OnPageReleaseL += OnReleaseL;
+			OnPageDraw += OnDraw;
 		}
 		#endregion
 
@@ -929,7 +855,7 @@ namespace hwfoundry.scenario
 		private enum CurrentMouseState
 		{
 			None,
-			NodesSelected,
+			DraggingNodes,
 			DraggingMarquee,
 			DraggingSocket
 		}
@@ -937,28 +863,69 @@ namespace hwfoundry.scenario
 		private TriggerscripterSocket selectedSocket = null;
 		private float zoomMax = .55f, zoomMin = .005f;
 		private float currentViewX = 0, currentViewY = 0, currentViewZoom = .25f;
-		private Matrix viewMatrix = new Matrix();
-		private bool copyPastePressed;
-#if DEBUG
-		private bool compilePressed = false;
-#endif
-		private int marqueeX1, marqueeY1;
-		private int marqueeX2, marqueeY2;
-		private int tempConnectionX, tempConnectionY;
-        public bool DrawDetail() { return currentViewZoom > .05; }
-		private void OnClickL(int mx, int my)
+        private Matrix viewMatrix = new Matrix();
+        private Point markedMousePos = new Point();
+        private Point GetTransformedMousePos()
 		{
-			marqueeX1 = mx;
-			marqueeY1 = my;
-			marqueeX2 = mx;
-			marqueeY2 = my;
+			var m = GetMouseState();
+            Point[] p = new Point[] { new Point(m.X, m.Y) };
+            viewMatrix.Inverted().TransformPoints(p);
+			return p[0];
+        }
 
-			//reverse nodes so that the last to draw is on top
-			var nodesReversed = nodes.ToList();
-			nodesReversed.Reverse();
+		private List<TriggerscripterNode> SelectedNodes { get; set; } = new List<TriggerscripterNode>();
+		private void SelectNode(TriggerscripterNode node)
+        {
+			if (SelectedNodes.Contains(node)) return;
 
-			//dragging socket
-			foreach (TriggerscripterNode n in nodesReversed)
+            int mx = GetTransformedMousePos().X;
+            int my = GetTransformedMousePos().Y;
+
+			node.selected = true;
+			SelectedNodes.Add(node);
+        }
+		private void DeselectNode(TriggerscripterNode node)
+		{
+			if (!SelectedNodes.Contains(node)) return;
+
+			node.selected = false;
+            SelectedNodes.Remove(node);
+		}
+		private void DeselectAllNodes()
+		{
+			foreach (var node in SelectedNodes)
+				node.selected = false;
+
+			SelectedNodes.Clear();
+		}
+        TriggerscripterNode? GetFirstNodeAtPoint(int mx, int my)
+        {
+            var nodesReversed = nodes.ToList();
+            nodesReversed.Reverse();
+
+            foreach (TriggerscripterNode n in nodesReversed)
+			{
+				if(n.PointIsIn(mx,my))
+				{
+					return n;
+				}
+			}
+
+			return null;
+        }
+
+
+        private void OnClickL(object o, EventArgs e)
+		{
+			int mx = GetTransformedMousePos().X;
+			int my = GetTransformedMousePos().Y;
+
+            //reverse nodes so that the last to draw is on top
+            var nodesReversed = nodes.ToList();
+            nodesReversed.Reverse();
+
+            //dragging socket
+            foreach (TriggerscripterNode n in nodesReversed)
 			{
 				foreach (TriggerscripterSocket s in n.sockets.Values)
 				{
@@ -994,71 +961,27 @@ namespace hwfoundry.scenario
 			//doing nothing
 			if (mouseState == CurrentMouseState.None)
 			{
-				foreach (TriggerscripterNode n in nodesReversed)
+				var node = GetFirstNodeAtPoint(mx, my);
+				if (node != null)
 				{
-					//if mouse is in this node
-					if (n.PointIsIn(mx, my))
+					if(!node.selected)
 					{
-						int ox, oy;
-						n.GetPointOffset(mx, my, out ox, out oy);
-						n.selectedX = ox;
-						n.selectedY = oy;
-						nodes.Remove(n);
-						nodes.Add(n);
-
-						foreach (TriggerscripterNode n2 in nodesReversed)
-							n2.selected = false;
-						n.selected = true;
-
-						mouseState = CurrentMouseState.NodesSelected;
-						return;
-					}
-				}
+						DeselectAllNodes();
+						SelectNode(node);
+                    }
+                    mouseState = CurrentMouseState.DraggingNodes;
+                }
 			}
 
-			//node(s) selected
-			if (mouseState == CurrentMouseState.NodesSelected)
+			if (mouseState == CurrentMouseState.DraggingNodes)
 			{
-				bool somethingUnderMouse = false;
-				bool selectedUnderMouse = false;
-				foreach (TriggerscripterNode n in nodesReversed)
-				{
-					//set select offset for this node
-					int ox, oy;
-					n.GetPointOffset(mx, my, out ox, out oy);
-					n.selectedX = ox;
-					n.selectedY = oy;
-
-					//determine if a selected node is under the mouse
-					if (n.selected && n.PointIsIn(mx, my))
-					{
-						selectedUnderMouse = true;
-					}
-
-					//if this node is not selected, but the mouse is inside the node, and the mouse is not in a selected node
-					if (!n.selected && n.PointIsIn(mx, my) && !selectedUnderMouse)
-					{
-						foreach (TriggerscripterNode n2 in nodesReversed)
-						{
-							n2.selected = false;
-						}
-						n.selected = true;
-
-						nodes.Remove(n);
-						nodes.Add(n);
-					}
-
-					//determine if there is anything under the mouse
-					if (n.PointIsIn(mx, my))
-						somethingUnderMouse = true;
-				}
-				//nothing was under the mouse, deselect all and set state
-				if (!somethingUnderMouse)
-				{
-					foreach (TriggerscripterNode n in nodes)
-						n.selected = false;
-					mouseState = CurrentMouseState.None;
-				}
+				foreach(var node in SelectedNodes)
+                {
+                    //int ox, oy;
+                    //node.GetPointOffset(mx, my, out ox, out oy);
+                    //node.selectedX = ox;
+                    //node.selectedY = oy;
+                }
 			}
 
 			//if there is no state still, start dragging marquee
@@ -1068,74 +991,53 @@ namespace hwfoundry.scenario
 					n.selected = false;
 
 				mouseState = CurrentMouseState.DraggingMarquee;
-				marqueeX1 = mx;
-				marqueeY1 = my;
-			}
+				markedMousePos.X = mx;
+				markedMousePos.Y = my;
+            }
 		}
-		private void OnMouseHeldL(int mx, int my)
-		{
-			var nodesReversed = nodes.ToList();
+        private void OnDragL(object o, EventArgs e)
+        {
+            int mx = GetTransformedMousePos().X;
+            int my = GetTransformedMousePos().Y;
+
+            var nodesReversed = nodes.ToList();
 			nodesReversed.Reverse();
 
 			//nodes are selected, drag them
-			if (mouseState == CurrentMouseState.NodesSelected)
+			if (mouseState == CurrentMouseState.DraggingNodes)
 			{
-				foreach (TriggerscripterNode n in nodesReversed)
+				foreach (TriggerscripterNode n in SelectedNodes)
 				{
-					if (n.selected)
-					{
-						n.SetPos(mx - n.selectedX, my - n.selectedY);
-						TrySetEdited();
-					}
+					n.Move(GetMouseState().deltaX * (1/currentViewZoom), GetMouseState().deltaY * (1/currentViewZoom));
+					TrySetEdited();
 				}
 			}
-
-			//socket is dragging, update it.
-			if (mouseState == CurrentMouseState.DraggingSocket)
-			{
-				tempConnectionX = mx;
-				tempConnectionY = my;
-            }
 
 			//marquee is dragging, update it
 			if (mouseState == CurrentMouseState.DraggingMarquee)
 			{
-				marqueeX2 = mx;
-				marqueeY2 = my;
 				foreach (TriggerscripterNode n in nodesReversed)
 				{
 					if (n.IntersectsRect(
-					Math.Min(marqueeX1, marqueeX2),
-					Math.Min(marqueeY1, marqueeY2),
-					Math.Abs(marqueeX2 - marqueeX1),
-					Math.Abs(marqueeY2 - marqueeY1)))
+					Math.Min(markedMousePos.X, mx),
+					Math.Min(markedMousePos.Y, my),
+					Math.Abs(mx - markedMousePos.X),
+					Math.Abs(my - markedMousePos.Y)))
 					{
-						n.selected = true;
-						nodes.Remove(n);
-						nodes.Add(n);
+						SelectNode(n);
+					}
+					else
+					{
+						DeselectNode(n);
 					}
 				}
 			}
 		}
-		private void OnMouseReleasedL(int mx, int my)
+        private void OnReleaseL(object o, EventArgs e)
 		{
-			//marquee was dragging. select nodes inside it
-			if (mouseState == CurrentMouseState.DraggingMarquee)
-			{
-				foreach (TriggerscripterNode n in nodes)
-				{
-					if (n.IntersectsRect(
-					Math.Min(marqueeX1, marqueeX2),
-					Math.Min(marqueeY1, marqueeY2),
-					Math.Abs(marqueeX2 - marqueeX1),
-					Math.Abs(marqueeY2 - marqueeY1)))
-					{
-						mouseState = CurrentMouseState.NodesSelected;
-					}
-				}
-				if (mouseState != CurrentMouseState.NodesSelected)
-					mouseState = CurrentMouseState.None;
-			}
+            int mx = GetTransformedMousePos().X;
+            int my = GetTransformedMousePos().Y;
+
 			//socket was dragging
 			if (mouseState == CurrentMouseState.DraggingSocket)
 			{
@@ -1175,133 +1077,81 @@ namespace hwfoundry.scenario
 					}
 				}
 				DraggingSocketFinish:
-				mouseState = CurrentMouseState.None;
 				selectedSocket = null;
 			}
-		}
-		private void OnClickR(int mx, int my)
-		{
-		}
+
+			mouseState = CurrentMouseState.None;
+        }
 		private int pasteOffset = 50;
 
-		protected override void OnTick()
-        {
-            var m = GetMouseState();
+        private void OnTick(object o, EventArgs e)
+		{
+			var m = GetMouseState();
 
 #if DEBUG
-			if (GetKeyIsDown(Keys.F5) && !compilePressed)
+			if (GetKeyIsDown(Keys.F5) && !GetKeyWasDown(Keys.F5))
 			{
 				TriggerscriptCompiler c = new TriggerscriptCompiler();
 				c.Compile(nodes, varID, "out.triggerscript");
-				compilePressed = true;
 			}
-			else compilePressed = false;
 #endif
 
 
 			#region delete
 			if (GetKeyIsDown(Keys.Delete))
 			{
-				TrySetEdited();
-				foreach (TriggerscripterNode n in nodes.ToArray())
-				{
-					if (n.selected)
+				foreach (TriggerscripterNode n in SelectedNodes.ToList())
+					//for each socket in this node's sockets
+					foreach (TriggerscripterSocket s in n.sockets.Values)
 					{
-						//for each socket in this node's sockets
-						foreach (TriggerscripterSocket s in n.sockets.Values)
+						//if it is an input
+						if (s is TriggerscripterSocket_Input)
 						{
-							//if it is an input
-							if (s is TriggerscripterSocket_Input)
+							//foreach output connected to this input
+							foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).ConnectedSockets.ToArray())
 							{
-								//foreach output connected to this input
-								foreach (TriggerscripterSocket cs in ((TriggerscripterSocket_Input)s).ConnectedSockets.ToArray())
-								{
-									//disconnect this input from the output
-									((TriggerscripterSocket_Output)cs).Disconnect((TriggerscripterSocket_Input)s);
-								}
+								//disconnect this input from the output
+								((TriggerscripterSocket_Output)cs).Disconnect((TriggerscripterSocket_Input)s);
 							}
-
-							//if it is an output
-							else
-							{
-								//foreach input connected to this output
-								foreach (TriggerscripterSocket cs in s.ConnectedSockets.ToArray())
-								{
-									((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)cs);
-								}
-							}
-
-							nodes.Remove(n);
 						}
+
+						//if it is an output
+						else
+						{
+							//foreach input connected to this output
+							foreach (TriggerscripterSocket cs in s.ConnectedSockets.ToArray())
+							{
+								((TriggerscripterSocket_Output)s).Disconnect((TriggerscripterSocket_Input)cs);
+							}
+						}
+						DeselectNode(n);
+						nodes.Remove(n);
+						TrySetEdited();
 					}
-				}
 			}
+		
 			#endregion
 
 
 			#region copy/paste
-			if (GetKeyIsDown(Keys.ControlKey) && GetKeyIsDown(Keys.C))
+			if (GetKeyIsDown(Keys.ControlKey) && GetKeyIsDown(Keys.C) && !GetKeyWasDown(Keys.C))
 			{
-				if (!copyPastePressed)
-				{
-					CopyGraph();
-				}
-				copyPastePressed = true;
+				CopyGraph();
 			}
-			if (GetKeyIsDown(Keys.ControlKey) && GetKeyIsDown(Keys.V))
+			if (GetKeyIsDown(Keys.ControlKey) && GetKeyIsDown(Keys.V) && !GetKeyWasDown(Keys.V))
 			{
+				PasteGraph();
 				TrySetEdited();
-				if (!copyPastePressed)
-				{
-					PasteGraph();
-				}
-				copyPastePressed = true;
-			}
-			else
-			{
-				copyPastePressed = false;
 			}
 			#endregion
 
 
 			#region mouse
-			Point min = PointToScreen(new Point(0, 0));
-			Point max = PointToScreen(new Point(Width, Height));
-			//translated mouse pos
-			Point[] p = new Point[] { new Point(m.X, m.Y) };
-            viewMatrix.Inverted().TransformPoints(p);
-
-			//left mouse
-			if (!m.leftDownLast)
-			{
-				if (m.leftDown)
-				{
-					OnClickL(p[0].X, p[0].Y);
-				}
-			}
-			if (m.leftDown)
-			{
-				OnMouseHeldL(p[0].X, p[0].Y);
-			}
-			if (m.leftDownLast && !m.leftDown)
-			{
-				OnMouseReleasedL(p[0].X, p[0].Y);
-			}
-
-			//right mouse
-			if (!m.rightDownLast)
-			{
-				if (m.rightDown)
-				{
-					OnClickR(p[0].X, p[0].Y);
-				}
-			}
-
 			//scroll wheel (pan)
 			if (m.middleDown)
 			{
-				currentViewX += (-m.deltaX) * 1 / currentViewZoom;
-				currentViewY += (-m.deltaY) * 1 / currentViewZoom;
+				currentViewX += (m.deltaX) * 1 / currentViewZoom;
+				currentViewY += (m.deltaY) * 1 / currentViewZoom;
 			}
 			//scroll wheel (zoom)
 			currentViewZoom += m.deltaScroll / 5500f;
@@ -1324,20 +1174,24 @@ namespace hwfoundry.scenario
 
 		#region draw
 		private Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
-		public int majorGridSpace = 200;
-		/// <summary>
-		/// Callback function for the editor itself that occurs whenever Invalidate() is called. Paints to the editor's window directly.
-		/// </summary>
-		protected override void OnDraw()
+		public int majorGridSpace = 350;
+        public bool DrawDetail() { return currentViewZoom > .075; }
+        private void OnDraw(object o, EventArgs e)
         {
-			//cause the page to redraw.
-            Invalidate();
+			//cause the page to redraw using winforms events.
+			Invalidate();
 		}
-		private void DrawControl(object o, PaintEventArgs e)
-        {
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+
+            int mx = GetTransformedMousePos().X;
+            int my = GetTransformedMousePos().Y;
+
             Graphics g = e.Graphics;
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 			g.Transform = viewMatrix;
 
 			//TODO: replace with config (all colors)
@@ -1356,20 +1210,18 @@ namespace hwfoundry.scenario
 			float invBottom = invertedMatrixPoints[1].Y;
 			
 			//draw grid lines from the starting lines' offset.
-			if (DrawDetail())
+			//top-most and left-most grid lines.
+			int xOffs = (int)Math.Round(invLeft / majorGridSpace) * majorGridSpace;
+			int yOffs = (int)Math.Round(invTop / majorGridSpace) * majorGridSpace;
+			for (int x = xOffs; x < invRight; x += majorGridSpace)
 			{
-				//top-most and left-most grid lines.
-				int xOffs = (int)Math.Round(invLeft / majorGridSpace) * majorGridSpace;
-				int yOffs = (int)Math.Round(invTop / majorGridSpace) * majorGridSpace;
-				for (int x = xOffs; x < invRight; x += majorGridSpace)
-				{
-					g.DrawLine(gridPen, x, invTop, x, invBottom);
-				}
-				for (int y = yOffs; y < invBottom; y += majorGridSpace)
-				{
-					g.DrawLine(gridPen, invLeft, y, invRight, y);
-				}
+				g.DrawLine(gridPen, x, invTop, x, invBottom);
 			}
+			for (int y = yOffs; y < invBottom; y += majorGridSpace)
+			{
+				g.DrawLine(gridPen, invLeft, y, invRight, y);
+			}
+			
 
 			//draw connections
 			foreach (TriggerscripterNode n in nodes)
@@ -1389,15 +1241,15 @@ namespace hwfoundry.scenario
 			{
 				//just a line. TODO: make this more uniform with the actual socket connections. Perhaps make the socket itself draw this?
 				e.Graphics.DrawLine(new Pen(selectedSocket.Color, 5.0f), 
-					new Point
+					new PointF
 						(
 						selectedSocket.OwnerNode.PosX + selectedSocket.BoundingRect.X + selectedSocket.BoundingRect.Width / 2,
 						selectedSocket.OwnerNode.PosY + selectedSocket.BoundingRect.Y + selectedSocket.BoundingRect.Height / 2
 						),
-					new Point
+					new PointF
 						(
-						tempConnectionX, 
-						tempConnectionY
+						mx, 
+						my
 						)
 					);
 			}
@@ -1415,13 +1267,13 @@ namespace hwfoundry.scenario
 
 			//draw marquee (current mouse dragged selection)
 			if (mouseState == CurrentMouseState.DraggingMarquee)
-			{
+            {
 				//just a rectangle.
 				e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, 10, 10, 10)),
-					Math.Min(marqueeX1,  marqueeX2),
-					Math.Min(marqueeY1,  marqueeY2),
-					Math.Abs(marqueeX2 - marqueeX1),
-					Math.Abs(marqueeY2 - marqueeY1));
+					Math.Min(markedMousePos.X, mx),
+					Math.Min(markedMousePos.Y, my),
+					Math.Abs(mx - markedMousePos.X),
+					Math.Abs(my - markedMousePos.Y));
 			}
 		}
 		#endregion
@@ -1439,9 +1291,9 @@ namespace hwfoundry.scenario
 		/// Gets the serialized representation of the current graph.
 		/// </summary>
 		/// <returns>The serialized object.</returns>
-		public SerializedTriggerscripter GetSerializedGraph()
+		public SerializedTriggerscript GetSerializedGraph()
 		{
-			SerializedTriggerscripter sts = new SerializedTriggerscripter();
+			SerializedTriggerscript sts = new SerializedTriggerscript();
 			foreach (TriggerscripterNode n in nodes)
 			{
 				SerializedNode sn = new SerializedNode();
@@ -1519,7 +1371,7 @@ namespace hwfoundry.scenario
 		/// Populates the editor with data from a serialized graph.
 		/// </summary>
 		/// <returns>True if the data was fully loaded without error.</returns>
-		public bool LoadFromSerializedGraph(SerializedTriggerscripter sts)
+		public bool LoadFromSerializedGraph(SerializedTriggerscript sts)
 		{
 			nodes.Clear();
 			Dictionary<int, TriggerscripterNode> triggers = new Dictionary<int, TriggerscripterNode>();
@@ -1621,18 +1473,59 @@ namespace hwfoundry.scenario
 			}
 			return true;
 		}
-		protected override bool OnLoadFile(string file)
+		public bool LoadFromSerializedGraph(TriggerscriptClass ts)
 		{
-			string text = File.ReadAllText(file);
-			SerializedTriggerscripter sts = JsonConvert.DeserializeObject<SerializedTriggerscripter>(text);
-			return LoadFromSerializedGraph(sts);
-		}
-		protected override bool OnSaveFile(string file)
-		{
-			string text = JsonConvert.SerializeObject(GetSerializedGraph());
-			File.WriteAllText(file, text);
+            Dictionary<int, TriggerscripterNode_Variable> variables = new Dictionary<int, TriggerscripterNode_Variable>();
+			foreach(var v in ts.TriggerVars)
+			{
+				var editorData = v.EditorNodeData;
+				float x = 0, y = 0;
+				if (editorData != null)
+				{
+					x = editorData.X;
+					y = editorData.Y;
+                }
+				TriggerscripterNode_Variable var = new TriggerscripterNode_Variable(this, v, x, y, v.ID);
+                nodes.Add(var);
+				variables.Add(v.ID, var);
+            }
+
+			foreach(var t in ts.Triggers)
+			{
+                var editorData = t.EditorNodeData;
+				float x = t.X * 10;
+				float y = t.Y * 10;
+                if (editorData != null)
+                {
+                    x = editorData.X;
+                    y = editorData.Y;
+                }
+				TriggerscripterNode_Trigger trigger = new TriggerscripterNode_Trigger(this, t.Name, x, y, t.ID);
+				nodes.Add(trigger);
+
+				int ytacker = 0;
+                foreach (var e in t.TriggerEffectsOnTrue)
+				{
+					TriggerscripterNode_Effect effect = new TriggerscripterNode_Effect(this, e, x, y, t.ID);
+                    nodes.Add(effect);
+
+					if (e.Inputs != null)
+					{
+						foreach (var inp in e.Inputs)
+						{
+							if (variables.ContainsKey(inp.Value))
+							{
+								variables[inp.Value].PosX = x;
+								variables[inp.Value].PosY = y + ytacker;
+								ytacker += variables[inp.Value].Height;
+							}
+						}
+					}
+                }
+            }
+
 			return true;
-		}
+        }
 
 		private Point nodeAddLocation = new Point();
 		/// <summary>
@@ -1645,7 +1538,7 @@ namespace hwfoundry.scenario
             viewMatrix.Inverted().TransformPoints(nodeAddLocationArr);
             nodeAddLocation = nodeAddLocationArr[0];
         }
-		private SerializedTriggerscripter copyBuffer = new SerializedTriggerscripter();
+		private SerializedTriggerscript copyBuffer = new SerializedTriggerscript();
 		public void CopyGraph()
 		{
 			copyBuffer = GetSerializedGraph();
@@ -1769,7 +1662,6 @@ namespace hwfoundry.scenario
 					}
 				}
 				catch { }
-				mouseState = CurrentMouseState.NodesSelected;
 			}
 		}
 
@@ -1804,25 +1696,25 @@ namespace hwfoundry.scenario
         }
 
         //actual creation functions
-        public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, int x, int y)
+        public TriggerscripterNode CreateTriggerNode(SerializedTrigger t, int id, float x, float y)
         {
             TriggerscripterNode_Trigger n = new TriggerscripterNode_Trigger(this, t, x, y, id);
             nodes.Add(n);
             return n;
         }
-        public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, int x, int y)
+        public TriggerscripterNode CreateVarNode(SerializedVariable v, int id, float x, float y)
         {
             TriggerscripterNode_Variable n = new TriggerscripterNode_Variable(this, v, x, y, id);
             nodes.Add(n);
             return n;
         }
-        public TriggerscripterNode CreateEffectNode(SerializedEffect e, int id, int x, int y)
+        public TriggerscripterNode CreateEffectNode(SerializedEffect e, int id, float x, float y)
         {
 			TriggerscripterNode_Effect n = new TriggerscripterNode_Effect(this, e, x, y, id);
             nodes.Add(n);
             return n;
         }
-        public TriggerscripterNode CreateConditionNode(SerializedCondition c, int id, int x, int y)
+        public TriggerscripterNode CreateConditionNode(SerializedCondition c, int id, float x, float y)
         {
             TriggerscripterNode_Condition n = new TriggerscripterNode_Condition(this, c, x, y, id);
             nodes.Add(n);

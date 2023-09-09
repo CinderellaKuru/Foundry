@@ -1,0 +1,256 @@
+<EraArchive>
+  <Files>
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E92264F1D6EBAA92" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.scn" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8ABA81F78A9E1E5E" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.sc2" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E0123B4E9DD34EB4" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.sc3" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0E509DB2B9EF2209" name="pfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3D84390B6D7B64D6" name="visfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AE310797BDB7068E" name="art\campaign\scn05\civbusdestroyed_01\civbusdestroyed_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="72CF73991BECBC62" name="art\campaign\scn05\civbusdestroyed_02\civbusdestroyed_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6BF73EAF196473EE" name="art\campaign\scn05\civbusdestroyed_03\civbusdestroyed_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5B4AE026692B98B8" name="art\campaign\scn05\civcardestroyed_01\civcardestroyed_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="ABF5BD4F90D00B72" name="art\campaign\scn05\civcardestroyed_02\civcardestroyed_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8CA8B064F0B8A187" name="art\campaign\scn05\civcardestroyed_03\civcardestroyed_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5EF32AC5B92A3C66" name="art\campaign\scn05\signdeadend_01\signdeadend_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8C1D03E6B965A3E5" name="art\campaign\scn05\signnoenter_01\signnoenter_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DFF6970F8D29C3DC" name="art\campaign\scn05\signright_01\signright_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="98376D4BA00CD6C9" name="art\campaign\scn05\signstop_01\signstop_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="02C31AE01EFB7DC1" name="art\campaign\scn05\signyeild_01\signyeild_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1B16892967E10E38" name="art\campaign\scn06\damagedecal_04\damagedecal_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FA0CB5263FCE1966" name="art\campaign\scn06\onibuildingd_01\onibuildingd_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1844489DBD523CC4" name="art\campaign\scn06\onibuildingd_02\onibuildingd_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4DC93A79169AA02E" name="art\campaign\scn06\oniobtowerd_01\oniobtowerd_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C4D04E15B6648653" name="art\campaign\scn06\onirubble_01\onirubble_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="013D98D201B24259" name="art\campaign\scn06\onirubble_02\onirubble_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="010639CDABF98303" name="art\campaign\scn06\onirubble_05\onirubble_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5756617ED2EE4788" name="art\campaign\scn06\powertowerd_01\powertowerd_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="06F43B43DEE50E58" name="art\campaign\scn06\powertowerd_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="276FA4E46B7F2564" name="art\campaign\scn06\powertowerd_01\cables.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5310AD75396BFDEA" name="art\environment\shieldinterior\waterfallfx_01\ripple_01.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B20633E2F6B6671D" name="art\effects\environment\wasteland\bubble_foam.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DF48FF5D06A1E513" name="art\environment\arcadia\cloveronirubble_02\cloveronirubble_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="06C434056A05A889" name="art\environment\arcadia\cloverriver_01\cloverriver_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="81D38256A0D51AFA" name="art\environment\arcadia\cloverrock01large_01\cloverrock01large_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="629F6E3E43EA21D3" name="art\environment\arcadia\cloverrock01large_02\cloverrock01large_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C83EBBC046CE0E34" name="art\environment\arcadia\cloverrock01large_03\cloverrock01large_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0C3D6EEFED8CE4DB" name="art\environment\arcadia\cloverrock01large_04\cloverrock01large_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="57F05A928B44F0EF" name="art\environment\arcadia\cloverrock01medium_01\cloverrock01medium_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="23BD998BCE574198" name="art\environment\arcadia\cloverrock01medium_02\cloverrock01medium_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AC0B650BFE543D40" name="art\environment\arcadia\cloverrock01medium_03\cloverrock01medium_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7361CF4777393D77" name="art\environment\arcadia\cloverrock01small_01\cloverrock01small_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1A7928F63B2A2D88" name="art\environment\arcadia\cloverrock01small_02\cloverrock01small_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="149689F124564927" name="art\environment\arcadia\cloverwaterfall_02\cloverwaterfall_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="14D1D6460C992F06" name="art\environment\arcadia\cloverwaterfall_03\cloverwaterfall_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E2166FA7A0778144" name="art\environment\arcadia\industriallight_01\industriallight_damaged_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="316033C1AB8271EE" name="art\environment\arcadia\industriallight_01\industriallight_01.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A1EEC8E7B162882B" name="art\environment\arcadia\ruins_04\ruins_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BEDC2BE374C97D04" name="art\environment\arcadia\ruins_05\ruins_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="24D5AF54D5C9B9B2" name="art\environment\arcadia\ruins_06\ruins_06.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2F587DB6787C0F20" name="art\environment\shieldinterior\grasspatch_01\grasspatch_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D069AFBC3B23D07D" name="art\environment\shieldinterior\plantcactus_01\plantcactus_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A6B8719142F5D6B5" name="art\environment\shieldinterior\plantcactus_02\plantcactus_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8104A6B1DF664F44" name="art\environment\shieldinterior\plantcactus_03\plantcactus_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="837178FFA046BE79" name="art\environment\shieldinterior\plantcactus_04\plantcactus_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0718F4D8225D139F" name="art\environment\shieldinterior\plantcactus_05\plantcactus_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="73EB27697C9B37FB" name="art\environment\shieldinterior\plantchoiweed_01\plantchoiweed_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E2B712CB6E3A3BC1" name="art\environment\shieldinterior\plantchoiweed_02\plantchoiweed_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="75002546E1AEC216" name="art\environment\shieldinterior\plantdeadbrush_01\plantdeadbrush_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B91F1AA3E6840FC4" name="art\environment\shieldinterior\plantdeadbrush_02\plantdeadbrush_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7F3EA0CDC724C370" name="art\environment\tree\banana_01\banana_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6E3860C59E51E22B" name="art\environment\tree\banana_02\banana_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="21AE013F3C3DD2CD" name="art\environment\tree\elephantear_01\elephantear_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FC3985608239AAE0" name="art\environment\tree\mushroom_01\mushroom_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="15EF9B17BE7ADE4E" name="art\environment\tree\palm_01\palm_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F761762A3292D259" name="art\environment\tree\palm_02\palm_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4CA17226616872E8" name="art\environment\tree\palm_03\palm_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DD6B8A7808F2994F" name="art\environment\tree\palm_04\palm_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="96F3E02B439E6AD6" name="art\environment\tree\palm_05\palm_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="974CDF0E67A05D20" name="art\environment\tree\palm_06\palm_06.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B459B946863CEB5B" name="art\environment\tree\palmbush_01\palmbush_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="77940F601E1E02C3" name="art\environment\tree\palmbush_02\palmbush_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A5CCDB58CB453391" name="art\environment\tree\palmbush_03\palmbush_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DA5F6E83AF1941E2" name="art\environment\tree\palmbush_04\palmbush_04.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F9A9981F4DDD3650" name="art\environment\tree\palmbush_05\palmbush_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="74E871B57E96BB80" name="art\environment\tree\palmbush_06\palmbush_06.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="788817593A066037" name="art\environment\tree\palmdead_01\palmdead_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8C460EAD4DE25715" name="art\environment\tree\palmdead_02\palmdead_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="06ABD01FD91656C9" name="art\environment\tree\palmdead_03\palmdead_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2147B85EAACF9D5B" name="art\hook\bonus\reactor_01\reactor_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="24E686C861E268A9" name="art\hook\bonus\reactor_01\uncaptured_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="69D1BC7458F63561" name="art\hook\bonus\reactor_01\lock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F8C544A5D9B562EA" name="art\hook\bonus\reactor_01\unlock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9E7F185711217E1E" name="art\hook\bonus\reactor_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="42AD52925898A283" name="tfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B1DA45386E2D5EF8" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.xsd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="267AB811DA1A863C" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.xth" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C799D675394F40BF" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.xtd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DEE41865B75BDF2F" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.xtt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6A517B6EEF022069" name="art\foliage\arc_bush01.xml" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A0956E09A348982B" name="art\foliage\arc_bush01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="16E6978A3E751187" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.lrp" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5B8B89BC2B01D2C1" name="art\foliage\arc_bush01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="95AFE1BE39315424" name="art\foliage\swi_bush01.xml" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2B096791AE0103A4" name="art\foliage\swi_bush01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B19BF0445D769AF0" name="art\foliage\swi_bush01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C323D0CC2DC03C35" name="art\foliage\scn06_jungleplant_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="240A6677853A6E22" name="art\foliage\scn06_jungleplant_01.xml" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B3EE7A280528B42A" name="art\foliage\scn06_jungleplant_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8E4D72000347E58E" name="art\terrain\arcadia\pavement_15_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A8D45A265973389D" name="art\terrain\arcadia\arcadia_brick_surface_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="207D3E7F539E768F" name="art\terrain\arcadia\arcadia_brick_surface_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A9FD593A8C408CB9" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.gls" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9276A9AE2CC5B43C" name="art\terrain\arcadia\rubble_06_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F74D3644E0BEF9C9" name="scenario\skirmish\design\pirth_outskirts\pirth_outskirts.fls" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="29993C7A0969E075" name="art\terrain\arcadia\rubble_05_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="52D45D9601206F79" name="art\terrain\arcadia\pavement_15_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="99DFBE63CB11109F" name="art\terrain\arcadia\arcadia_brick_surface_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4668B6DBBFA27F8C" name="art\terrain\arcadia\citygrass_02_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FB71B6CE2F7AA44B" name="art\terrain\arcadia\arcadia_brick_surface_02_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4F6C338CAE13FD87" name="art\terrain\arcadia\rubble_06_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="83EB3DB2C1EB1F8C" name="art\terrain\arcadia\rock_05_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9C016EFAF44F4043" name="art\terrain\arcadia\grass_05_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B930C2CD4B4BF5C9" name="art\terrain\arcadia\grass_07_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7B8199C46EECD2BD" name="art\terrain\arcadia\grass_06_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="04DA258EE3ACE166" name="art\terrain\arcadia\grass_03_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="023B96EC34FEBEF3" name="art\terrain\arcadia\rubble_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="62C5077B4D88EC55" name="art\terrain\arcadia\pavement_15_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7446B28A0E08F4FA" name="art\terrain\arcadia\arcadia_brick_surface_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8201DFC14FB128DC" name="art\terrain\arcadia\citygrass_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B78252EB00FCEE97" name="art\terrain\arcadia\arcadia_brick_surface_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F3DBEB18B1337379" name="art\terrain\arcadia\rubble_06_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0FD5D798FA79DE0B" name="art\terrain\arcadia\rock_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="150472F2097C6BCB" name="art\terrain\arcadia\grass_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B864C3F5D6706BAA" name="art\terrain\arcadia\grass_07_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6ACEBBEA7C508676" name="art\terrain\arcadia\grass_06_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="911E62DA15EDCA19" name="art\terrain\arcadia\grass_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="82DA145C7FFEF728" name="art\ui\flash\minimaps\pirth_outskirts.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E279F814C0B96BE1" name="art\environment\arcadia\powertower_01\powertower01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7DD335EB5A2CBC66" name="art\hook\bonus\reactor_01\reactorplatform_01_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BAC696C3924F9DF6" name="art\environment\tree\palm_04\palm_04_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0791F671DCCD5D99" name="art\environment\shieldinterior\mazelake_01\mazesky_en.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DA8B7A661F662ECF" name="art\environment\tree\palm_04\palm_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6BB46B286A9DAB1F" name="art\hook\bonus\reactor_01\reactor_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9902D87F7AB6AA37" name="art\environment\tree\palmdead_01\palmdead_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7E5D30C0626AF94C" name="art\environment\shieldinterior\lake_01\lake_01_nm.xpr" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D3123AD662351201" name="art\environment\tree\palmbush_05\palmbush_05_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="63EA75C9BB53D237" name="art\campaign\scn05\civcardestroyed_03\civcardestroyed_03_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C6778A17FB497B52" name="art\campaign\scn05\civbusdestroyed_01\civbusdestroyed_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="884D73F5892E546A" name="art\environment\arcadia\powertower_01\powertower01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B912E548FC3A6F5C" name="art\environment\tree\palmdead_01\palmdead_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1A10B54C6428EF6F" name="art\environment\shieldinterior\lake_03\waterfall2_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="36EF358BBF81E723" name="art\environment\shieldinterior\rock01large_01\rock01large_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="430328AD58C65432" name="art\campaign\scn05\civbusdestroyed_01\civbusdestroyed_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7332F71FC7DB00B5" name="art\environment\tree\banana_02\banana2_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FDF7F5526E0DCA44" name="art\environment\arcadia\fountain_01\fountain01_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F2A661906E482F23" name="art\environment\arcadia\ruins_01\ruins_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7FA6D8C61D526313" name="art\environment\arcadia\onibuilding_01\onibuilding_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="49DE782117C5786F" name="art\environment\tree\palmbush_05\palmbush_05_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5C9B72A8BE7F4F18" name="art\environment\arcadia\cloverwaterfall_02\alpha2_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C5E0241660CFF6C1" name="art\terrain\arcadia\rubble_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5AAC18BAD25AEBC5" name="art\environment\arcadia\onibuilding_01\onibuilding_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E56031B6DF4B234A" name="art\campaign\scn05\civbusdestroyed_02\decal01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="31F874208152EA6B" name="art\environment\shieldinterior\plantcactus_01\plantcactus_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0DBF5D6A4303337D" name="art\hook\bonus\reactor_01\reactorplatform_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4CA3327F834F8FF5" name="art\environment\shieldinterior\grasspatch_01\grasspatch01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="46B8FA315FFEB4EB" name="art\environment\arcadia\ruins_03\ruins_03_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A44F3C81B9FFE2E1" name="art\environment\shieldinterior\treechoinana_01\genericopacity_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B67E70F6F3D3C992" name="art\environment\shieldinterior\plantcactus_01\plantcactus_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C1E2962E449ECFB0" name="art\environment\arcadia\cloverriver_01\alpha_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C298745D493F88C5" name="art\environment\arcadia\powertower_01\powertower01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2A63472AA0A385A8" name="art\environment\shieldinterior\treechoinana_01\choiplants_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="116FF8BF39ACD0BF" name="art\environment\tree\palm_01\palm02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7AF4B4632ADF2C09" name="art\environment\arcadia\industriallight_02\industriallight_02_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C893A99029F37451" name="art\environment\arcadia\industrialsiren_01\industrialsiren_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="743A29518B4768D0" name="art\environment\arcadia\fountain_01\fountaincolor_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="674D6430571BFA7F" name="art\campaign\scn05\civbusdestroyed_01\ab_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="43692D76B5176DBC" name="art\hook\bonus\reactor_01\reactor_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="711B9A6E1796585B" name="art\environment\shieldinterior\plantcactus_01\plantcactus_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="84757299D8C2EE89" name="art\environment\tree\palm_04\palm_04_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3F9B24449BEB1357" name="art\unsc\vehicle\damage_01\decalsheet_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7C50C75CA8051E7D" name="art\campaign\scn06\oniobtower_01\oniobtower_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="996A1CECD0710C09" name="art\environment\shieldinterior\lake_03\waterfall_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0F7A982D8D5B84F4" name="art\campaign\scn06\oniobtower_01\oniobtower_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D1E1BDB90B43D8B1" name="art\campaign\scn06\oniobtower_01\oniobtower_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9239D96A4CB31BC5" name="art\campaign\scn05\civcardestroyed_02\civcardestroyed_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8CBF1F8EE0B7BBB9" name="art\hook\bonus\reactor_01\reactor_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="05F8A1A599CADB4C" name="art\environment\tree\palmbush_05\palmbush_05_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A52864BCBEF6BA13" name="art\environment\shieldinterior\rock01large_01\rock01large_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="91A1A00A0D32337A" name="art\campaign\scn06\onicontroltower_01\onitext_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2DBCB290EE97013C" name="art\environment\arcadia\onibuilding_01\onibuilding_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4520657C8FBC25F7" name="art\campaign\scn05\signs_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BC3E972358DE8C86" name="art\campaign\scn05\civbusdestroyed_02\decal01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5F54F40C2E5CFAEB" name="art\unsc\vehicle\damage_01\decalsheet_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="49798AB021DB7959" name="art\campaign\scn05\civbusdestroyed_01\civbusdestroyed_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FFDFFEB7F0AE156E" name="art\environment\tree\palm_01\palm02_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DC67DE4AD54F40D9" name="art\campaign\scn05\civcardestroyed_03\civcardestroyed_03_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="32634ADCECAEEDCB" name="art\campaign\scn05\civcardestroyed_01\civcardestroyed_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="925933FE3F39CFAD" name="art\campaign\scn05\civcardestroyed_01\civcardestroyed_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="77A8114ECB86065C" name="art\hook\bonus\reactor_01\reactorplatform_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0DB1442CB5257D13" name="art\terrain\arcadia\rubble_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BD9142CEE26ABD77" name="art\environment\arcadia\ruins_03\ruins_03_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BC23F054FF06BD18" name="art\environment\arcadia\onibuilding_02\onibuilding_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E47CC916C8266A69" name="art\environment\tree\banana_01\banana_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A807A54DB290D6F1" name="art\environment\arcadia\ruins_03\ruins_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F003151F7D74042F" name="art\hook\bonus\reactor_01\reactorplatform_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CDA9E46AA2E72B7D" name="art\environment\arcadia\ruins_01\ruins_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7DF362EB60E49719" name="art\environment\shieldinterior\treechoinana_01\choiplants_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1AF1CAE1B4C36763" name="art\terrain\harvest\concrete_snow_burnt_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="15870A7B122BDF07" name="art\campaign\scn06\onicontroltower_01\onitext_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0CF1ED6904E0EE32" name="art\campaign\scn05\civcardestroyed_01\civcardestroyed_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C2A8F1F942557D3D" name="art\environment\arcadia\ruins_03\ruins_03_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E810967A2F423339" name="art\environment\shieldexterior\deadbrush_01\deadbrush_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9F1AD99838AA8E15" name="art\environment\arcadia\ruins_01\ruins_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2755D057037B0DAB" name="art\terrain\harvest\concrete_snow_burnt_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="67FDD9136BAB3BA9" name="art\environment\tree\palmbush_05\palmbush_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CF38D85D53FB1B58" name="art\environment\tree\palm_01\palm02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1585FB611A6E1F98" name="art\environment\arcadia\ruins_02\ruins_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A10E28357C707DF4" name="art\hook\bonus\reactor_01\reactorplatform_01_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="544897EA43EF1B76" name="art\environment\shieldinterior\waterfall_02\alphacap_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3AF569545D6BEDC9" name="art\environment\tree\palm_04\palm_04_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="65249D9EAB49791A" name="art\environment\tree\elephantear_01\elephantear_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="79E623CA65890BBF" name="art\terrain\arcadia\rubble_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A4A3E94DBBFC1B77" name="art\environment\arcadia\powertower_01\ptdecals_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A81C70A77F6D4167" name="art\unsc\vehicle\damage_01\decalsheet_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3DC1BED95044D8A0" name="art\environment\arcadia\powertower_01\ptdecals_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F192408FFAD22CD5" name="art\environment\tree\elephantear_01\elephantear_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="34AE54E84559D2CC" name="art\environment\shieldinterior\lake_03\waterfall_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4E4A62E17DB13976" name="art\environment\tree\banana_01\banana_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E415C311BF689B56" name="art\environment\arcadia\onibuilding_02\onibuilding_02_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AAC9DA005B40AF79" name="art\campaign\scn05\civbusdestroyed_01\civbusdestroyed_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6AA1789BF61A007D" name="art\environment\tree\palm_01\palm02_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AF992AD5DDE2CCA3" name="art\environment\arcadia\ruins_02\ruins_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="36FA2B86986ED059" name="art\campaign\scn05\civcardestroyed_02\civcardestroyed_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="46F9E3FD134BA49F" name="art\hook\bonus\reactor_01\reactor_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="52FA647D9FE600E9" name="art\environment\arcadia\ruins_02\ruins_02_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EB8BE835CEADEE2A" name="art\environment\arcadia\industrialsiren_01\industrialsiren_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="19CEBEAD9B17610F" name="art\environment\arcadia\powertower_01\powertower01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="020A4C77FB87E722" name="art\hook\bonus\reactor_01\reactor_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BBBD38BF6F51FCC1" name="art\campaign\scn05\civcardestroyed_03\civcardestroyed_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3B2BC119F471AD02" name="art\environment\tree\mushroom_01\mushroom_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5F86DCD5DE0F596B" name="art\environment\arcadia\onibuilding_02\onibuilding_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="280B1472D451A01D" name="art\environment\shieldexterior\deadbrush_01\deadbrush_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2A74FEE4BDCB0522" name="art\hook\bonus\reactor_01\reactor_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DF9073D8564E9FEF" name="art\environment\arcadia\industrialsiren_01\industrialsiren_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="26DE9FB4CAD577BC" name="art\environment\shieldinterior\treechoinana_01\choiplants_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D84549052046593C" name="art\campaign\scn05\civcardestroyed_02\civcardestroyed_02_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DCA3B1F96C3F1ABF" name="art\hook\bonus\reactor_01\reactorplatform_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FE68AED00A83D089" name="art\effects\energy\noise.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="02B13240EFFBC663" name="art\effects\fire\fire_01.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F7192EA3FDC90D95" name="art\effects\flares\flare_streak_01_fx.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FA0917985D59BEFD" name="art\terrain\arcadia\citygrass_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DC27DAC5CC6F3451" name="art\terrain\arcadia\crater_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6D1C610E391C6370" name="art\terrain\arcadia\crater_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D15687FA98EDEF61" name="art\terrain\arcadia\crater_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="12F13969CFF03B9E" name="art\terrain\arcadia\grass_03_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A8F260DAC7CC02B5" name="art\terrain\arcadia\grass_05_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7F5583F81F8B5EA2" name="art\terrain\arcadia\grass_06_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7F5583F81F8B5EA2" name="art\terrain\arcadia\grass_07_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B49B177F70F3C569" name="art\terrain\arcadia\rubble_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E2887DA5228250A6" name="art\terrain\arcadia\rubble_07_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0180E99E4C5DF5E7" name="art\terrain\harvest\concrete_snow_burnt_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DE0B0C0C3E4656BE" name="art\terrain\harvest\glassing_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="40C6F54A80E9731E" name="art\terrain\harvest\glassing_04_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CB60777A4E76EF49" name="art\terrain\harvest\glassing_04_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D99DFC6B949AF409" name="art\unsc\air\pelican_01\pelican_01_rm.ddx" Compression="DeflateRaw" />
+  </Files>
+</EraArchive>

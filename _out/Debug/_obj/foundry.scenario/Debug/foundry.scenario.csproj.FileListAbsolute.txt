@@ -1,0 +1,13 @@
+R:\foundry\_out\Debug\modules\foundry.scenario.deps.json
+R:\foundry\_out\Debug\modules\foundry.scenario.dll
+R:\foundry\_out\Debug\modules\foundry.scenario.pdb
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.csproj.AssemblyReference.cache
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.csproj.CopyComplete
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.dll
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\refint\foundry.scenario.dll
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.pdb
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\ref\foundry.scenario.dll
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.ScenarioQuickstartControl.resources
+R:\foundry\_out\Debug\_obj\foundry.scenario\Debug\foundry.scenario.csproj.GenerateResource.cache

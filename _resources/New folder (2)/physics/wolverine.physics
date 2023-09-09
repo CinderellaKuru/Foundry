@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<physics>
+	<blueprint>wolverine</blueprint>
+	<ThrownByProjectiles>true</ThrownByProjectiles>
+	<Vehicle>
+		<info>
+			<chassisInertia yaw="3" pitch="3" roll="2.4000001" />
+			<suspension springLength="1.29999995" wheelRadius="1" springStrength="50" dampingCompression="2" dampingRelaxation="2" normalClippingAngle="0.100000001" />
+			<hardpoints>
+				<hardpoint>-2.79999995,-0.800000012,4</hardpoint>
+				<hardpoint>2.79999995,-0.800000012,4</hardpoint>
+				<hardpoint>-2.79999995,-0.800000012,-4</hardpoint>
+				<hardpoint>2.79999995,-0.800000012,-4</hardpoint>&gt;&gt;&gt;&gt;</hardpoints>
+		</info>wolverine</Vehicle>
+	<CenterOffset>0,2.27999997,0</CenterOffset>
+	<TerrainEffects>effects\terraineffects\wolverine_physics</TerrainEffects>
+</physics>

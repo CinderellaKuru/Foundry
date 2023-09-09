@@ -102,6 +102,19 @@
           }
         }
       },
+      "ini-parser/2.5.2": {
+        "type": "package",
+        "compile": {
+          "lib/net20/INIFileParser.dll": {
+            "related": ".dll.mdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/INIFileParser.dll": {
+            "related": ".dll.mdb;.xml"
+          }
+        }
+      },
       "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
         "type": "package",
         "compile": {
@@ -209,6 +222,19 @@
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "ObjectListView.Official/2.9.2-alpha2": {
+        "type": "package",
+        "compile": {
+          "lib/net20/ObjectListView.dll": {
+            "related": ".XML"
+          }
+        },
+        "runtime": {
+          "lib/net20/ObjectListView.dll": {
+            "related": ".XML"
           }
         }
       },
@@ -1783,6 +1809,91 @@
             "related": ".xml"
           }
         }
+      },
+      "KSoft/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft.T4": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.dll": {}
+        }
+      },
+      "KSoft.Compression/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.Compression.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.Compression.dll": {}
+        }
+      },
+      "KSoft.IO.TagElementStreams/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.IO.TagElementStreams.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.IO.TagElementStreams.dll": {}
+        }
+      },
+      "KSoft.Math/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.Math.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.Math.dll": {}
+        }
+      },
+      "KSoft.Phoenix/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft": "1.0.0",
+          "KSoft.Compression": "1.0.0",
+          "KSoft.IO.TagElementStreams": "1.0.0",
+          "KSoft.Math": "1.0.0",
+          "KSoft.Security": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.Phoenix.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.Phoenix.dll": {}
+        }
+      },
+      "KSoft.Security/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/KSoft.Security.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.Security.dll": {}
+        }
+      },
+      "KSoft.T4/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/KSoft.T4.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/KSoft.T4.dll": {}
+        }
       }
     }
   },
@@ -1899,6 +2010,20 @@
         "lib/netstandard2.0/HelixToolkit.SharpDX.Core.deps.json",
         "lib/netstandard2.0/HelixToolkit.SharpDX.Core.dll",
         "lib/netstandard2.0/HelixToolkit.SharpDX.Core.xml"
+      ]
+    },
+    "ini-parser/2.5.2": {
+      "sha512": "hp3gKmC/14+6eKLgv7Jd1Z7OV86lO+tNfOXr/stQbwmRhdQuXVSvrRAuAe7G5+lwhkov0XkqZ8/bn1PYWMx6eg==",
+      "type": "package",
+      "path": "ini-parser/2.5.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ini-parser.2.5.2.nupkg.sha512",
+        "ini-parser.nuspec",
+        "lib/net20/INIFileParser.dll",
+        "lib/net20/INIFileParser.dll.mdb",
+        "lib/net20/INIFileParser.xml"
       ]
     },
     "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
@@ -2062,6 +2187,19 @@
         "newtonsoft.json.13.0.3.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "packageIcon.png"
+      ]
+    },
+    "ObjectListView.Official/2.9.2-alpha2": {
+      "sha512": "9U24/g7Nyv86Br/TsuFqyW98J1R0SRN8RkCLDnSQSDGoGj5YIZatyPMTkJZSSHg1AskuleItMCgqPzNA8svDZA==",
+      "type": "package",
+      "path": "objectlistview.official/2.9.2-alpha2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/ObjectListView.XML",
+        "lib/net20/ObjectListView.dll",
+        "objectlistview.official.2.9.2-alpha2.nupkg.sha512",
+        "objectlistview.official.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -6001,6 +6139,41 @@
         "yaxlib.4.1.0.nupkg.sha512",
         "yaxlib.nuspec"
       ]
+    },
+    "KSoft/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft/KSoft.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft/KSoft.csproj"
+    },
+    "KSoft.Compression/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft.Compression/KSoft.Compression.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft.Compression/KSoft.Compression.csproj"
+    },
+    "KSoft.IO.TagElementStreams/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft.IO.TagElementStreams/KSoft.IO.TagElementStreams.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft.IO.TagElementStreams/KSoft.IO.TagElementStreams.csproj"
+    },
+    "KSoft.Math/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft.Math/KSoft.Math.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft.Math/KSoft.Math.csproj"
+    },
+    "KSoft.Phoenix/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/Games/Phoenix/KSoft.Phoenix/KSoft.Phoenix.csproj",
+      "msbuildProject": "../_extlib/Vita/Games/Phoenix/KSoft.Phoenix/KSoft.Phoenix.csproj"
+    },
+    "KSoft.Security/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft.Security/KSoft.Security.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft.Security/KSoft.Security.csproj"
+    },
+    "KSoft.T4/1.0.0": {
+      "type": "project",
+      "path": "../_extlib/Vita/KSoft/KSoft.T4/KSoft.T4.csproj",
+      "msbuildProject": "../_extlib/Vita/KSoft/KSoft.T4/KSoft.T4.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6010,8 +6183,17 @@
       "DockPanelSuite.ThemeVS2015 >= 3.1.0",
       "HelixToolkit >= 2.24.0",
       "HelixToolkit.SharpDX.Core >= 2.24.0",
+      "KSoft >= 1.0.0",
+      "KSoft.Compression >= 1.0.0",
+      "KSoft.IO.TagElementStreams >= 1.0.0",
+      "KSoft.Math >= 1.0.0",
+      "KSoft.Phoenix >= 1.0.0",
+      "KSoft.Security >= 1.0.0",
+      "KSoft.T4 >= 1.0.0",
       "Newtonsoft.Json >= 13.0.3",
-      "YAXLib >= 4.1.0"
+      "ObjectListView.Official >= 2.9.2-alpha2",
+      "YAXLib >= 4.1.0",
+      "ini-parser >= 2.5.2"
     ]
   },
   "packageFolders": {
@@ -6045,7 +6227,29 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "R:\\foundry\\_extlib\\Vita\\Games\\Phoenix\\KSoft.Phoenix\\KSoft.Phoenix.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\Games\\Phoenix\\KSoft.Phoenix\\KSoft.Phoenix.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Compression\\KSoft.Compression.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Compression\\KSoft.Compression.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.IO.TagElementStreams\\KSoft.IO.TagElementStreams.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.IO.TagElementStreams\\KSoft.IO.TagElementStreams.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Math\\KSoft.Math.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Math\\KSoft.Math.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Security\\KSoft.Security.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.Security\\KSoft.Security.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.T4\\KSoft.T4.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft.T4\\KSoft.T4.csproj"
+            },
+            "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft\\KSoft.csproj": {
+              "projectPath": "R:\\foundry\\_extlib\\Vita\\KSoft\\KSoft\\KSoft.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -6082,9 +6286,17 @@
             "target": "Package",
             "version": "[13.0.3, )"
           },
+          "ObjectListView.Official": {
+            "target": "Package",
+            "version": "[2.9.2-alpha2, )"
+          },
           "YAXLib": {
             "target": "Package",
             "version": "[4.1.0, )"
+          },
+          "ini-parser": {
+            "target": "Package",
+            "version": "[2.5.2, )"
           }
         },
         "imports": [
@@ -6117,6 +6329,26 @@
       "warningLevel": 1,
       "message": "Package 'AdamsLair.TreeViewAdv 1.7.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "AdamsLair.TreeViewAdv",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'ini-parser 2.5.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "ini-parser",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'ObjectListView.Official 2.9.2-alpha2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "ObjectListView.Official",
       "targetGraphs": [
         "net6.0-windows7.0"
       ]

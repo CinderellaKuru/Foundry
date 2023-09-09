@@ -10,115 +10,123 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 using System.IO;
-using static Foundry.FoundryInstance;
+using static foundry.FoundryInstance;
+using BrightIdeasSoftware;
 
-namespace Foundry
+namespace foundry
 {
     public class ProjectExplorer : DockContent
     {
-        private ToolStrip toolStrip;
-        private ToolStripButton buttonRefresh;
-        private NodeIcon nodeImage;
-        private NodeTextBox nodeText;
-        private TreeViewAdv treeView;
-        private TreeModel treeModel;
-
+        private TreeListView treelist;
+        private ToolStrip toolstrip;
+        private ToolStripButton toolstrip_refreshbutton;
+        private System.ComponentModel.IContainer components;
         private FoundryInstance instance;
 
         public ProjectExplorer(FoundryInstance i)
         {
             instance = i;
-            Init();
+            InitializeComponent();
+            treelist.CanExpandGetter = delegate (object o)
+            {
+                DiskEntryNode den = (DiskEntryNode)o;
+                return den.IsFolder;
+            };
+            treelist.ChildrenGetter = delegate (object o)
+            {
+                DiskEntryNode den = (DiskEntryNode)o;
+                return den.Children;
+            };
+            treelist.AllColumns.Add(new OLVColumn("Name", "Name"));
+            treelist.RebuildColumns();
         }
-        private void Init()
+        private void InitializeComponent()
         {
-            this.treeModel = new TreeModel();
-            this.nodeImage = new NodeIcon();
-            this.nodeText = new NodeTextBox();
-            this.toolStrip = new ToolStrip();
-            this.buttonRefresh = new ToolStripButton();
-            this.treeView = new TreeViewAdv();
-            this.toolStrip.SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectExplorer));
+            this.treelist = new BrightIdeasSoftware.TreeListView();
+            this.toolstrip = new System.Windows.Forms.ToolStrip();
+            this.toolstrip_refreshbutton = new System.Windows.Forms.ToolStripButton();
+            ((System.ComponentModel.ISupportInitialize)(this.treelist)).BeginInit();
+            this.toolstrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // nodeImage
+            // treeListView1
             // 
-            this.nodeImage.LeftMargin = 1;
-            this.nodeImage.ParentColumn = null;
-            this.nodeImage.DataPropertyName = "Image";
-            this.nodeImage.ScaleMode = Aga.Controls.Tree.ImageScaleMode.Clip;
+            this.treelist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treelist.Location = new System.Drawing.Point(0, 28);
+            this.treelist.Name = "treeListView1";
+            this.treelist.ShowGroups = false;
+            this.treelist.Size = new System.Drawing.Size(284, 233);
+            this.treelist.TabIndex = 0;
+            this.treelist.View = System.Windows.Forms.View.Details;
+            this.treelist.ItemActivate += new EventHandler(TreeList_Node_ItemActivate);
             // 
-            // nodeText
+            // toolStrip1
             // 
-            this.nodeText.IncrementalSearchEnabled = true;
-            this.nodeText.LeftMargin = 3;
-            this.nodeText.DataPropertyName = "Text";
-            this.nodeText.ParentColumn = null;
+            this.toolstrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolstrip_refreshbutton});
+            this.toolstrip.Location = new System.Drawing.Point(0, 0);
+            this.toolstrip.Name = "toolStrip1";
+            this.toolstrip.Size = new System.Drawing.Size(284, 25);
+            this.toolstrip.TabIndex = 1;
+            this.toolstrip.Text = "toolStrip1";
             // 
-            // toolstrip
+            // toolStripButton1
             // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.buttonRefresh});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolstrip";
-            this.toolStrip.Size = new System.Drawing.Size(284, 25);
-            this.toolStrip.TabIndex = 1;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // buttonRefresh
-            // 
-            this.buttonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonRefresh.Image = Foundry.Properties.Resources.arrow_refresh_small;
-            this.buttonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.buttonRefresh.Size = new System.Drawing.Size(23, 22);
-            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefresh_Clicked);
-            // 
-            // treeView
-            // 
-            this.treeView.BackColor = System.Drawing.SystemColors.Window;
-            this.treeView.DefaultToolTipProvider = null;
-            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.DragDropMarkColor = System.Drawing.Color.Black;
-            this.treeView.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.treeView.Location = new System.Drawing.Point(0, 25);
-            this.treeView.Model = treeModel;
-            this.treeView.Name = "treeView";
-            this.treeView.NodeControls.Add(this.nodeImage);
-            this.treeView.NodeControls.Add(this.nodeText);
-            this.treeView.SelectedNode = null;
-            this.treeView.Size = new System.Drawing.Size(284, 236);
-            this.treeView.TabIndex = 2;
-            this.treeView.Text = "treeview";
-            this.treeView.NodeMouseClick += new EventHandler<TreeNodeAdvMouseEventArgs>(TreeViewNode_Clicked);
-            this.treeView.NodeMouseDoubleClick += new EventHandler<TreeNodeAdvMouseEventArgs>(TreeViewNode_DoubleClicked);
+            this.toolstrip_refreshbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolstrip_refreshbutton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolstrip_refreshbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolstrip_refreshbutton.Name = "toolStripButton1";
+            this.toolstrip_refreshbutton.Size = new System.Drawing.Size(23, 22);
+            this.toolstrip_refreshbutton.Text = "toolStripButton1";
+            this.toolstrip_refreshbutton.Click += new System.EventHandler(this.ButtonRefresh_Clicked);
             // 
             // ProjectExplorer
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.treeView);
-            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.toolstrip);
+            this.Controls.Add(this.treelist);
             this.Name = "ProjectExplorer";
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.treelist)).EndInit();
+            this.toolstrip.ResumeLayout(false);
+            this.toolstrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// nodes
-		class ExplorerNode : Node
-		{
-			public ExplorerNode(string text, string fullPath, Image image)
-			{
-				Text = text;
-				FullPath = fullPath;
-				Image = image;
-			}
 
-			public string FullPath { get; set; }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        class ExplorerNode : Node
+        {
+            public ExplorerNode(string text, string fullPath)
+            {
+                Text = text;
+                FullPath = fullPath;
+                Image = null;
+            }
+
+            public string FullPath { get; set; }
+            public ref Image Icon 
+            { 
+                get 
+                {
+                    return ref defaultImage;
+
+                    //string ext = Path.GetExtension(FullPath);
+
+                    //if(nodeImages.ContainsKey(ext))
+                    //{
+                    //    return ref NodeIcons[0];
+                    //}
+                    //else
+                    //{
+                    //    return ref defaultImage;
+                    //}
+                }
+            }
 		}
 		/// <summary>
 		/// Only files ending with these extensions are allowed.
@@ -126,89 +134,66 @@ namespace Foundry
 		/// </summary>
 		private static List<string> allowedExtensions = new List<string>()
 		{
-			//imports
-			FoundryInstance.ExtImportScenario,
-			FoundryInstance.ExtImportTerrain,
-			FoundryInstance.ExtImportTriggerscript,
 
-			//save
-			FoundryInstance.ExtSerializeTerrain,
-			FoundryInstance.ExtSerializeScenario,
-			FoundryInstance.ExtSerializeTriggerscript,
-			//FoundryInstance.ExtSerializeXml
 		};
+        private static Image defaultImage = Properties.Resources.page_white;
 		/// <summary>
 		/// The file extension of each node is compared to this map of icons.
 		/// </summary>
-		private Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
+		private static Dictionary<string, Image> nodeImages = new Dictionary<string, Image>()
         {
-            { ExtSerializeTriggerscript,   Properties.Resources.page_white },
-            { ExtSerializeScenario,        Properties.Resources.page_white },
+            //{ ExtSerializeTriggerscript,   Properties.Resources.page_white },
+            //{ ExtSerializeScenario,        Properties.Resources.page_white },
         };
+
+        private static List<Image> NodeIcons = new List<Image>()
+        {
+
+        };
+
+
         private void UpdateNodes_CreateExplorerNodeRecursive(DiskEntryNode diskNode, ExplorerNode explorerNode)
         {
-			foreach (DiskEntryNode child in diskNode.children.Where(x =>
+			foreach (DiskEntryNode child in diskNode.Children.Where(x =>
 			{
 				//filter folder names starting with a dot.
-				if (x.isFolder)
-					if (x.name[0] == '.')
+				if (x.IsFolder)
+					if (x.Name[0] == '.')
 						return false;
-				//filter out file extensions.
-				if (!x.isFolder)
-					if (!allowedExtensions.Contains(Path.GetExtension(x.name)))
-						return false;
+				////filter out file extensions.
+				//if (!x.isFolder)
+				//	if (!allowedExtensions.Contains(Path.GetExtension(x.name)))
+				//		return false;
 				return true;
 			}))
             {
                 Image img = Properties.Resources.page_white;
-                if (child.isFolder)
-                    img = Properties.Resources.folder;
-                else
-                    img = nodeImages.ContainsKey(Path.GetExtension(child.path)) ? nodeImages[Path.GetExtension(child.path)] : Properties.Resources.page_white;
+                //if (child.isFolder)
+                //    img = Properties.Resources.folder;
+                //else
+                //    img = nodeImages.ContainsKey(Path.GetExtension(child.path)) ? nodeImages[Path.GetExtension(child.path)] : Properties.Resources.page_white;
 
-                ExplorerNode newNode = new ExplorerNode(child.name, child.path, img);
+                ExplorerNode newNode = new ExplorerNode(child.Name, child.Path);
                 UpdateNodes_CreateExplorerNodeRecursive(child, newNode);
                 explorerNode.Nodes.Add(newNode);
             }
         }
         public void UpdateNodes(DiskEntryNode root)
         {
-            ExplorerNode rootExplorerNode = new ExplorerNode(root.name, root.path, Properties.Resources.box);
-            UpdateNodes_CreateExplorerNodeRecursive(root, rootExplorerNode);
-            
-            treeView.BeginUpdate();
-            treeModel.Nodes.Clear();
-            treeModel.Nodes.Add(rootExplorerNode);
-            treeView.EndUpdate();
-
-            treeView.ExpandAll(); //replace with cached fold info.
-            treeView.FullUpdate();
+            treelist.ClearObjects();
+            treelist.AddObject(instance.OpenedWorkspaceRoot);
+            treelist.RebuildAll(true);
         }
         public void RefreshNodes()
         {
             instance.UpdateDirectory();
         }
-        public void ClearNodes()
-        {
-            treeView.BeginUpdate();
-            treeModel.Nodes.Clear();
-            treeView.EndUpdate();
-            treeView.FullUpdate();
-        }
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // ui callbacks
-        private void TreeViewNode_Clicked(object o, TreeNodeAdvMouseEventArgs e)
+        private void TreeList_Node_ItemActivate(object o, EventArgs e)
         {
-            
-        }
-        private void TreeViewNode_DoubleClicked(object o, TreeNodeAdvMouseEventArgs e)
-        {
-            if (e.Node.Tag is ExplorerNode)
-            {
-                instance.OpenAsset(((ExplorerNode)e.Node.Tag).FullPath);
-            }
+            var item = treelist.GetItem(treelist.SelectedIndex);
         }
         private void ButtonRefresh_Clicked(object o, EventArgs e)
         {

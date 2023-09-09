@@ -1,0 +1,11 @@
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.csproj.AssemblyReference.cache
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.csproj.CopyComplete
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.dll
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\refint\KSoft.IO.TagElementStreams.dll
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\KSoft.IO.TagElementStreams.pdb
+R:\foundry\_out\Release\KSoft.IO.TagElementStreams.deps.json
+R:\foundry\_out\Release\KSoft.IO.TagElementStreams.dll
+R:\foundry\_out\Release\_obj\KSoft.IO.TagElementStreams\Release\ref\KSoft.IO.TagElementStreams.dll
+R:\foundry\_out\Release\KSoft.IO.TagElementStreams.pdb

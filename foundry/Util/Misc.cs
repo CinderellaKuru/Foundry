@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry.Util
+namespace foundry.util
 {
 	public static class Misc
 	{
@@ -49,5 +49,30 @@ namespace Foundry.Util
 			ret.Invert();
 			return ret;
         }
+
+		public static Vector3 FromString(string vec)
+		{
+			vec = vec.Trim();
+			string[] elements = vec.Split(",");
+
+			if (elements.Length != 3) return new Vector3(0,0,0);
+
+			float x, y, z;
+
+			bool xGood = float.TryParse(elements[0], out x);
+			bool yGood = float.TryParse(elements[1], out y);
+			bool zGood = float.TryParse(elements[2], out z);
+
+			if(xGood && yGood && zGood)
+			{
+				return new Vector3(x, y, z);
+			}
+
+			return new Vector3(0, 0, 0);
+        }
+		public static string ToString(Vector3 vec)
+		{
+			return string.Format("{0},{1},{2}", vec.X, vec.Y, vec.Z);
+		}
 	}
 }

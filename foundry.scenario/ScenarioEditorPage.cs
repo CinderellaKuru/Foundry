@@ -15,17 +15,17 @@ using System.Diagnostics;
 using System.Buffers.Binary;
 using Newtonsoft.Json.Linq;
 using SharpDX.Direct2D1;
-using Foundry.Util;
+using foundry.Util;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using HelixToolkit.SharpDX.Core.Core;
-using Foundry.Modules.UGX;
 using System.Windows.Forms;
 using System.Xml;
 using System.Drawing.Drawing2D;
 using Matrix = SharpDX.Matrix;
-using Foundry;
+using foundry;
+using foundry.vis;
 
-namespace hwfoundry.scenario
+namespace foundry.scenario
 {
 	public class ScenarioTool
 	{
@@ -45,31 +45,33 @@ namespace hwfoundry.scenario
 		}
 	}
 
-	public class ScenarioEditorPage : SceneEditorPage
+	public class ScenarioEditorPage : BaseSceneEditorPage
 	{
 		public ScenarioEditorPage()
 		{
 			ToolStrip toolStrip = new ToolStrip();
 			Controls.Add(toolStrip);
 
-			toolStrip.Items.Add(null, Foundry.Properties.Resources.icon_skirt, new EventHandler((object o, EventArgs e) =>
+			toolStrip.Items.Add(null, foundry.Properties.Resources.icon_skirt, new EventHandler((object o, EventArgs e) =>
 			{
 				terrain.ToggleSkirt();
 				viewport.InvalidateRender();
-				OnDraw();
-			}));
+				Redraw();
+            }));
 
 			SetGeometry("cube", UGXImporter.ImportUGXGeometry("S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\mods\\Sarc0.5.7.5\\art\\banished\\vehicle\\scarab_01\\mesh_scarab01.ugx"));
 
 			temp = new Object(this, "cube");
-		}
-		protected override string GetSaveExtension()
-		{
-			return FoundryInstance.ExtSerializeScenario;
-		}
-		protected override string GetImportExtension()
-		{
-			return FoundryInstance.ExtImportScenario;
+
+			OnPageTick += (sender, e) =>
+			{
+				var hits = HitTest(HitMask.TERRAIN);
+				if (hits.Count > 0)
+				{
+					temp.SetPosition(hits[0].PointHit);
+				}
+				viewport.InvalidateRender();
+			};
 		}
 
 
@@ -267,17 +269,6 @@ namespace hwfoundry.scenario
 		}
 		private Terrain terrain;
 
-		protected override void OnTick()
-		{
-			base.OnTick();
-
-			var hits = HitTest(HitMask.TERRAIN);
-			if (hits.Count > 0)
-			{
-				temp.SetPosition(hits[0].PointHit);
-			}
-			viewport.InvalidateRender();
-		}
 
 
 		private const long XTDHeaderId	  = 0x1111;
@@ -286,161 +277,159 @@ namespace hwfoundry.scenario
 		private const long AOChunkID	  = 0xCCCC;
 		private const long AlphaChunkID	  = 0xDDDD;
 		private const long TessChunkID    = 0xAAAA;
-		protected override bool OnLoadFile(string file)
-		{
-			return true;
-		}
-		protected override bool OnSaveFile(string file)
-		{
-			return false;
-		}
-		protected override bool OnImportFile(string file)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.Load(file);
-			XmlNode scenarioNode = doc.SelectSingleNode("Scenario");
+		//protected override bool OnLoadFile(string file)
+		//{
+		//	return false;
+		//}
+		//protected override bool OnSaveFile(string file)
+		//{
+		//	return false;
+		//}
+		//protected override bool OnImportFile(string file)
+		//{
+		//	XmlDocument doc = new XmlDocument();
+		//	doc.Load(Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + ".scn");
+		//	XmlNode scenarioNode = doc.SelectSingleNode("Scenario");
 
-			XmlDocument doc2 = new XmlDocument();
-			doc2.Load(Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + ".sc2");
-			XmlNode scenarioNode2 = doc2.SelectSingleNode("Scenario");
+		//	XmlDocument doc2 = new XmlDocument();
+		//	doc2.Load(Path.GetDirectoryName(file) + "\\" + Path.GetFileNameWithoutExtension(file) + ".sc2");
+		//	XmlNode scenarioNode2 = doc2.SelectSingleNode("Scenario");
 
-			#region Objects
-			XmlNode[] objectsNodes =
-				{
-					scenarioNode.SelectSingleNode("Objects"),
-					scenarioNode2.SelectSingleNode("Objects")
-				};
-
-
-			XmlDocument objectsXmlDoc = new XmlDocument();
-			objectsXmlDoc.Load("S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\data\\objects.xml");
-			XmlNode objectsXmlDocNode = objectsXmlDoc.SelectSingleNode("Objects");
-
-			foreach (XmlNode objectsNode in objectsNodes)
-			{
-				foreach (XmlNode child in objectsNode.ChildNodes)
-				{
-					string objectName = child.LastChild.Value;
-
-					foreach (XmlNode obj in objectsXmlDocNode.ChildNodes)
-					{
-						if (obj.Attributes.GetNamedItem("name").Value == objectName)
-						{
-							XmlNode visNode = obj.SelectSingleNode("Visual");
-							if (visNode != null)
-							{
-								string visPath = "";
-								try
-								{
-									visPath = visNode.LastChild.Value;
-									string fullVisPath = "S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\art\\" + visPath;
-
-									XmlDocument visDoc = new XmlDocument();
-									visDoc.Load(fullVisPath);
-
-									string ugx = "S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\art\\" +
-										visDoc.SelectSingleNode("visual")
-										.SelectSingleNode("model")
-										.SelectSingleNode("component")
-										.SelectSingleNode("asset")
-										.SelectSingleNode("file").LastChild.Value + ".ugx";
-
-									SetGeometry(visPath, UGXImporter.ImportUGXGeometry(ugx));
-									Object o = new Object(this, visPath);
-
-									string posStr = child.Attributes.GetNamedItem("Position").Value;
-									string[] posStrElems = posStr.Split(',');
-									float x = float.Parse(posStrElems[0]);
-									float y = float.Parse(posStrElems[1]);
-									float z = float.Parse(posStrElems[2]);
-									Vector3 pos = new Vector3(x, y, z);
-
-									string fwdStr = child.Attributes.GetNamedItem("Forward").Value;
-									string[] fwdStrElems = fwdStr.Split(',');
-									float fx = float.Parse(fwdStrElems[0]);
-									float fy = float.Parse(fwdStrElems[1]);
-									float fz = float.Parse(fwdStrElems[2]);
-									Vector3 fwd = new Vector3(fx, fy, fz);
-
-									string rgtStr = child.Attributes.GetNamedItem("Right").Value;
-									string[] rgtStrElems = rgtStr.Split(',');
-									float rx = float.Parse(rgtStrElems[0]);
-									float ry = float.Parse(rgtStrElems[1]);
-									float rz = float.Parse(rgtStrElems[2]);
-									Vector3 rgt = new Vector3(rx, ry, rz);
-
-									Matrix m1 = Matrix.Identity;
-									m1.Forward = fwd;
-									m1.Right = rgt;
-									m1.Up = new Vector3(0, 1, 0);
-									//mr.ScaleVector = new Vector3(1, 1, 1);
-
-									Matrix m2 = Matrix.Translation(pos);
+		//	#region Objects
+		//	XmlNode[] objectsNodes =
+		//		{
+		//			scenarioNode.SelectSingleNode("Objects"),
+		//			scenarioNode2.SelectSingleNode("Objects")
+		//		};
 
 
-									Matrix m = m1 * m2;
-									o.SetMatrix(m);
-								}
-								catch { Console.WriteLine(visPath); }
-							}
-						}
-					}
-				}
-			}
-			#endregion
+		//	XmlDocument objectsXmlDoc = new XmlDocument();
+		//	objectsXmlDoc.Load("S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\data\\objects.xml");
+		//	XmlNode objectsXmlDocNode = objectsXmlDoc.SelectSingleNode("Objects");
 
-			#region XTD
-			string xtdPath = 
-				Path.GetDirectoryName(file) + "\\" +
-				scenarioNode.SelectSingleNode("Terrain").LastChild.Value +
-				".xtd";
+		//	foreach (XmlNode objectsNode in objectsNodes)
+		//	{
+		//		foreach (XmlNode child in objectsNode.ChildNodes)
+		//		{
+		//			string objectName = child.LastChild.Value;
 
-			var ecfChunks = ECF.ReadChunks(xtdPath);
+		//			foreach (XmlNode obj in objectsXmlDocNode.ChildNodes)
+		//			{
+		//				if (obj.Attributes.GetNamedItem("name").Value == objectName)
+		//				{
+		//					XmlNode visNode = obj.SelectSingleNode("Visual");
+		//					if (visNode != null)
+		//					{
+		//						string visPath = "";
+		//						try
+		//						{
+		//							visPath = visNode.LastChild.Value;
+		//							string fullVisPath = "S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\art\\" + visPath;
 
-			byte[] xtdHeader = ecfChunks[XTDHeaderId][0];
-			int thisNumXVerts = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 4));
-			int thisNumXChunks = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 8));
+		//							XmlDocument visDoc = new XmlDocument();
+		//							visDoc.Load(fullVisPath);
 
-			//TerrainSetTotalSize(thisNumXChunks);
-			terrain = new Terrain(this, thisNumXVerts, thisNumXVerts);
+		//							string ugx = "S:\\SteamLibrary\\steamapps\\common\\HaloWarsDE\\extract\\art\\" +
+		//								visDoc.SelectSingleNode("visual")
+		//								.SelectSingleNode("model")
+		//								.SelectSingleNode("component")
+		//								.SelectSingleNode("asset")
+		//								.SelectSingleNode("file").LastChild.Value + ".ugx";
 
-			byte[] atlas = ecfChunks[AtlasChunkId][0];
-			Vector3 posCompMin = new Vector3(
-				BitConverter.ToSingle(atlas.Skip(0).Take(4).Reverse().ToArray(), 0),
-				BitConverter.ToSingle(atlas.Skip(4).Take(4).Reverse().ToArray(), 0),
-				BitConverter.ToSingle(atlas.Skip(8).Take(4).Reverse().ToArray(), 0));
-			Vector3 posCompRange = new Vector3(
-				BitConverter.ToSingle(atlas.Skip(16).Take(4).Reverse().ToArray(), 0),
-				BitConverter.ToSingle(atlas.Skip(20).Take(4).Reverse().ToArray(), 0),
-				BitConverter.ToSingle(atlas.Skip(24).Take(4).Reverse().ToArray(), 0));
+		//							SetGeometry(visPath, UGXImporter.ImportUGXGeometry(ugx));
+		//							Object o = new Object(this, visPath);
 
-			const int positionsOffset = 32;
-			const uint kBitMask10 = (1 << 10) - 1;
-			const float kBitMask10Rcp = 1.0f / kBitMask10;
-			for (int i = 0; i < thisNumXVerts * thisNumXVerts; i++)
-			{
-				uint v = BitConverter.ToUInt32(atlas, (i * 4) + positionsOffset);
+		//							string posStr = child.Attributes.GetNamedItem("Position").Value;
+		//							string[] posStrElems = posStr.Split(',');
+		//							float x = float.Parse(posStrElems[0]);
+		//							float y = float.Parse(posStrElems[1]);
+		//							float z = float.Parse(posStrElems[2]);
+		//							Vector3 pos = new Vector3(x, y, z);
 
-				uint x = (v >> 20) & kBitMask10;
-				uint y = (v >> 10) & kBitMask10;
-				uint z = (v >> 00) & kBitMask10;
-				float fx = (x * kBitMask10Rcp * posCompRange.X) - posCompMin.X;
-				float fy = (y * kBitMask10Rcp * posCompRange.Y) - posCompMin.Y;
-				float fz = (z * kBitMask10Rcp * posCompRange.Z) - posCompMin.Z;
+		//							string fwdStr = child.Attributes.GetNamedItem("Forward").Value;
+		//							string[] fwdStrElems = fwdStr.Split(',');
+		//							float fx = float.Parse(fwdStrElems[0]);
+		//							float fy = float.Parse(fwdStrElems[1]);
+		//							float fz = float.Parse(fwdStrElems[2]);
+		//							Vector3 fwd = new Vector3(fx, fy, fz);
 
-				int row = i / (thisNumXVerts);
-				int col = i % (thisNumXVerts);
-				//row and col order is intentional based on objects.
-				terrain.SetVertex(row, col, new Vector3(fx, fy, fz));
-			}
+		//							string rgtStr = child.Attributes.GetNamedItem("Right").Value;
+		//							string[] rgtStrElems = rgtStr.Split(',');
+		//							float rx = float.Parse(rgtStrElems[0]);
+		//							float ry = float.Parse(rgtStrElems[1]);
+		//							float rz = float.Parse(rgtStrElems[2]);
+		//							Vector3 rgt = new Vector3(rx, ry, rz);
 
-			terrain.ToggleSkirt();
-			terrain.UpdateBounds();
-			terrain.UpdateNormals();
-			terrain.UpdateOctree();
+		//							Matrix m1 = Matrix.Identity;
+		//							m1.Forward = fwd;
+		//							m1.Right = rgt;
+		//							m1.Up = new Vector3(0, 1, 0);
+		//							//mr.ScaleVector = new Vector3(1, 1, 1);
 
-			return true;
-			#endregion
-		}
+		//							Matrix m2 = Matrix.Translation(pos);
+
+
+		//							Matrix m = m1 * m2;
+		//							o.SetMatrix(m);
+		//						}
+		//						catch (Exception e) 
+		//						{ 
+		//							Console.WriteLine(visPath);
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//	#endregion
+
+		//	#region XTD
+  //          var ecfChunks = ECF.ReadChunks(file);
+
+		//	byte[] xtdHeader = ecfChunks[XTDHeaderId][0];
+		//	int thisNumXVerts = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 4));
+		//	int thisNumXChunks = BinaryPrimitives.ReverseEndianness(BitConverter.ToInt32(xtdHeader, 8));
+
+		//	//TerrainSetTotalSize(thisNumXChunks);
+		//	terrain = new Terrain(this, thisNumXVerts, thisNumXVerts);
+
+		//	byte[] atlas = ecfChunks[AtlasChunkId][0];
+		//	Vector3 posCompMin = new Vector3(
+		//		BitConverter.ToSingle(atlas.Skip(0).Take(4).Reverse().ToArray(), 0),
+		//		BitConverter.ToSingle(atlas.Skip(4).Take(4).Reverse().ToArray(), 0),
+		//		BitConverter.ToSingle(atlas.Skip(8).Take(4).Reverse().ToArray(), 0));
+		//	Vector3 posCompRange = new Vector3(
+		//		BitConverter.ToSingle(atlas.Skip(16).Take(4).Reverse().ToArray(), 0),
+		//		BitConverter.ToSingle(atlas.Skip(20).Take(4).Reverse().ToArray(), 0),
+		//		BitConverter.ToSingle(atlas.Skip(24).Take(4).Reverse().ToArray(), 0));
+
+		//	const int positionsOffset = 32;
+		//	const uint kBitMask10 = (1 << 10) - 1;
+		//	const float kBitMask10Rcp = 1.0f / kBitMask10;
+		//	for (int i = 0; i < thisNumXVerts * thisNumXVerts; i++)
+		//	{
+		//		uint v = BitConverter.ToUInt32(atlas, (i * 4) + positionsOffset);
+
+		//		uint x = (v >> 20) & kBitMask10;
+		//		uint y = (v >> 10) & kBitMask10;
+		//		uint z = (v >> 00) & kBitMask10;
+		//		float fx = (x * kBitMask10Rcp * posCompRange.X) - posCompMin.X;
+		//		float fy = (y * kBitMask10Rcp * posCompRange.Y) - posCompMin.Y;
+		//		float fz = (z * kBitMask10Rcp * posCompRange.Z) - posCompMin.Z;
+
+		//		int row = i / (thisNumXVerts);
+		//		int col = i % (thisNumXVerts);
+		//		//row and col order is intentional based on objects.
+		//		terrain.SetVertex(row, col, new Vector3(fx, fy, fz));
+		//	}
+
+		//	terrain.ToggleSkirt();
+		//	terrain.UpdateBounds();
+		//	terrain.UpdateNormals();
+		//	terrain.UpdateOctree();
+
+		//	return true;
+		//	#endregion
+		//}
 	}
 }

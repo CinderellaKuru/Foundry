@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Objects>
+		<Object IsSquad="false" Player="0" ID="30000001" TintValue="1" EditorName="snd_play_burning_wreckage_20962" Position="794.346497,36.5719986,399.590912" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_burning_wreckage</Object>
+		<Object IsSquad="false" Player="0" ID="30000002" TintValue="1" EditorName="snd_play_burning_wreckage_20961" Position="511.657898,2.92359996,592.80072" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_burning_wreckage</Object>
+		<Object IsSquad="false" Player="0" ID="30000003" TintValue="1" EditorName="snd_play_cavern_scn_08_20950" Position="658.333801,-12.0144997,-3.46690011" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000004" TintValue="1" EditorName="snd_play_cavern_scn_08_20951" Position="490.299194,-11.3685999,-2.74810004" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000005" TintValue="1" EditorName="snd_play_flood_brain_exist_20955" Position="317.771393,-15.0337,478.549896" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_brain_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000006" TintValue="1" EditorName="snd_play_flood_brain_exist_20958" Position="702.773682,-21.7551003,542.38678" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_brain_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000007" TintValue="1" EditorName="snd_play_flood_brain_exist_20954" Position="254.406296,16.2493992,181.795807" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_brain_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000008" TintValue="1" EditorName="snd_play_flood_brain_exist_20953" Position="146.446304,-98.9701004,829.367126" Forward="0.841499984,0,0.540300012" Right="0.540300012,0,-0.841499984" Group="-1" VisualVariationIndex="0">snd_play_flood_brain_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000009" TintValue="1" EditorName="snd_play_flood_pod_exist_20945" Position="771.726318,-21.9067993,607.325684" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000010" TintValue="1" EditorName="snd_play_flood_pod_exist_20946" Position="527.692627,5.10589981,457.939087" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000011" TintValue="1" EditorName="snd_play_flood_pod_exist_20949" Position="373.14209,-14.9757996,515.19342" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000012" TintValue="1" EditorName="snd_play_flood_pod_exist_20947" Position="473.688202,4.77019978,457.140503" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000013" TintValue="1" EditorName="snd_play_flood_pod_exist_20943" Position="732.799988,-21.4013004,520.491028" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000014" TintValue="1" EditorName="snd_play_flood_pod_exist_20957" Position="229.736298,10.7636995,721.609314" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000015" TintValue="1" EditorName="snd_play_flood_pod_exist_20956" Position="244.099899,21.2444,341.525208" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_flood_pod_exist</Object>
+		<Object IsSquad="false" Player="0" ID="30000016" TintValue="1" EditorName="snd_play_rock_debris_20952" Position="523.158813,40.463501,184.537598" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_rock_debris</Object>
+		<Object IsSquad="false" Player="0" ID="30000017" TintValue="1" EditorName="snd_play_rock_debris_7692" Position="947.599915,72.9870987,100.832497" Forward="0,0,-1" Right="-1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_rock_debris</Object>
+		<Object IsSquad="false" Player="0" ID="30000018" TintValue="1" EditorName="snd_play_rock_debris_20959" Position="980.90332,40.6195984,325.415314" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_rock_debris</Object>
+	</Objects>
+</Scenario>

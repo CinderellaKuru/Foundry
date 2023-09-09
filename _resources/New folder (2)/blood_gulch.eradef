@@ -1,0 +1,83 @@
+<EraArchive>
+  <Files>
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A3363EC6F38DC0C7" name="scenario\skirmish\design\blood_gulch\blood_gulch.scn" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0A46D180A9279B70" name="scenario\skirmish\design\blood_gulch\blood_gulch.sc2" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="657B58EEAD8962F1" name="scenario\skirmish\design\blood_gulch\blood_gulch.sc3" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="34F726965AB7B9C1" name="pfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="62B86766550B2666" name="visfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C801C8B75DEBA520" name="art\effects\energy\plasma_spheretile_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D761D4708C1454D8" name="art\environment\arcadia\pinetree_08\pinetree_08.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AB45A2BDC43A043A" name="art\environment\arcadia\pinetree_09\pinetree_09.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C05E9A869B612965" name="art\environment\arcadia\pinetree_10\pinetree_10.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="94EE558D62DA36E5" name="art\environment\arcadia\pinetree_11\pinetree_11.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2147B85EAACF9D5B" name="art\hook\bonus\reactor_01\reactor_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="24E686C861E268A9" name="art\hook\bonus\reactor_01\uncaptured_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="69D1BC7458F63561" name="art\hook\bonus\reactor_01\lock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F8C544A5D9B562EA" name="art\hook\bonus\reactor_01\unlock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9E7F185711217E1E" name="art\hook\bonus\reactor_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C6ECA018F22C642F" name="art\hook\building\teleporter1way_01\teleporter1way_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F1824A22A9711F90" name="art\hook\building\teleporter2way_01\teleporter2way_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C53D7903EC3DF492" name="art\system\rebelmarker\sniper_01\sniper_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="42AD52925898A283" name="tfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="72628D8271F4DC64" name="scenario\skirmish\design\blood_gulch\blood_gulch.xsd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="353B59B1E1026675" name="scenario\skirmish\design\blood_gulch\blood_gulch.xth" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A813D36CDD06D9F2" name="scenario\skirmish\design\blood_gulch\blood_gulch.xtd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6FC8FA2E8CF01596" name="scenario\skirmish\design\blood_gulch\blood_gulch.xtt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6CEFC121CF17BF52" name="scenario\skirmish\design\blood_gulch\blood_gulch.lrp" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1F322099D5EF0BBA" name="art\terrain\sw interior\floodmud_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="54BBF6B7F5A93779" name="art\terrain\sw interior\grass_06_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B94FE62443EA296D" name="art\terrain\sw interior\grass_03_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A5024E8E09B5431D" name="art\terrain\sw interior\grass_04_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C71F1C6DD4DDF7DC" name="art\terrain\sw interior\cliffwall_04_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D117233DD87A063C" name="scenario\skirmish\design\blood_gulch\blood_gulch.gls" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CFE74DC3C62365D5" name="scenario\skirmish\design\blood_gulch\blood_gulch.fls" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B94E276F0874204B" name="art\terrain\sw interior\grass_05_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FBDA6F011FC90970" name="art\terrain\sw interior\floodmud_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="01E0F5ED47F7EE88" name="art\terrain\sw interior\grass_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="478612999FE6A133" name="art\terrain\sw interior\grass_06_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7A3587CC2BDB5250" name="art\foliage\bg_grass_02.xml" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0897B8B4DC818A27" name="art\foliage\bg_grass_02_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2B096791AE0103A4" name="art\foliage\swi_bush01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="95AFE1BE39315424" name="art\foliage\swi_bush01.xml" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B19BF0445D769AF0" name="art\foliage\swi_bush01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BF53290A6BB96A5A" name="art\foliage\bg_grass_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5F2C6EBF0E1700F3" name="art\terrain\sw interior\grass_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5B3763D31910B2E4" name="art\terrain\sw interior\grass_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F679E1ACAB298796" name="art\terrain\sw interior\cliffwall_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DA1E9B1483379F3A" name="art\terrain\sw interior\grass_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1EC9A6E565A683A6" name="art\terrain\sw interior\floodmud_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="414D2045545410B7" name="art\terrain\sw interior\grass_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E05EC48903CB8E9D" name="art\ui\flash\minimaps\blood_gulch.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7DD335EB5A2CBC66" name="art\hook\bonus\reactor_01\reactorplatform_01_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6BB46B286A9DAB1F" name="art\hook\bonus\reactor_01\reactor_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0DBF5D6A4303337D" name="art\hook\bonus\reactor_01\reactorplatform_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FE2E08C61FA67C08" name="art\environment\arcadia\pinetree_11\pinetree_11_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="43692D76B5176DBC" name="art\hook\bonus\reactor_01\reactor_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8CBF1F8EE0B7BBB9" name="art\hook\bonus\reactor_01\reactor_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A42D9787105D9BF5" name="art\environment\arcadia\pinetree_08\pinetree_08_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CF609CC71D61313E" name="art\hook\building\teleporter2way_01\teleporter2way_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FE63B498A9F1C5EA" name="art\hook\building\teleporter2way_01\teleporter2way_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="77A8114ECB86065C" name="art\hook\bonus\reactor_01\reactorplatform_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CFE9732EBEF4DCE9" name="art\environment\arcadia\pinetree_08\pinetree_08_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F003151F7D74042F" name="art\hook\bonus\reactor_01\reactorplatform_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DCB119CBFE48940F" name="art\hook\building\teleporter2way_01\teleporter2way_01_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A10E28357C707DF4" name="art\hook\bonus\reactor_01\reactorplatform_01_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1B0DFFA26CA58ED5" name="art\hook\building\teleporter2way_01\teleporter2way_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="46F9E3FD134BA49F" name="art\hook\bonus\reactor_01\reactor_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8EAAC972DE5539D8" name="art\environment\arcadia\pinetree_08\pinetree_08_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="67D2B138DF5BBD63" name="art\hook\building\teleporter2way_01\teleporter2way_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5F662A0931184306" name="art\environment\arcadia\pinetree_08\pinetree_08_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="020A4C77FB87E722" name="art\hook\bonus\reactor_01\reactor_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2A74FEE4BDCB0522" name="art\hook\bonus\reactor_01\reactor_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DCA3B1F96C3F1ABF" name="art\hook\bonus\reactor_01\reactorplatform_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FE68AED00A83D089" name="art\effects\energy\noise.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="02B13240EFFBC663" name="art\effects\fire\fire_01.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F7192EA3FDC90D95" name="art\effects\flares\flare_streak_01_fx.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EF75AA4A78B519CE" name="art\effects\flares\roundline_01.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="934DB74579B57ED3" name="art\terrain\sw interior\cliffwall_04_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C0BE010E1DACADBC" name="art\terrain\sw interior\grass_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CDDBD21E365B4E1B" name="art\terrain\sw interior\grass_05_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="937182979FAE3ABB" name="art\terrain\sw interior\grass_06_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D99DFC6B949AF409" name="art\unsc\air\pelican_01\pelican_01_rm.ddx" Compression="DeflateRaw" />
+  </Files>
+</EraArchive>

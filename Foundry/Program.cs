@@ -1,11 +1,11 @@
-﻿using Foundry;
+﻿using foundry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Foundry
+namespace foundry
 {
     internal static class Program
     {

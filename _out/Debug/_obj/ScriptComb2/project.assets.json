@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Antlr/3.5.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/Antlr3.Runtime.dll": {}
+        },
+        "runtime": {
+          "lib/Antlr3.Runtime.dll": {}
+        }
+      },
       "libLLVM/16.0.6": {
         "type": "package"
       },
@@ -41,10 +50,36 @@
             "related": ".xml"
           }
         }
+      },
+      "YAXLib/4.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/YAXLib.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/YAXLib.dll": {
+            "related": ".xml"
+          }
+        }
       }
     }
   },
   "libraries": {
+    "Antlr/3.5.0.2": {
+      "sha512": "CSfrVuDVMx3OrQhT84zed+tOdM1clljyRLWWlQM22fJsmG836RVDGQlE6tzysXh8X8p9UjkHbLr6OqEIVhtdEA==",
+      "type": "package",
+      "path": "antlr/3.5.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "antlr.3.5.0.2.nupkg.sha512",
+        "antlr.nuspec",
+        "lib/Antlr3.Runtime.dll",
+        "lib/Antlr3.Runtime.pdb"
+      ]
+    },
     "libLLVM/16.0.6": {
       "sha512": "ZlIpwHUVzNb9jeSzu6NQYKiVeiXRQuNzpx/zZNw4tCbAqUPWmZ8Dj8WL2IX7BenuT1fTBdbsPsYz23PBxGxIkA==",
       "type": "package",
@@ -115,12 +150,34 @@
         "newtonsoft.json.nuspec",
         "packageIcon.png"
       ]
+    },
+    "YAXLib/4.2.0": {
+      "sha512": "c96kqFXCvKicuqLvGqkxFZvhVIxha8VJY52fWHyyIYRA6qOhh+2ohpxVOQmxIXX7HsRJ7WIOaZfJ50XN39Qg7A==",
+      "type": "package",
+      "path": "yaxlib/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "YAXLib_256x256.png",
+        "lib/net461/YAXLib.dll",
+        "lib/net461/YAXLib.xml",
+        "lib/net6.0/YAXLib.dll",
+        "lib/net6.0/YAXLib.xml",
+        "lib/netstandard2.0/YAXLib.dll",
+        "lib/netstandard2.0/YAXLib.xml",
+        "lib/netstandard2.1/YAXLib.dll",
+        "lib/netstandard2.1/YAXLib.xml",
+        "yaxlib.4.2.0.nupkg.sha512",
+        "yaxlib.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Antlr >= 3.5.0.2",
       "LLVMSharp >= 16.0.0",
-      "Newtonsoft.Json >= 13.0.3"
+      "Newtonsoft.Json >= 13.0.3",
+      "YAXLib >= 4.2.0"
     ]
   },
   "packageFolders": {
@@ -167,6 +224,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Antlr": {
+            "target": "Package",
+            "version": "[3.5.0.2, )"
+          },
           "LLVMSharp": {
             "target": "Package",
             "version": "[16.0.0, )"
@@ -174,6 +235,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
+          },
+          "YAXLib": {
+            "target": "Package",
+            "version": "[4.2.0, )"
           }
         },
         "imports": [
@@ -195,5 +260,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Antlr 3.5.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Antlr",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
-	<OutputPath>$(SolutionDir)_out\$(Configuration)\tools</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<OutputPath>$(SolutionDir)_out\$(Configuration)\tools\$(MSBuildProjectName)</OutputPath>
 	<BaseIntermediateOutputPath>$(SolutionDir)_out\$(Configuration)\_obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
   </PropertyGroup>
 </Project>

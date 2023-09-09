@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<physics>
+	<blueprint>scorpion</blueprint>
+	<ThrownByProjectiles>true</ThrownByProjectiles>
+	<Vehicle>
+		<info>
+			<chassisInertia yaw="3" pitch="3" roll="2.4000001" />
+			<suspension springLength="1.29999995" wheelRadius="1" springStrength="50" dampingCompression="2" dampingRelaxation="2" normalClippingAngle="0.100000001" />
+			<hardpoints>
+				<hardpoint>-3,-0.0500000007,3</hardpoint>
+				<hardpoint>3,-0.0500000007,3</hardpoint>
+				<hardpoint>-3,-0.0500000007,-6</hardpoint>
+				<hardpoint>3,-0.0500000007,-6</hardpoint>&gt;&gt;&gt;&gt;</hardpoints>
+			<treadpoints height="2.1500001" length="6">
+				<treadpoint zOffset="4.69999981">-4,-0.0500000007,0.699999988</treadpoint>
+				<treadpoint zOffset="4.69999981">4,-0.0500000007,0.699999988</treadpoint>
+				<treadpoint zOffset="-3.5">-4.5,-0.0500000007,-4.30000019</treadpoint>
+				<treadpoint zOffset="-3.5">4.5,-0.0500000007,-4.30000019</treadpoint>
+			</treadpoints>
+		</info>scorpion</Vehicle>
+	<CenterOffset>0,2.27999997,0</CenterOffset>
+	<TerrainEffects>effects\terraineffects\scorpion</TerrainEffects>
+</physics>

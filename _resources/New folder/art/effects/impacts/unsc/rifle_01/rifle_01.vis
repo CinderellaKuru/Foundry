@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<visual xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" defaultmodel="Default">
+	<model name="Default">
+		<component>
+			<asset type="Model">
+				<file>effects\impacts\unsc\rifle_01\rifle_impact_01</file>
+			</asset>
+		</component>
+		<anim type="Idle" exitAction="Freeze" tweenTime="0" tweenToAnimation="">
+			<asset type="Anim">
+				<file>effects\impacts\unsc\rifle_01\rifle_impact_anim_01</file>
+				<weight>1</weight>
+				<tag type="Particle" position="0.0320000015" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+				<tag type="Particle" position="0.333000004" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+			</asset>
+			<asset type="Anim">
+				<file>effects\impacts\unsc\rifle_01\rifle_impact_anim_01</file>
+				<weight>1</weight>
+				<tag type="Particle" position="0.166999996" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+				<tag type="Particle" position="0.666999996" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+			</asset>
+			<asset type="Anim">
+				<file>effects\impacts\unsc\rifle_01\rifle_impact_anim_01</file>
+				<weight>1</weight>
+				<tag type="Particle" position="0.166999996" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+				<tag type="Particle" position="0.890999973" name="effects\impacts\unsc\rifle_01\rifle_01" tobone="bone_FX01" checkvisible="false" disregardorient="false" lifespan="0.439999998" />
+			</asset>
+		</anim>
+	</model>
+</visual>

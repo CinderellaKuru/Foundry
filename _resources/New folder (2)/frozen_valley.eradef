@@ -1,0 +1,195 @@
+<EraArchive>
+  <Files>
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="811153AFEAEEDE13" name="scenario\skirmish\design\frozen_valley\frozen_valley.scn" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6E4AF7BFD0D0F62B" name="scenario\skirmish\design\frozen_valley\frozen_valley.sc2" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D3541FB3AAA2BB8E" name="scenario\skirmish\design\frozen_valley\frozen_valley.sc3" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="48022B21FE16BE14" name="pfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="34337B848BE4766F" name="visfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A84C590CDBF0765C" name="art\campaign\utility\runetough_01\runetough_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="ED3AB294F3A14A8D" name="art\campaign\utility\runetough_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="394E26DD0FDD169A" name="art\effects\special\buff1_t_01_fx.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FC4467D1ACA15FF9" name="art\creep\infantry\grunt_01\grunt_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7267FE36FD0F2353" name="art\creep\infantry\jackal_01\jackal_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F56C56DE24CAB1C4" name="art\covenant\infantry\jackal_01\beam_rifle_death_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CB580CF1320B2942" name="art\environment\creatures\bird_01\bird_snow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="36B83A9822B0BC24" name="art\environment\creatures\bird_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9A298FDD8E5961B5" name="art\environment\creatures\bird_01\flying_02.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="778A4B6A9851D24B" name="art\environment\creatures\bird_01\flying_03.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="202A990AC2719E6D" name="art\environment\harvest\crystal_01\crystal_a01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="29F6ADD2AA9FBC0E" name="art\environment\harvest\crystal_01\crystal_a01.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D5FF6E65FDBACE2A" name="art\environment\harvest\crystal_01\crystal_b01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FAFA4192FF2029AC" name="art\environment\harvest\crystal_01\crystal_b01.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D3A7E83B27C2425F" name="art\environment\harvest\crystal_01\crystal_c01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F3BB08BA53AEFAD0" name="art\environment\harvest\crystal_01\crystal_c01.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="14186BB144645A03" name="art\environment\harvest\crystal_02\crystal_a02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DFAC949EE195B600" name="art\environment\harvest\crystal_02\crystal_a02.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D066945D0495D1F7" name="art\environment\harvest\crystal_02\crystal_b02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3DB152FA694B83A5" name="art\environment\harvest\crystal_02\crystal_b02.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EFFEC928C231A6F0" name="art\environment\harvest\crystal_02\crystal_c02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="14F7D8C38B4BDDB1" name="art\environment\harvest\crystal_02\crystal_c02.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F7C565793D257C62" name="art\environment\harvest\crystal_02\crystal_e02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A1D94E4BE47B01FB" name="art\environment\harvest\crystal_02\crystal_e02.dmg" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A07E35F15D1DC744" name="art\environment\harvest\foreventsnow_01\foreventsnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DFF252CE21707709" name="art\environment\harvest\foreventsnow_02\foreventsnow_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2BB597F962341597" name="art\environment\harvest\foreventsnow_03\foreventsnow_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E9D5938C289790C8" name="art\environment\harvest\forundoorsnow_01\forundoorsnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="26BCD5921C50DC39" name="art\environment\harvest\iceplane_01\iceplane_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C658E07250E937CB" name="art\environment\harvest\pelicanwreck_01\pelicanwreck_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F7E3AEE6622A5CC9" name="art\environment\harvest\pelicanwreck_01\pelicanwreck_light_01.lgt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8F12A33D2A2A74F1" name="art\environment\harvest\rock01sml_05\rock01sml_05.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="600201DFD10151AC" name="art\environment\harvest\rock01sml_07\rock01sml_07.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4E60D1A7B065E68C" name="art\environment\harvest\treedead01lrg_01\treedead01lrg_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E7235903E0D99958" name="art\environment\harvest\treedead01lrg_02\treedead01lrg_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E9280539C1F7A541" name="art\environment\harvest\treedead01med_01\treedead01med_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DB9C28DA4908BF57" name="art\environment\harvest\treedead01sml_01\treedead01sml_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1547BADA2A87E7E1" name="art\environment\harvest\treedead02lrg_01\treedead02lrg_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C596ABB0A4AF5238" name="art\environment\harvest\treedead02med_01\treedead02med_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="806CAA1E3A31B905" name="art\environment\harvest\treedead02med_02\treedead02med_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FC6CB40D1A751363" name="art\environment\harvest\treedead02med_03\treedead02med_03.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EE4BA257C188B188" name="art\environment\harvest\treedead02sml_01\treedead02sml_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A1A2B2A23ECF962F" name="art\environment\harvest\treedead02xlrg_01\treedead02xlrg_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="41EFF78013F3B824" name="art\environment\harvest\treestump_01\treestump_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C8C987928DB0646C" name="art\environment\harvest\treestump_02\treestump_02.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5832C1E79D554EE0" name="art\environment\harvest\wallcornersnow_01\wallcornersnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B52AD7015DDA832B" name="art\environment\harvest\wallinnersnow_01\wallinnersnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A9311FA75654172E" name="art\environment\harvest\wallsnow_01\wallsnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1D3F7F6885D5807F" name="art\environment\harvest\wastesailsnow_01\wastesailsnow_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2147B85EAACF9D5B" name="art\hook\bonus\reactor_01\reactor_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="24E686C861E268A9" name="art\hook\bonus\reactor_01\uncaptured_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="69D1BC7458F63561" name="art\hook\bonus\reactor_01\lock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F8C544A5D9B562EA" name="art\hook\bonus\reactor_01\unlock_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9E7F185711217E1E" name="art\hook\bonus\reactor_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="590702BA1F56F3AE" name="art\hook\buff\healing_01\healing_01.ugx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FD728A7E21F26C45" name="art\hook\buff\healing_01\idle_01.uax" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="42AD52925898A283" name="tfxfilelist.txt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8DDDA5FF1C65D782" name="scenario\skirmish\design\frozen_valley\frozen_valley.xsd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D340A2CEE92F578A" name="scenario\skirmish\design\frozen_valley\frozen_valley.xth" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B2AE1B53DF3B6482" name="scenario\skirmish\design\frozen_valley\frozen_valley.xtd" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AAACD0FBEDB36684" name="scenario\skirmish\design\frozen_valley\frozen_valley.xtt" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9E73D06227ABC0EC" name="art\terrain\harvest\forerunnertile_03_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C2BADD6271B16E54" name="art\terrain\harvest\forerunnertile_04_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EFF4BA62144948BB" name="art\terrain\harvest\forerunnertile_03_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="638603A86204FDE2" name="art\terrain\harvest\snowrock_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="155DCF9030E338BB" name="art\terrain\harvest\snowtrail_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0209015221C3BAAE" name="art\terrain\harvest\forerunnertile_05_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A19024DE066EA796" name="art\terrain\harvest\forerunnertile_03_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="76E571AD33A558C0" name="art\terrain\harvest\snow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="342A3FE5DFEA7B01" name="art\terrain\harvest\forerunnertile_04_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F89B1E3F88D2C206" name="art\terrain\harvest\snowtrail_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CC51F2F3883676B9" name="art\terrain\harvest\snow_02_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CAD6C6D721F73123" name="art\terrain\harvest\snowrock_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1D977C854C77BCB2" name="art\terrain\harvest\snowtrail_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A0D406E6DCC5CC91" name="art\terrain\harvest\forerunnertile_05_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CF685A1376F25532" name="art\terrain\harvest\forerunnertile_03_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E07B49E860AF7D63" name="art\terrain\harvest\snow_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="491C993D4ABBD5B5" name="art\terrain\harvest\forerunnertile_04_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4C3739594752CC46" name="art\terrain\harvest\snowtrail_02_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="46BC4D197D278509" name="art\terrain\harvest\snow_02_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EC7480F72B2584F0" name="art\terrain\harvest\snowrock_04_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BFDC0545A9720639" name="art\terrain\harvest\snowrock_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B4E8F3EDCB3CEF31" name="art\terrain\harvest\snowrock_03_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2081C8853DF10E4E" name="art\terrain\harvest\snowtrail_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9C92D75B84ADE36B" name="art\terrain\harvest\forerunnertile_05_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4D0EA2CEED2BF493" name="art\terrain\harvest\forerunnertile_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="30FA3FF642E076CC" name="art\terrain\harvest\snow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B8F8635D0F4F00D4" name="art\terrain\harvest\forerunnertile_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="BF969985CFFDD232" name="art\terrain\harvest\snowtrail_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8D802109C31BFA2C" name="art\terrain\harvest\snow_02_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2910715D4DE0A18A" name="art\terrain\harvest\snowrock_04_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="50383A5F83CEB4E7" name="art\terrain\harvest\snowrock_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C46A3A48F07BE203" name="art\terrain\harvest\snowrock_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F48D7F8B0631DA70" name="scenario\skirmish\design\frozen_valley\frozen_valley.lrp" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B5C1CA708403AB31" name="art\environment\sky\beta_3v3_arabia_en.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="04250379F5B911CC" name="scenario\skirmish\design\frozen_valley\frozen_valley.gls" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="42B21A384DF4DF00" name="scenario\skirmish\design\frozen_valley\frozen_valley.fls" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5BE3981A5CE4A7A6" name="art\ui\flash\minimaps\frozen_valley.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7DD335EB5A2CBC66" name="art\hook\bonus\reactor_01\reactorplatform_01_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F18A58AD0B49D787" name="art\hook\buff\healing_01\healing_decal_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CBB031438BCC3E1E" name="art\environment\harvest\wallsnow_01\wallsnow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="44C90A507C03ADF1" name="art\covenant\infantry\weapons_01\plasma_pistol_01\plasma_pistol_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6BB46B286A9DAB1F" name="art\hook\bonus\reactor_01\reactor_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="000F8F5CC9DFB02E" name="art\hook\buff\healing_01\strips_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C84E162A4D44E00F" name="art\campaign\utility\runetough_01\runewars_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7EA492D6E64BFA0D" name="art\hook\buff\healing_01\healing_decal_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A9E8D778E3817E6C" name="art\environment\harvest\wastespiresnow_01\wastspiresnow_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="49CBA98BFE6D52AD" name="art\creep\infantry\jackal_01\jackal_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5BD38323A620B27B" name="art\environment\harvest\crystal_01\crystal_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="42056526281D917D" name="art\environment\creatures\bird_01\bird_snow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="89827F21E7278F78" name="art\environment\creatures\bird_01\bird_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CEED279CF484979B" name="art\creep\infantry\jackal_01\jackal_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="059FEC1469EAD59A" name="art\environment\harvest\treedead02xlrg_01\icecicle_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8D908B401FD1AF47" name="art\environment\harvest\pelicanwreck_01\pelicanwreck_b_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9C9D6544693AAC20" name="art\environment\harvest\pelicanwreck_01\pelicanwreck01b_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0DBF5D6A4303337D" name="art\hook\bonus\reactor_01\reactorplatform_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0DE776830CF77C45" name="art\environment\harvest\wallsnow_01\wallsnow_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0B7588C204FAAA1F" name="art\environment\harvest\foreventsnow_01\foreventsnow_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="17A3824E5EE6DAE5" name="art\hook\buff\healing_01\healing_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B6FF5AE7B47E1C66" name="art\hook\buff\healing_01\strips_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="32C81368B3B56F03" name="art\environment\harvest\iceplane_01\iceplane_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C8A6B72E183E2E0C" name="art\environment\harvest\iceplane_01\iceplane_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A6F5044A515A850C" name="art\environment\harvest\rock01xlrg_01\rock01xlrg_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="43692D76B5176DBC" name="art\hook\bonus\reactor_01\reactor_xf.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E58EA9B261101FA9" name="art\environment\harvest\wastespiresnow_01\wastspiresnow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="6466F43A26083002" name="art\hook\buff\healing_01\strips_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3315077B831CA84C" name="art\campaign\utility\runetough_01\runewars_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="CCF83F2F47569909" name="art\environment\harvest\foreventsnow_01\foreventsnow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DCD8E850FE4AB96A" name="art\environment\harvest\iceplane_01\iceplane_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2B3871287CDBBC0B" name="art\creep\infantry\jackal_01\jackal_01_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8CBF1F8EE0B7BBB9" name="art\hook\bonus\reactor_01\reactor_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="48EB20C5899A5A0A" name="art\environment\harvest\forundoorsnow_01\forundoorsnow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7FA457121033ACED" name="art\environment\harvest\forundoorsnow_01\forundoorsnow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B99BF70CB6BD9623" name="art\hook\buff\healing_01\strips_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7CADD87B5DC05948" name="art\hook\buff\healing_01\strips_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="AB62A6119A945D60" name="art\environment\harvest\wallcornersnow_01\wallcornersnow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="899B23EC58598023" name="art\environment\harvest\treedead01med_01\treebark_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4E7C4EF9A0DB122F" name="art\environment\harvest\wastespiresnow_01\wastspiresnow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="77A8114ECB86065C" name="art\hook\bonus\reactor_01\reactorplatform_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C808D64B6780F26D" name="art\environment\harvest\crystal_01\crystal_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="76ED3FE34EAC3B52" name="art\hook\buff\healing_01\ramp_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="47F7A6C7AADC4B7B" name="art\environment\harvest\wallcornersnow_01\wallcornersnow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2DF1C4C57B07A438" name="art\environment\harvest\forundoorsnow_01\forundoorsnow_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="83525F1D0C4B5A7A" name="art\environment\harvest\treedead01med_01\treebark_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="04579B90FED1F7F1" name="art\environment\harvest\iceplane_01\iceplane_01_ao.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F003151F7D74042F" name="art\hook\bonus\reactor_01\reactorplatform_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D65EB38A9A0E624E" name="art\environment\harvest\wallsnow_01\wallsnow_01_rm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="1276BA8CCB38682E" name="art\environment\harvest\pelicanwreck_01\pelicanwreck_b_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="4FFCD97551CFCC21" name="art\environment\harvest\treedead02xlrg_01\icecicle_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="26A689E7193544FC" name="art\environment\harvest\wallsnow_01\wallsnow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9D7EC3D8B60C50B4" name="art\environment\creatures\bird_01\bird_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C33ACFEB91C4598A" name="art\environment\harvest\rock01xlrg_01\rock01xlrg_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="8203075750D1DA57" name="art\hook\buff\healing_01\ramp_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3EB6FFEA60C9482E" name="art\hook\buff\healing_01\healing_decal_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="390F43867523B306" name="art\environment\harvest\treedead02xlrg_01\icecicle_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="0188F0A160D9679A" name="art\environment\harvest\pelicanwreck_01\decal_03_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="35EAC31D573AA4BA" name="art\environment\harvest\foreventsnow_01\foreventsnow_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="C76B348E4A1CC938" name="art\creep\infantry\jackal_01\jackal_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="EC81F7C8382139B4" name="art\environment\harvest\foreventsnow_01\foreventsnow_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A10E28357C707DF4" name="art\hook\bonus\reactor_01\reactorplatform_01_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="274782CE89D45C7D" name="art\hook\buff\healing_01\healing_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="9DA49EC71AA89ACD" name="art\environment\harvest\treedead01med_01\treebark_01_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="46F9E3FD134BA49F" name="art\hook\bonus\reactor_01\reactor_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="E4F4D89CB3785B2B" name="art\environment\harvest\crystal_01\crystal_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7F8259C2D38E71AA" name="art\hook\buff\healing_01\healing_decal_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="80C463CC42B1E873" name="art\environment\harvest\treedead02xlrg_01\icecicle_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="091B739747DF26E1" name="art\environment\harvest\crystal_01\crystal_01_nm.ddx" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="25561771C669328E" name="art\environment\harvest\forundoorsnow_01\forundoorsnow_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="5CA8CB7814406DBE" name="art\environment\harvest\wallcornersnow_01\wallcornersnow_01_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="017733C6FF93E6CB" name="art\hook\buff\healing_01\healing_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D27B7A27F3AB6ACD" name="art\environment\harvest\treedead02xlrg_01\icecicle_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="020A4C77FB87E722" name="art\hook\bonus\reactor_01\reactor_nm.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FF24069669A25E53" name="art\environment\harvest\wallcornersnow_01\wallcornersnow_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="B52ED598978D20A3" name="art\environment\harvest\rock01xlrg_01\rock01xlrg_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="ED28E3B1BA193A3C" name="art\environment\harvest\pelicanwreck_01\decal_03_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="2A74FEE4BDCB0522" name="art\hook\bonus\reactor_01\reactor_ef.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="7D8924043CCE75EE" name="art\hook\buff\healing_01\healing_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="76E25631D80A67B3" name="art\environment\harvest\pelicanwreck_01\decal_03_op.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="DCA3B1F96C3F1ABF" name="art\hook\bonus\reactor_01\reactorplatform_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="3362F8D453C99AEF" name="art\environment\harvest\iceplane_01\iceplane_01_df.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="094DB11153376D5F" name="art\environment\creatures\bird_01\bird_snow_01_sp.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="A23C4D40D9D245FF" name="art\environment\harvest\wallsnow_01\wallsnow_01_em.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="FE68AED00A83D089" name="art\effects\energy\noise.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="02B13240EFFBC663" name="art\effects\fire\fire_01.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="F7192EA3FDC90D95" name="art\effects\flares\flare_streak_01_fx.ddx" Compression="DeflateRaw" />
+    <chunk fileDateTime="2017-01-01 00:00:00Z" id="D99DFC6B949AF409" name="art\unsc\air\pelican_01\pelican_01_rm.ddx" Compression="DeflateRaw" />
+  </Files>
+</EraArchive>

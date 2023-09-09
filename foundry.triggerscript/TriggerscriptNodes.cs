@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static hwfoundry.scenario.TriggerscriptEditorPage;
+using static foundry.triggerscript.TriggerscriptEditorPage;
 
-namespace hwfoundry.scenario
+//TODO: This shit is a mess! CLEAN IT UP
+namespace foundry.triggerscript
 {
     //////////////////////////////////////////////////////////////////////////////////////
     public class TriggerscripterSocket
@@ -40,11 +43,21 @@ namespace hwfoundry.scenario
 		/// </summary>
         public virtual void Draw(PaintEventArgs e)
         {
-            Rectangle nodePlusOffs = new Rectangle(OwnerNode.PosX + BoundingRect.X, OwnerNode.PosY + BoundingRect.Y, BoundingRect.Width, BoundingRect.Height);
-            e.Graphics.FillRectangle(new SolidBrush(Color), nodePlusOffs);
+            e.Graphics.FillRectangle(new SolidBrush(Color),
+                    OwnerNode.PosX + BoundingRect.X,
+                    OwnerNode.PosY + BoundingRect.Y,
+                    BoundingRect.Width,
+                    BoundingRect.Height
+                    );
+
 			if (OwnerNode.Owner.DrawDetail())
 			{
-				e.Graphics.DrawRectangle(new Pen(Color.Black, 1.0f), nodePlusOffs);
+				e.Graphics.DrawRectangle(new Pen(Color.Black, 1.0f),
+                    OwnerNode.PosX + BoundingRect.X,
+                    OwnerNode.PosY + BoundingRect.Y,
+                    BoundingRect.Width,
+                    BoundingRect.Height
+                    );
 			}
         }
         public bool PointIsIn(int x, int y)
@@ -67,29 +80,26 @@ namespace hwfoundry.scenario
 		/// </summary>
 		public void FinalizeConnection(TriggerscripterSocket_Output s)
         {
-            ConnectedSockets.Add(s);
+            if(s.ConnectedSockets.Contains(this))
+                ConnectedSockets.Add(s);
         }
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
-            Font f = new Font("Arial", 14.5f, FontStyle.Regular);
 
 			if (OwnerNode.Owner.DrawDetail())
 			{
 				if (ShowType)
 				{
-					OwnerNode.DrawStringOnNode(e.Graphics, f, Text, Color.White,
+					OwnerNode.DrawStringOnNode(e.Graphics, TriggerscripterNode.SocketFont, string.Format("{0}\n[{1}]", Text, ValueType), Color.White,
 						BoundingRect.X + 27,
-						BoundingRect.Y - 14);
-					OwnerNode.DrawStringOnNode(e.Graphics, f, "[" + ValueType + "]", Color.White,
-						BoundingRect.X + 27,
-						BoundingRect.Y + 8);
+						BoundingRect.Y - 19);
 				}
 				else
 				{
-					OwnerNode.DrawStringOnNode(e.Graphics, f, Text, Color.White,
+					OwnerNode.DrawStringOnNode(e.Graphics, TriggerscripterNode.SocketFont, Text, Color.White,
 						BoundingRect.X + 27,
-						BoundingRect.Y - 1);
+						BoundingRect.Y - 5);
 				}
 			}
         }
@@ -106,23 +116,18 @@ namespace hwfoundry.scenario
             base.Draw(e);
 			if (OwnerNode.Owner.DrawDetail())
 			{
-				Font f = new Font("Arial", 14.5f, FontStyle.Regular);
 				if (ShowType)
 				{
-					OwnerNode.DrawStringOnNode(e.Graphics, f, Text, Color.White,
+					OwnerNode.DrawStringOnNode(e.Graphics, TriggerscripterNode.SocketFont, string.Format("{0}\n[{1}]", Text, ValueType), Color.White,
 						BoundingRect.X - 7,
-						BoundingRect.Y - 12,
-						StringFormatFlags.DirectionRightToLeft);
-					OwnerNode.DrawStringOnNode(e.Graphics, f, "[" + ValueType + "]", Color.White,
-						BoundingRect.X - 7,
-						BoundingRect.Y + 10,
+						BoundingRect.Y - 19,
 						StringFormatFlags.DirectionRightToLeft);
 				}
 				else
 				{
-					OwnerNode.DrawStringOnNode(e.Graphics, f, Text, Color.White,
-						BoundingRect.X - 8,
-						BoundingRect.Y,
+					OwnerNode.DrawStringOnNode(e.Graphics, TriggerscripterNode.SocketFont, Text, Color.White,
+						BoundingRect.X - 7,
+						BoundingRect.Y - 3,
 						StringFormatFlags.DirectionRightToLeft);
 				}
 			}
@@ -134,12 +139,12 @@ namespace hwfoundry.scenario
         {
             foreach (TriggerscripterSocket s in ConnectedSockets)
             {
-                int x1 = OwnerNode.PosX + BoundingRect.X + (SocketSize / 2);
-                int y1 = OwnerNode.PosY + BoundingRect.Y + (SocketSize / 2);
-                int x2 = s.OwnerNode.PosX + s.BoundingRect.X + (SocketSize / 2);
-                int y2 = s.OwnerNode.PosY + s.BoundingRect.Y + (SocketSize / 2);
+                float x1 = OwnerNode.PosX + BoundingRect.X + (SocketSize / 2);
+                float y1 = OwnerNode.PosY + BoundingRect.Y + (SocketSize / 2);
+                float x2 = s.OwnerNode.PosX + s.BoundingRect.X + (SocketSize / 2);
+                float y2 = s.OwnerNode.PosY + s.BoundingRect.Y + (SocketSize / 2);
 
-                int halfWidth = (x2 - x1) / 2;
+                float halfWidth = (x2 - x1) / 2;
 
                 Pen p = new Pen(new SolidBrush(Color), 5.0f);
                 e.Graphics.DrawLine(p, x1, y1, x1 + halfWidth, y1);
@@ -179,28 +184,36 @@ namespace hwfoundry.scenario
     //////////////////////////////////////////////////////////////////////////////////////
     public class TriggerscripterNode
     {
+        public static Font SocketFont = new Font("Arial", 24, FontStyle.Regular, GraphicsUnit.Pixel);
+        public static Font TitleFont     = new Font("Arial", 28, FontStyle.Regular, GraphicsUnit.Pixel);
+        public static Font TitleFontBold = new Font("Arial", 28, FontStyle.Bold, GraphicsUnit.Pixel);
+
         public TriggerscriptEditorPage Owner { get; private set; }
-        public object Data { get; private set; }
-		public int Width { get; private set; } = 350;
-		public int Height { get; private set; } = 0;
+        public object Data { get; set; }
+		public int Width { get; set; } = 425;
+		public int Height { get; set; } = 0;
 		public int BottomPadding { get; private set; } = 0;
-        public int PosX { get; private set; }
-		public int PosY { get; private set; }
-        public Color HeaderColor { get; private set; } = Color.Black;
-        public string Name { get; private set; } = "node";
+        public float PosX { get; set; }
+		public float PosY { get; set; }
+        public Color HeaderColor { get; set; } = Color.Black;
+        public string Name { get; set; } = "node";
         public string Type { get; private set; } = "null";
         public string HandleAs { get; private set; } = "null";
         public int Id { get; private set; } = -1;
 
 
 		//TODO make these properties.
-        public int selectedX = 0, selectedY = 0;
         public bool selected = false;
 		//these too
         public Dictionary<string, TriggerscripterSocket> sockets = new Dictionary<string, TriggerscripterSocket>();
         int inSockets = 0, outSockets = 0;
 
-        public TriggerscripterNode(TriggerscriptEditorPage control, object data, int px, int py, int id, string name, string type, string handleAs, Color headerColor, int bottomPadding = 0)
+        public TriggerscripterNode(TriggerscriptEditorPage control, int id, string type, string handleAs)
+        {
+            Owner = control;
+            HandleAs = handleAs;
+        }
+        public TriggerscripterNode(TriggerscriptEditorPage control, object data, float px, float py, int id, string name, string type, string handleAs, Color headerColor, int bottomPadding = 0)
         {
             Owner = control;
 			Data = data;
@@ -219,7 +232,7 @@ namespace hwfoundry.scenario
             PosX = px;
             PosY = py;
         }
-        public void Move(int mx, int my)
+        public void Move(float mx, float my)
         {
             PosX += mx;
             PosY += my;
@@ -268,7 +281,7 @@ namespace hwfoundry.scenario
                 return null;
             }
         }
-        public bool PointIsIn(int mx, int my)
+        public bool PointIsIn(float mx, float my)
         {
             if (mx >= PosX && mx <= PosX + Width && my >= PosY && my <= PosY + Height)
             {
@@ -279,7 +292,7 @@ namespace hwfoundry.scenario
                 return false;
             }
         }
-        public bool PointIsInHeader(int mx, int my, out int offsX, out int offsY)
+        public bool PointIsInHeader(float mx, float my, out float offsX, out float offsY)
         {
             if (mx >= PosX && mx <= PosX + Width && my >= PosY && my <= PosY + headerHeight)
             {
@@ -294,14 +307,14 @@ namespace hwfoundry.scenario
                 return false;
             }
         }
-        public bool IntersectsRect(int rx, int ry, int rwidth, int rheight)
+        public bool IntersectsRect(float rx, float ry, float rwidth, float rheight)
         {
-            Rectangle r1 = new Rectangle(PosX, PosY, Width, Height);
-            Rectangle r2 = new Rectangle(rx, ry, rwidth, rheight);
+            RectangleF r1 = new RectangleF(PosX, PosY, Width, Height);
+            RectangleF r2 = new RectangleF(rx, ry, rwidth, rheight);
 
             return r1.IntersectsWith(r2);
         }
-        public void GetPointOffset(int mx, int my, out int ox, out int oy)
+        public void GetPointOffset(float mx, float my, out float ox, out float oy)
         {
             ox = mx - PosX;
             oy = my - PosY;
@@ -343,14 +356,12 @@ namespace hwfoundry.scenario
 
 			if (Owner.DrawDetail())
 			{
-            Font fb = new Font("Arial", 18, FontStyle.Bold);
-            Font fr = new Font("Arial", 18, FontStyle.Regular);
-            DrawStringOnNode(e.Graphics, fb, TrunicateString(e.Graphics, fb, Name, Width - 60), Color.White, 3, 3);
-            DrawStringOnNode(e.Graphics, fr, TrunicateString(e.Graphics, fr, Type, Width - 60), Color.White, 3, 29);
-
-				Color borderColor = selected ? Color.White : Color.Black;
-				e.Graphics.DrawRectangle(new Pen(borderColor, 1.0f), PosX, PosY, Width, Height + BottomPadding);
+                DrawStringOnNode(e.Graphics, TitleFontBold, TrunicateString(e.Graphics, TitleFontBold, Name, Width - 60), Color.White, 3, 3);
+                DrawStringOnNode(e.Graphics, TitleFont,     TrunicateString(e.Graphics, TitleFont,     Type, Width - 60), Color.White, 3, 29);
 			}
+
+            Color borderColor = selected ? Color.White : Color.Black;
+            e.Graphics.DrawRectangle(new Pen(borderColor, 1.0f), PosX, PosY, Width, Height + BottomPadding);
 
             foreach (var socket in sockets)
             {
@@ -365,7 +376,15 @@ namespace hwfoundry.scenario
 		public bool Active { get; set; }
 		public bool Conditional { get; set; }
 
-		public TriggerscripterNode_Trigger(TriggerscriptEditorPage control, SerializedTrigger t, int px, int py, int id)
+		public TriggerscripterNode_Trigger(TriggerscriptEditorPage control, string name, float px, float py, int id)
+			: base(control, null, px, py, id, name, "Trigger", "Trigger", trgColor)
+        {
+            AddSocket(true, "Caller", "TRG", TriggerscriptEditorPage.trgColor, false, true);
+            AddSocket(true, "Conditions", "CND", TriggerscriptEditorPage.cndColor, false, true);
+            AddSocket(false, "Call On True", "EFF", TriggerscriptEditorPage.effColor, false, false);
+            AddSocket(false, "Call On False", "EFF", TriggerscriptEditorPage.effColor, false, false);
+        }
+		public TriggerscripterNode_Trigger(TriggerscriptEditorPage control, SerializedTrigger t, float px, float py, int id)
 			: base(control, t, px, py, id, t.name, "Trigger", "Trigger", trgColor)
         {
             AddSocket(true, "Caller", "TRG", TriggerscriptEditorPage.trgColor, false, true);
@@ -406,28 +425,34 @@ namespace hwfoundry.scenario
     {
         public string Value { get; set; }
 
-		public TriggerscripterNode_Variable(TriggerscriptEditorPage control, SerializedVariable v, int px, int py, int id)
+		public TriggerscripterNode_Variable(TriggerscriptEditorPage control, SerializedVariable v, float px, float py, int id)
 			: base(control, v, px, py, id, v.name, v.type, "Variable", requiredVarColor, 50)
 		{
 			AddSocket(true, "Set", v.type, requiredVarColor, false);
 			AddSocket(false, "Use", v.type, requiredVarColor, false);
 			Value = v.value;
 		}
+		public TriggerscripterNode_Variable(TriggerscriptEditorPage control, TriggerscriptClass.TriggerVarClass v, float px, float py, int id)
+			: base(control, null, px,py,id, v.Name, v.Type, "Variable", requiredVarColor, 50)
+		{
+			AddSocket(true, "Set", v.Type, requiredVarColor, false);
+			AddSocket(false, "Use", v.Type, requiredVarColor, false);
+		}
+
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
 			if (Owner.DrawDetail())
 			{
 				e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(60, 60, 60)), PosX + 10, PosY + Height - 10, Width - 20, 50);
-				Font f = new Font("Arial", 16, FontStyle.Regular);
-				DrawStringOnNode(e.Graphics, f, TrunicateString(e.Graphics, f, Value, Width - 40), Color.White, 15, Height);
+				DrawStringOnNode(e.Graphics, SocketFont, TrunicateString(e.Graphics, SocketFont, Value, Width - 40), Color.White, 15, Height);
 			}
         }
     }
 	// effect ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public class TriggerscripterNode_Effect : TriggerscripterNode
 	{
-		public TriggerscripterNode_Effect(TriggerscriptEditorPage control, SerializedEffect e, int px, int py, int id)
+		public TriggerscripterNode_Effect(TriggerscriptEditorPage control, SerializedEffect e, float px, float py, int id)
 			: base(control, e, px, py, id, e.name, "Condition", "Condition", effColor)
 		{
 			AddSocket(true, "Caller", "EFF", effColor, false, false);
@@ -451,6 +476,36 @@ namespace hwfoundry.scenario
 				AddSocket(false, "Trigger", "TRG", trgColor, false, false);
 			}
 		}
+        public TriggerscripterNode_Effect(TriggerscriptEditorPage control, TriggerscriptClass.TriggerClass.EffectClass e, float px, float py, int id)
+            : base(control, e, px, py, id, e.Type, "Condition", "Condition", effColor)
+        {
+            AddSocket(true, "Caller", "EFF", effColor, false, false);
+            AddSocket(false, "Call", "EFF", effColor, false, false);
+
+            if (e.Type.Contains("Trigger"))
+            {
+                if (e.Inputs != null)
+                {
+                    foreach (var i in e.Inputs)
+                    {
+                        Color color = i.Optional ? optionalVarColor : requiredVarColor;
+                        AddSocket(true, i.Name, i.Name, color, true, false);
+                    }
+                }
+                if (e.Outputs != null)
+                {
+                    foreach (var ou in e.Outputs)
+                    {
+                        Color color = ou.Optional ? optionalVarColor : requiredVarColor;
+                        AddSocket(false, ou.Name, ou.Name, color, true, false);
+                    }
+                }
+            }
+            else
+            {
+                AddSocket(false, "Trigger", "TRG", trgColor, false, false);
+            }
+        }
 
 		public override void Draw(PaintEventArgs e)
 		{
@@ -462,7 +517,7 @@ namespace hwfoundry.scenario
     {
         public bool Inverted { get; set; }
 
-		public TriggerscripterNode_Condition(TriggerscriptEditorPage control, SerializedCondition c, int px, int py, int id)
+		public TriggerscripterNode_Condition(TriggerscriptEditorPage control, SerializedCondition c, float px, float py, int id)
 			: base(control, c, px, py, id, c.name, "Condition", "Condition", cndColor)
 		{
 			AddSocket(false, "Result", "CND", cndColor, false, false);
@@ -480,7 +535,6 @@ namespace hwfoundry.scenario
         public override void Draw(PaintEventArgs e)
         {
             base.Draw(e);
-            Font f = new Font("Arial", 27, FontStyle.Regular);
 
 			if (Owner.DrawDetail())
 			{

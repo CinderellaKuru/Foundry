@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Foundry.Properties {
+namespace foundry.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Foundry.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Foundry.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("foundry.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,16 +63,6 @@ namespace Foundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap _lock {
-            get {
-                object obj = ResourceManager.GetObject("_lock", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap arrow_refresh_small {
             get {
                 object obj = ResourceManager.GetObject("arrow_refresh_small", resourceCulture);
@@ -86,6 +76,36 @@ namespace Foundry.Properties {
         public static System.Drawing.Bitmap box {
             get {
                 object obj = ResourceManager.GetObject("box", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap bullet_delete {
+            get {
+                object obj = ResourceManager.GetObject("bullet_delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap bullet_green {
+            get {
+                object obj = ResourceManager.GetObject("bullet_green", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap bullet_red {
+            get {
+                object obj = ResourceManager.GetObject("bullet_red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -185,9 +205,9 @@ namespace Foundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap icon_skirt {
+        public static System.Drawing.Bitmap folder_magnify {
             get {
-                object obj = ResourceManager.GetObject("icon_skirt", resourceCulture);
+                object obj = ResourceManager.GetObject("folder_magnify", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -195,9 +215,9 @@ namespace Foundry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap lock_open {
+        public static System.Drawing.Bitmap icon_skirt {
             get {
-                object obj = ResourceManager.GetObject("lock_open", resourceCulture);
+                object obj = ResourceManager.GetObject("icon_skirt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

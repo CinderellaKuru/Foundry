@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Foundry.Util
+namespace foundry.Util
 {
 	public static class ECF
 	{

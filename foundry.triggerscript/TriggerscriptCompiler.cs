@@ -6,10 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace hwfoundry.scenario
+namespace foundry.triggerscript
 {
-	//TODO: move this class into TriggerscriptEditorPage (maybe?).
-	using static hwfoundry.scenario.TriggerscriptEditorPage;
+	//TODO: move this class into TriggerscriptEditorPage (maybe?) [no.].
 	public class TriggerscriptCompiler
     {
         List<int> varIds = new List<int>();

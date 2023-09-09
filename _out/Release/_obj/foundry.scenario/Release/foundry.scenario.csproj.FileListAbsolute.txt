@@ -1,0 +1,12 @@
+R:\foundry\_out\Release\modules\foundry.scenario.deps.json
+R:\foundry\_out\Release\modules\foundry.scenario.dll
+R:\foundry\_out\Release\modules\foundry.scenario.pdb
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.csproj.AssemblyReference.cache
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\hwfoundry.scenario.SceneEditorPage.resources
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.csproj.GenerateResource.cache
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.dll
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\refint\foundry.scenario.dll
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\foundry.scenario.pdb
+R:\foundry\_out\Release\_obj\foundry.scenario\Release\ref\foundry.scenario.dll

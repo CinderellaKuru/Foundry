@@ -13,10 +13,17 @@
           "DockPanelSuite.ThemeVS2015": "3.1.0",
           "HelixToolkit": "2.24.0",
           "HelixToolkit.SharpDX.Core": "2.24.0",
+          "KSoft": "1.0.0",
+          "KSoft.Compression": "1.0.0",
+          "KSoft.IO.TagElementStreams": "1.0.0",
+          "KSoft.Math": "1.0.0",
+          "KSoft.Phoenix": "1.0.0",
+          "KSoft.Security": "1.0.0",
+          "KSoft.T4": "1.0.0",
           "Newtonsoft.Json": "13.0.3",
+          "ObjectListView.Official": "2.9.2-alpha2",
           "YAXLib": "4.1.0",
-          "KSoft": "0.0.8588.38070",
-          "KSoft.Phoenix": "0.0.8588.38075"
+          "ini-parser": "2.5.2"
         },
         "runtime": {
           "foundry.dll": {}
@@ -94,6 +101,14 @@
           }
         }
       },
+      "ini-parser/2.5.2": {
+        "runtime": {
+          "lib/net20/INIFileParser.dll": {
+            "assemblyVersion": "2.5.2.0",
+            "fileVersion": "2.5.2.0"
+          }
+        }
+      },
       "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
         "runtime": {
           "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {
@@ -164,6 +179,14 @@
           "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
             "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "ObjectListView.Official/2.9.2-alpha2": {
+        "runtime": {
+          "lib/net20/ObjectListView.dll": {
+            "assemblyVersion": "2.9.1.25410",
+            "fileVersion": "2.9.1.0"
           }
         }
       },
@@ -1007,52 +1030,61 @@
           }
         }
       },
-      "KSoft/0.0.8588.38070": {
+      "KSoft/1.0.0": {
+        "dependencies": {
+          "KSoft.T4": "1.0.0"
+        },
         "runtime": {
-          "KSoft.dll": {
-            "assemblyVersion": "0.0.8588.38070",
-            "fileVersion": "0.0.8588.38070"
-          }
+          "KSoft.dll": {}
         }
       },
-      "KSoft.Phoenix/0.0.8588.38075": {
+      "KSoft.Compression/1.0.0": {
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
         "runtime": {
-          "KSoft.Phoenix.dll": {
-            "assemblyVersion": "0.0.8588.38075",
-            "fileVersion": "0.0.8588.38075"
-          }
+          "KSoft.Compression.dll": {}
         }
       },
-      "KSoft.Security/0.0.8588.38071": {
+      "KSoft.IO.TagElementStreams/1.0.0": {
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
         "runtime": {
-          "KSoft.Security.dll": {
-            "assemblyVersion": "0.0.8588.38071",
-            "fileVersion": "0.0.8588.38071"
-          }
+          "KSoft.IO.TagElementStreams.dll": {}
         }
       },
-      "KSoft.IO.TagElementStreams/0.0.8588.38074": {
+      "KSoft.Math/1.0.0": {
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
         "runtime": {
-          "KSoft.IO.TagElementStreams.dll": {
-            "assemblyVersion": "0.0.8588.38074",
-            "fileVersion": "0.0.8588.38074"
-          }
+          "KSoft.Math.dll": {}
         }
       },
-      "KSoft.Math/0.0.8588.38071": {
+      "KSoft.Phoenix/1.0.0": {
+        "dependencies": {
+          "KSoft": "1.0.0",
+          "KSoft.Compression": "1.0.0",
+          "KSoft.IO.TagElementStreams": "1.0.0",
+          "KSoft.Math": "1.0.0",
+          "KSoft.Security": "1.0.0"
+        },
         "runtime": {
-          "KSoft.Math.dll": {
-            "assemblyVersion": "0.0.8588.38071",
-            "fileVersion": "0.0.8588.38071"
-          }
+          "KSoft.Phoenix.dll": {}
         }
       },
-      "KSoft.Compression/0.0.8588.38071": {
+      "KSoft.Security/1.0.0": {
+        "dependencies": {
+          "KSoft": "1.0.0"
+        },
         "runtime": {
-          "KSoft.Compression.dll": {
-            "assemblyVersion": "0.0.8588.38071",
-            "fileVersion": "0.0.8588.38071"
-          }
+          "KSoft.Security.dll": {}
+        }
+      },
+      "KSoft.T4/1.0.0": {
+        "runtime": {
+          "KSoft.T4.dll": {}
         }
       },
       "ICSharpCode.SharpZipLib/1.2.0.246": {
@@ -1060,6 +1092,30 @@
           "ICSharpCode.SharpZipLib.dll": {
             "assemblyVersion": "1.2.0.246",
             "fileVersion": "1.2.0.246"
+          }
+        }
+      },
+      "Microsoft.VisualStudio.TextTemplating/17.0.0.0": {
+        "runtime": {
+          "Microsoft.VisualStudio.TextTemplating.dll": {
+            "assemblyVersion": "17.0.0.0",
+            "fileVersion": "17.3.32921.402"
+          }
+        }
+      },
+      "Microsoft.VisualStudio.TextTemplating.Interfaces.11.0/11.0.0.0": {
+        "runtime": {
+          "Microsoft.VisualStudio.TextTemplating.Interfaces.11.0.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.50727.1"
+          }
+        }
+      },
+      "Microsoft.VisualStudio.TextTemplating.Interfaces.10.0/10.0.0.0": {
+        "runtime": {
+          "Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.30319.1"
           }
         }
       }
@@ -1113,6 +1169,13 @@
       "path": "helixtoolkit.sharpdx.core/2.24.0",
       "hashPath": "helixtoolkit.sharpdx.core.2.24.0.nupkg.sha512"
     },
+    "ini-parser/2.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hp3gKmC/14+6eKLgv7Jd1Z7OV86lO+tNfOXr/stQbwmRhdQuXVSvrRAuAe7G5+lwhkov0XkqZ8/bn1PYWMx6eg==",
+      "path": "ini-parser/2.5.2",
+      "hashPath": "ini-parser.2.5.2.nupkg.sha512"
+    },
     "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
       "type": "package",
       "serviceable": true,
@@ -1154,6 +1217,13 @@
       "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "ObjectListView.Official/2.9.2-alpha2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9U24/g7Nyv86Br/TsuFqyW98J1R0SRN8RkCLDnSQSDGoGj5YIZatyPMTkJZSSHg1AskuleItMCgqPzNA8svDZA==",
+      "path": "objectlistview.official/2.9.2-alpha2",
+      "hashPath": "objectlistview.official.2.9.2-alpha2.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",
@@ -1771,37 +1841,57 @@
       "path": "yaxlib/4.1.0",
       "hashPath": "yaxlib.4.1.0.nupkg.sha512"
     },
-    "KSoft/0.0.8588.38070": {
-      "type": "reference",
+    "KSoft/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KSoft.Phoenix/0.0.8588.38075": {
-      "type": "reference",
+    "KSoft.Compression/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KSoft.Security/0.0.8588.38071": {
-      "type": "reference",
+    "KSoft.IO.TagElementStreams/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KSoft.IO.TagElementStreams/0.0.8588.38074": {
-      "type": "reference",
+    "KSoft.Math/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KSoft.Math/0.0.8588.38071": {
-      "type": "reference",
+    "KSoft.Phoenix/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KSoft.Compression/0.0.8588.38071": {
-      "type": "reference",
+    "KSoft.Security/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "KSoft.T4/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "ICSharpCode.SharpZipLib/1.2.0.246": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.VisualStudio.TextTemplating/17.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.VisualStudio.TextTemplating.Interfaces.11.0/11.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.VisualStudio.TextTemplating.Interfaces.10.0/10.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

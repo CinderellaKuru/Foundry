@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KSoft;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,23 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static Foundry.FoundryInstance;
+using static foundry.FoundryInstance;
 
-namespace Foundry
+namespace foundry
 {
-	public abstract class BaseEditorPage : DockContent
+	public abstract class BaseEditorPage : BaseToolPage
 	{
-		private FoundryInstance Instance;
 		private string cachedFileName = null;
 		private bool loaded = false;
 		private bool edited = false;
-		public BaseEditorPage()
+        public BaseEditorPage()
 		{
 			mouseState = new MouseState();
 			downKeys = new List<Keys>();
 
-			ControlAdded += new ControlEventHandler(InternalOnly_ControlAdded);
-			FormClosing += new FormClosingEventHandler(Internal_Closed);
+			ControlAdded += new ControlEventHandler(Internal_ControlAdded);
 			Resize += new EventHandler(Internal_Resize);
 
 			MouseMove += new MouseEventHandler(Internal_MouseMoved);
@@ -33,39 +32,32 @@ namespace Foundry
 
 			KeyDown += new KeyEventHandler(Internal_KeyDown);
 			KeyUp += new KeyEventHandler(Internal_KeyUp);
-		}
-		public void Init(FoundryInstance i)
-		{
-			Instance = i;
-			SetRenderInterval(16);
-			renderTimer.Start();
-			OnInit();
-        }
-        protected abstract string GetSaveExtension();
-		protected abstract string GetImportExtension();
 
+			OnPageInit += (sender, e) =>
+			{
+				SetRenderInterval(16);
+				renderTimer.Start();
+			};
+        }
 
 		#region internal events
-		private void InternalOnly_ControlAdded(object o, ControlEventArgs e)
+		private void Internal_ControlAdded(object o, ControlEventArgs e)
 		{
-			e.Control.MouseMove += new MouseEventHandler(Internal_MouseMoved);
-			e.Control.MouseWheel += new MouseEventHandler(Internal_MouseWheelMoved);
-			e.Control.MouseDown += new MouseEventHandler(Internal_MouseButtonDown);
-			e.Control.MouseUp += new MouseEventHandler(Internal_MouseButtonUp);
+			e.Control.ControlAdded += Internal_ControlAdded;
 
-			e.Control.KeyDown += new KeyEventHandler(Internal_KeyDown);
-			e.Control.KeyUp += new KeyEventHandler(Internal_KeyUp);
-		}
-		private void Internal_Closed(object o, FormClosingEventArgs e)
-		{
-			Controls.Clear();
-			OnClose();
+            e.Control.MouseMove += Internal_MouseMoved;
+			e.Control.MouseWheel += Internal_MouseWheelMoved;
+			e.Control.MouseDown += Internal_MouseButtonDown;
+			e.Control.MouseUp += Internal_MouseButtonUp;
+
+			e.Control.KeyDown += Internal_KeyDown;
+			e.Control.KeyUp += Internal_KeyUp;
 		}
 		private void Internal_Resize(object o, EventArgs e)
 		{
 			if (!Disposing)
 			{
-				OnResize();
+                OnPageResize?.Invoke(this, null);
 			}
 		}
 
@@ -80,8 +72,8 @@ namespace Foundry
 		private MouseState mouseState;
 		private void Internal_MouseMoved(object o, MouseEventArgs e)
 		{
-			mouseState.deltaX = mouseState.X - e.X;
-			mouseState.deltaY = mouseState.Y - e.Y;
+			mouseState.deltaX = e.X - mouseState.X;
+			mouseState.deltaY = e.Y - mouseState.Y;
 			mouseState.X = e.X;
 			mouseState.Y = e.Y;
 
@@ -178,43 +170,65 @@ namespace Foundry
         }
 
         //tick
-        public void SetRenderInterval(int milliseconds) { renderIntervalMilliseconds = milliseconds; }
-		private int renderIntervalMilliseconds;
-		private Stopwatch renderTimer = new Stopwatch();
-		/// <summary>
-		/// Calls OnTick, and when enough time has passed, OnDraw().
-		/// </summary>
-		private void Internal_Tick()
+        public void SetRenderInterval(long milliseconds) { renderIntervalMilliseconds = milliseconds; }
+        private Stopwatch renderTimer = new Stopwatch();
+		private long renderIntervalMilliseconds;
+
+
+        /// <summary>
+        /// Calls OnTick, and when enough time has passed, OnDraw().
+        /// </summary>
+        private void Internal_Tick()
 		{
-			try
-			{
-				OnTick();
-			}
-			catch (Exception e)
-			{
+			//Main Tick
+            try { OnPageTick?.Invoke(this, null); }
+			catch (Exception e) {
 				Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnTick() encountered an error. See console for details.", true,
 					string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
 			}
 
-			if (renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
+			//Dragging
+			if (mouseState.leftDown && !mouseState.leftDownLast)
 			{
-				try
-				{
-					OnDraw();
-				}
-				catch (Exception e)
-				{
+				try { OnPageClickL?.Invoke(this, null); }
+				catch (Exception e) {
+                    Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnDragStart() encountered an error. See console for details.", true,
+                        string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
+                }
+			}
+			if (mouseState.leftDown && mouseState.leftDownLast)
+			{
+				try { OnPageDragL?.Invoke(this, null); }
+				catch (Exception e) {
+                    Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnDragging() encountered an error. See console for details.", true,
+                        string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
+                }
+            }
+            if (!mouseState.leftDown && mouseState.leftDownLast)
+            {
+                try { OnPageReleaseL?.Invoke(this, null); }
+                catch (Exception e)   {
+                    Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnDragStop() encountered an error. See console for details.", true,
+                        string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
+                }
+            }
+
+            //Draw
+            if (renderTimer.ElapsedMilliseconds > renderIntervalMilliseconds)
+			{
+                try { OnPageDraw?.Invoke(this, null); }
+				catch (Exception e) {
 					Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnDraw() encountered an error. See console for details.", true,
 					string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
-				}
-				renderTimer.Restart();
-			}
-		}
+                }
+                renderTimer.Restart();
+            }
+        }
 		#endregion
 
 
 		#region external interactions
-		public bool TrySetEdited()
+        public bool TrySetEdited()
 		{
 			if (loaded)
 			{
@@ -222,7 +236,7 @@ namespace Foundry
 				{
 					try
 					{
-						OnEdit();
+						OnPageEdit?.Invoke(this, null);
 						edited = true;
 						return true;
 					}
@@ -237,224 +251,67 @@ namespace Foundry
 			}
 			return false;
 		}
-		public bool TryOpen(string file)
-		{
-			if(loaded)
-			{
-				TryClose(true);
-			}
-			if (File.Exists(file) && Path.GetExtension(file) == GetSaveExtension() && !loaded)
-			{
-				try
-				{
-					if (OnLoadFile(file))
-					{
-						Instance.AppendLog(LogEntryType.Info, "File " + Path.GetFileName(file) + " opened.", true);
-						edited = false;
-						loaded = true;
-						cachedFileName = file;
-                        Text = Path.GetFileName(file);
-                        return true;
-					}
-				}
-				catch (Exception e)
-				{
-					Instance.AppendLog(LogEntryType.Error, "TryOpen(): OnLoadFile() encountered an error. See console for details.", true,
-						string.Format("--Error info:\n--Editor type: {0}\n--Tried file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, file, e.Message, e.StackTrace));
-					return false;
-				}
-			}
-			return false;
-		}
-		public bool TryImport(string file)
-		{
-			if (!loaded && File.Exists(file) && Path.GetExtension(file) == GetImportExtension())
-			{
-				try
-				{
-					if (OnImportFile(file))
-					{
-						Instance.AppendLog(LogEntryType.Info, "File " + Path.GetFileName(file) + " imported.", true);
-						edited = true;
-						loaded = true;
-						return true;
-					}
-				}
-				catch (Exception e)
-				{
-					Instance.AppendLog(LogEntryType.Error, "TryImport(): OnImportFile() encountered an error. See console for details.", true,
-						string.Format("--Error info:\n--Editor type: {0}\n--Tried file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, file, e.Message, e.StackTrace));
-					return false;
-				}
-			}
-			return false;
-		}
-		public bool TryShow(DockPanel workspace, DockState state)
-		{
-			if (loaded)
-			{
-				try
-				{
-					Show(workspace, state);
-					return true;
-				}
-				catch (Exception e)
-				{
-					Instance.AppendLog(LogEntryType.Error, "TryShow(): Show() encountered an error. See console for details.", true,
-						string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
-					return false;
-				}
-			}
-			return false;
-		}
-		public bool TryClose(bool force = false)
-		{
-			if (loaded)
-			{
-				if (edited && !force)
-				{
-					//edited and do not force -- display prompt.
-					if (MessageBox.Show("Are you sure you want to close this page? Any unsaved progress will be lost.", "Warning!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-					{
-						goto CLOSE_ROUTINE;
-					}
-					return false;
-				}
-				else
-				{
-					//either not edited, or is forced -- no prompt.
-					goto CLOSE_ROUTINE;
-				}
-			}
-			return false;
-
-			CLOSE_ROUTINE:
-			Close();
-			try
-			{
-				OnClose();
-			}
-			catch (Exception e)
-			{
-				Instance.AppendLog(LogEntryType.Error, "TryClose(): OnClose() encountered an error. See console for details.", true,
-					string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
-				return false;
-			}
-			edited = false;
-			loaded = false;
-			cachedFileName = null;
-			return true;
-		}
-		public bool TrySave()
-		{
-			if (loaded && edited)
-			{
-				if (cachedFileName == null)
-				{
-					OpenFileDialog ofd = new OpenFileDialog();
-					ofd.Filter = "Foundry Content (*" + GetSaveExtension() + ")|*" + GetSaveExtension();
-					if (ofd.ShowDialog() == DialogResult.OK)
-					{
-						cachedFileName = ofd.FileName;
-						Instance.UpdateDirectory();
-					}
-				}
-				if (Path.GetExtension(cachedFileName) == GetSaveExtension())
-				{
-					try
-					{
-						if (OnSaveFile(cachedFileName))
-						{
-							edited = false;
-							return true;
-						}
-					}
-					catch (Exception e)
-					{
-						Instance.AppendLog(LogEntryType.Error, "TrySave(): OnSaveFile() encountered an error. See console for details.", true,
-							string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Exception information: {2}'\n'--Stacktrace:{3}", GetType().Name, cachedFileName, e.Message, e.StackTrace));
-						return false;
-					}
-				}
-				return false;
-			}
-			return false;
-
-		}
-		public bool TrySaveAs(string file)
-		{
-			if (loaded)
-			{
-				try
-				{
-					if (OnSaveFile(file))
-					{
-						edited = false;
-						return true;
-					}
-				}
-				catch (Exception e)
-				{
-					Instance.AppendLog(LogEntryType.Error, "TrySaveAs(): OnSaveFile() encountered an error. See console for details.", true,
-						string.Format("--Error info:\n--Editor type: {0}\n--Loaded file: {1}\n--Tried file: {2}\n--Exception information: {3}'\n'--Stacktrace:{4}", GetType().Name, cachedFileName, file, e.Message, e.StackTrace));
-					return false;
-				}
-			}
-			return false;
-
-		}
-
 		public bool IsEdited()
 		{
 			return edited;
 		}
+
+		public void Redraw()
+		{
+			OnPageDraw?.Invoke(this, null);
+		}
 		#endregion
 
+		public event EventHandler OnPageSave;
+		public event EventHandler OnPageSaveAs;
+		public event EventHandler OnPageEdit;
 
-		#region virtual functions
-		protected virtual void OnInit() { }
-		/// <summary>
-		/// Occurs when the editor is set to edited.
-		/// </summary>
-		protected virtual void OnEdit() { }
-		/// <summary>
-		/// Occurs when the editor is loaded from a saved file.
-		/// Can assume the file is valid to be loaded into this editor.
-		/// </summary>
-		/// <returns>If file was successfully loaded into the editor.</returns>
-		protected virtual bool OnLoadFile(string file) { return true; }
-		/// <summary>
-		/// Occurs when the editor is loaded from an imported file.
-		/// Can assume the file is valid to be imported to this editor.
-		/// </summary>
-		/// <returns>If the file was successfully imported into the editor.</returns>
-		protected virtual bool OnImportFile(string file) { return true; }
-		/// <summary>
-		/// Occurs when the editor is saved.
-		/// Allowed to overwrite existing files.
-		/// </summary>
-		/// <returns>If the data was successfully saved to the file.</returns>
-		protected virtual bool OnSaveFile(string file) { return true; }
-		/// <summary>
-		/// Occurs when the editor is resized.
-		/// </summary>
-		protected virtual void OnResize() { }
-		/// <summary>
-		/// Occurs when the editor's GUI is shown.
-		/// </summary>
-		protected virtual void OnShow() { }
-		/// <summary>
-		/// Occurs when the editor is closed.
-		/// </summary>
-		protected virtual void OnClose() { }
-		/// <summary>
-		/// Occurs whenever there is any input given to the editor.
-		/// </summary>
-		protected virtual void OnTick() { }
-		/// <summary>
-		/// Occurs on the next OnTick if more time than the render interval has passed.
-		/// </summary>
-		protected virtual void OnDraw() { }
-		#endregion
-	}
+		public event EventHandler OnPageTick;
+		public event EventHandler OnPageDraw;
+		public event EventHandler OnPageResize;
+
+		public event EventHandler OnPageClickL;
+		public event EventHandler OnPageDragL;
+		public event EventHandler OnPageReleaseL;
+
+        //#region virtual functions
+        ///// <summary>
+        ///// Occurs when the editor is set to edited.
+        ///// </summary>
+        //protected virtual void OnEdit() { }
+        ///// <summary>
+        ///// Occurs when the editor is loaded from a saved file.
+        ///// Can assume the file is valid to be loaded into this editor.
+        ///// </summary>
+        ///// <returns>If file was successfully loaded into the editor.</returns>
+        //protected virtual bool OnLoadFile(string file) { return true; }
+        ///// <summary>
+        ///// Occurs when the editor is loaded from an imported file.
+        ///// Can assume the file is valid to be imported to this editor.
+        ///// </summary>
+        ///// <returns>If the file was successfully imported into the editor.</returns>
+        //protected virtual bool OnImportFile(string file) { return true; }
+        ///// <summary>
+        ///// Occurs when the editor is saved.
+        ///// Allowed to overwrite existing files.
+        ///// </summary>
+        ///// <returns>If the data was successfully saved to the file.</returns>
+        //protected virtual bool OnSaveFile(string file) { return true; }
+        ///// <summary>
+        ///// Occurs when the editor is resized.
+        ///// </summary>
+        //protected virtual void OnResize() { }
+        ///// <summary>
+        ///// Occurs whenever there is any input given to the editor.
+        ///// </summary>
+        //protected virtual void OnTick() { }
+        //      protected virtual void OnClickL() { }
+        //protected virtual void OnDragL() { }
+        //protected virtual void OnReleaseL() { }
+        ///// <summary>
+        ///// Occurs on the next OnTick if more time than the render interval has passed.
+        ///// </summary>
+        //protected virtual void OnDraw() { }
+        //#endregion
+    }
 }

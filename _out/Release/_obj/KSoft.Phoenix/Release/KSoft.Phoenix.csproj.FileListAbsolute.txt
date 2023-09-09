@@ -1,0 +1,11 @@
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.csproj.AssemblyReference.cache
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.csproj.CopyComplete
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.dll
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\refint\KSoft.Phoenix.dll
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\KSoft.Phoenix.pdb
+R:\foundry\_out\Release\KSoft.Phoenix.deps.json
+R:\foundry\_out\Release\KSoft.Phoenix.dll
+R:\foundry\_out\Release\_obj\KSoft.Phoenix\Release\ref\KSoft.Phoenix.dll
+R:\foundry\_out\Release\KSoft.Phoenix.pdb

@@ -5,25 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry.Util
+namespace foundry.Util
 {
 	public static class ERA
 	{
 		public static void ExpandERA(string eraPath, string outputDir)
 		{
-			KSoft.Phoenix.Resource.EraFileExpander expander = new KSoft.Phoenix.Resource.EraFileExpander(eraPath);
+            using (KSoft.Phoenix.Resource.EraFileExpander expander = new KSoft.Phoenix.Resource.EraFileExpander(eraPath))
+            {
+                expander.Options = new KSoft.Collections.BitVector32();
+                expander.Options.Set(KSoft.Phoenix.Resource.EraFileUtilOptions.x64);
 
-			var expanderOptions = new KSoft.Collections.BitVector32();
-			expanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.Decrypt);
-			expander.ExpanderOptions = expanderOptions;
+                expander.ExpanderOptions = new KSoft.Collections.BitVector32();
+                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.Decrypt);
+                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontOverwriteExistingFiles);
+                //expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontLoadEntireEraIntoMemory);
+                expander.ProgressOutput = null;
+                expander.VerboseOutput = null;
+                expander.DebugOutput = null;
 
-			var options = new KSoft.Collections.BitVector32();
-			options.Set(KSoft.Phoenix.Resource.EraFileUtilOptions.x64);
-			expander.Options = options;
+#if DEBUG
+                expander.ProgressOutput = Console.Out;
+#endif
 
-			expander.Read();
-			expander.ExpandTo(outputDir, Path.GetFileNameWithoutExtension(eraPath));
-			expander.Dispose();
-		}
+                expander.Read();
+                expander.ExpandTo(outputDir, Path.GetFileNameWithoutExtension(eraPath));
+            }
+
+            GC.Collect();
+        }
 	}
 }

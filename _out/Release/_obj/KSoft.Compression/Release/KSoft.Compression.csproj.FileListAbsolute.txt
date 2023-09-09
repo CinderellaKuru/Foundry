@@ -1,0 +1,11 @@
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.csproj.AssemblyReference.cache
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.csproj.CopyComplete
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.dll
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\refint\KSoft.Compression.dll
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\KSoft.Compression.pdb
+R:\foundry\_out\Release\KSoft.Compression.deps.json
+R:\foundry\_out\Release\KSoft.Compression.dll
+R:\foundry\_out\Release\_obj\KSoft.Compression\Release\ref\KSoft.Compression.dll
+R:\foundry\_out\Release\KSoft.Compression.pdb

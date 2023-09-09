@@ -1,0 +1,10 @@
+R:\foundry\_out\Debug\modules\foundry.layout.deps.json
+R:\foundry\_out\Debug\modules\foundry.layout.dll
+R:\foundry\_out\Debug\modules\foundry.layout.pdb
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\foundry.layout.csproj.AssemblyReference.cache
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\foundry.layout.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\foundry.layout.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\foundry.layout.dll
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\refint\foundry.layout.dll
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\foundry.layout.pdb
+R:\foundry\_out\Debug\_obj\foundry.layout\Debug\ref\foundry.layout.dll

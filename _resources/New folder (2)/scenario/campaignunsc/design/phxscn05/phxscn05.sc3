@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Objects>
+		<Object IsSquad="false" Player="0" ID="30000001" TintValue="1" EditorName="snd_play_bird_13_2094" Position="717.802673,-58.6043015,294.577606" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_bird_13</Object>
+		<Object IsSquad="false" Player="0" ID="30000002" TintValue="1" EditorName="snd_play_birds_group_03_2081" Position="443.226013,6.77680016,956.110413" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000003" TintValue="1" EditorName="snd_play_birds_group_03_2083" Position="90.8351974,21.9403992,918.915283" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000004" TintValue="1" EditorName="snd_play_birds_group_03_2086" Position="964.41571,-27.3153,325.628204" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000005" TintValue="1" EditorName="snd_play_birds_group_03_2080" Position="680.594788,12.1745005,949.594299" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000006" TintValue="1" EditorName="snd_play_birds_group_03_2079" Position="890.24707,19.5209007,942.851929" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000007" TintValue="1" EditorName="snd_play_birds_group_03_2082" Position="219.687607,7.97419977,946.074829" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000008" TintValue="1" EditorName="snd_play_insect_01_2100" Position="67.3597031,4.74370003,818.605286" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000009" TintValue="1" EditorName="snd_play_insect_01_2098" Position="780.335388,7.23449993,863.404724" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000010" TintValue="1" EditorName="snd_play_insect_01_2097" Position="870.57782,-40.1323013,612.195618" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000011" TintValue="1" EditorName="snd_play_obj_fountain_2085" Position="846.552185,-14.9703999,491.308685" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_obj_fountain</Object>
+		<Object IsSquad="false" Player="0" ID="30000012" TintValue="1" EditorName="snd_play_ocean_waves_2091" Position="554.099487,10.8430996,261.680786" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000013" TintValue="1" EditorName="snd_play_ocean_waves_2093" Position="911.927612,29.3803005,302.80661" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000014" TintValue="1" EditorName="snd_play_ocean_waves_2089" Position="193.872803,14.2916002,258.442993" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000015" TintValue="1" EditorName="snd_play_ocean_waves_2092" Position="718.765381,10.4034004,312.367889" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000016" TintValue="1" EditorName="snd_play_ocean_waves_2090" Position="40.9021988,14.1732998,287.40329" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000017" TintValue="1" EditorName="snd_play_ocean_waves_2088" Position="353.519104,14.9272003,264.137909" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_ocean_waves</Object>
+		<Object IsSquad="false" Player="0" ID="30000018" TintValue="1" EditorName="snd_play_water_bird_10_distant_reverb_closed_2102" Position="191.469193,51.1553001,251.299301" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_water_bird_10_distant_reverb_closed</Object>
+		<Object IsSquad="false" Player="0" ID="30000019" TintValue="1" EditorName="snd_play_water_bird_10_distant_reverb_closed_2103" Position="636.01947,6.70769978,257.63739" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_water_bird_10_distant_reverb_closed</Object>
+	</Objects>
+</Scenario>

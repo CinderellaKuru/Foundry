@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "foundry.triggerscript": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

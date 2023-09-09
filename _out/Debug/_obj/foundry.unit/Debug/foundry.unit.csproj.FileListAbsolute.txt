@@ -1,0 +1,12 @@
+R:\foundry\_out\Debug\modules\foundry.unit.deps.json
+R:\foundry\_out\Debug\modules\foundry.unit.dll
+R:\foundry\_out\Debug\modules\foundry.unit.pdb
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.csproj.AssemblyReference.cache
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.UnitPickerPage.resources
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.csproj.GenerateResource.cache
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.dll
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\refint\foundry.unit.dll
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\foundry.unit.pdb
+R:\foundry\_out\Debug\_obj\foundry.unit\Debug\ref\foundry.unit.dll

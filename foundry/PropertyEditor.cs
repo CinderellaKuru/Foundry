@@ -1,7 +1,7 @@
 ﻿using WeifenLuo.WinFormsUI.Docking;
 using System.Windows.Forms;
 
-namespace Foundry
+namespace foundry
 {
     class PropertyEditor : DockContent
     {

@@ -64,7 +64,7 @@
   <data name="discordLink.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAAetJREFUWEftlr9LHFEUhVfiH6CFpYWNkDLYiIWNgo0gWEiKpIqpJH9CQIggCLai
+        vAAADrwBlbxySQAAAetJREFUWEftlr9LHFEUhVfiH6CFpYWNkDLYiIWNgo0gWEiKpIqpJH9CQIggCLai
         BIJgk8I01sYuEBCSKk1A1CaiYJFACARRvzOckct7o7vqiM0c+Ng395x7Hzu/dluNGjXqVM9f/xmAFzDq
         Uia8MWcGXLqfGNQPb+EHnMMF7MEzmIJpo7Vqh6CMsupRb7/H3U40jsB/0MD7oBkjHtuZaOiG7x5QB5rV
         7fHtRXg2NNfFrMffLIL69j9DY13o3ml/FgjNhKa6mfE214vQVtJUJ1veploEeuBfaIj8ho/wLdRS5Cmj
@@ -79,7 +79,7 @@
     <value>17, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>121</value>
+    <value>57</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

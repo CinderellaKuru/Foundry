@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Objects>
+		<Object IsSquad="false" Player="0" ID="30000005" TintValue="1" EditorName="snd_play_amb_sof_1132" Position="445.238495,35.2406998,495.006287" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_amb_sof</Object>
+		<Object IsSquad="false" Player="0" ID="30000006" TintValue="1" EditorName="snd_play_amb_sof_1133" Position="495.739807,35.2006989,494.665985" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_amb_sof</Object>
+		<Object IsSquad="false" Player="0" ID="30000004" TintValue="1" EditorName="snd_play_amb_sof_1131" Position="470.928406,35.2008018,519.981628" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_amb_sof</Object>
+		<Object IsSquad="false" Player="0" ID="30000002" TintValue="1" EditorName="snd_play_amb_sof_1129" Position="470.721405,35.3073997,494.090515" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_amb_sof</Object>
+		<Object IsSquad="false" Player="0" ID="30000003" TintValue="1" EditorName="snd_play_amb_sof_1130" Position="469.905701,35.2406998,471.065796" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_amb_sof</Object>
+	</Objects>
+</Scenario>

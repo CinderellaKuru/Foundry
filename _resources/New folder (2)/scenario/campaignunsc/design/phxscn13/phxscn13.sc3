@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Objects>
+		<Object IsSquad="false" Player="0" ID="30000020" TintValue="1" EditorName="snd_play_bird_bg_01_5035" Position="14.0313997,74.6038971,133.533798" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_bird_bg_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000021" TintValue="1" EditorName="snd_play_bird_bg_01_5036" Position="158.768005,69.8246994,19.2059994" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_bird_bg_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000019" TintValue="1" EditorName="snd_play_bird_bg_01_5034" Position="164.089294,88.3105011,1020.81201" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_bird_bg_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000018" TintValue="1" EditorName="snd_play_bird_bg_01_5033" Position="12.0213003,108.258904,777.132812" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_bird_bg_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000017" TintValue="1" EditorName="snd_play_bird_bg_01_5032" Position="10.4813995,91.4962997,998.441589" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_bird_bg_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000063" TintValue="1" EditorName="snd_play_birds_04_5078" Position="596.444092,-44.0278015,66.0402985" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000064" TintValue="1" EditorName="snd_play_birds_04_5079" Position="490.759308,-23.3717003,136.915802" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000060" TintValue="1" EditorName="snd_play_birds_04_5075" Position="461.8078,-33.6240005,710.9646" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000059" TintValue="1" EditorName="snd_play_birds_04_5074" Position="76.9720001,73.4925995,486.837585" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000062" TintValue="1" EditorName="snd_play_birds_04_5077" Position="973.601501,14.0530005,587.674377" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000061" TintValue="1" EditorName="snd_play_birds_04_5076" Position="705.31488,-23.3456001,606.093384" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000055" TintValue="1" EditorName="snd_play_birds_09_5070" Position="410.100311,-28.4850998,203.226105" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_09</Object>
+		<Object IsSquad="false" Player="0" ID="30000057" TintValue="1" EditorName="snd_play_birds_09_5072" Position="95.9194031,44.8577995,16.3600998" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_09</Object>
+		<Object IsSquad="false" Player="0" ID="30000056" TintValue="1" EditorName="snd_play_birds_09_5071" Position="260.869507,43.4477005,50.0068016" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_09</Object>
+		<Object IsSquad="false" Player="0" ID="30000058" TintValue="1" EditorName="snd_play_birds_09_5073" Position="65.8006973,64.6909027,270.084198" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_09</Object>
+		<Object IsSquad="false" Player="0" ID="30000054" TintValue="1" EditorName="snd_play_birds_09_5069" Position="619.799988,-21.9078007,276.025787" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_09</Object>
+		<Object IsSquad="false" Player="0" ID="30000048" TintValue="1" EditorName="snd_play_birds_11_5063" Position="34.226799,77.9027023,501.467712" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000052" TintValue="1" EditorName="snd_play_birds_11_5067" Position="960.640381,20.4734993,422.791595" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000053" TintValue="1" EditorName="snd_play_birds_11_5068" Position="734.054077,20.9801998,19.9141998" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000051" TintValue="1" EditorName="snd_play_birds_11_5066" Position="707.667908,-22.5265007,292.897308" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000049" TintValue="1" EditorName="snd_play_birds_11_5064" Position="42.9977989,100.5215,760.222778" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000050" TintValue="1" EditorName="snd_play_birds_11_5065" Position="717.116577,-21.8313007,664.077698" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_11</Object>
+		<Object IsSquad="false" Player="0" ID="30000029" TintValue="1" EditorName="snd_play_birds_group_01_5044" Position="990.797729,39.5727005,854.058105" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000028" TintValue="1" EditorName="snd_play_birds_group_01_5043" Position="987.389526,44.8017006,1005.95502" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000031" TintValue="1" EditorName="snd_play_birds_group_01_5046" Position="622.243896,15.2901001,1000.11798" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000030" TintValue="1" EditorName="snd_play_birds_group_01_5045" Position="831.360474,57.0337982,992.534119" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000025" TintValue="1" EditorName="snd_play_birds_group_01_5040" Position="1007.64502,-10.1451998,237.660904" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000024" TintValue="1" EditorName="snd_play_birds_group_01_5039" Position="994.345215,18.0993996,26.0935001" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000027" TintValue="1" EditorName="snd_play_birds_group_01_5042" Position="1010.85303,25.3992004,416.717712" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000026" TintValue="1" EditorName="snd_play_birds_group_01_5041" Position="789.939697,13.6351995,25.9022999" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000082" TintValue="1" EditorName="snd_play_birds_group_03_5097" Position="360.816986,100.6418,998.499878" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000023" TintValue="1" EditorName="snd_play_birds_group_03_5038" Position="344.662292,45.5065994,21.7674007" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000022" TintValue="1" EditorName="snd_play_birds_group_03_5037" Position="15.7070999,86.0343018,476.396698" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_birds_group_03</Object>
+		<Object IsSquad="false" Player="0" ID="30000065" TintValue="1" EditorName="snd_play_cavern_scn_08_5080" Position="113.5737,44.4515991,409.815796" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000067" TintValue="1" EditorName="snd_play_cavern_scn_08_5082" Position="236.9431,44.6169014,410.605713" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000068" TintValue="1" EditorName="snd_play_cavern_scn_08_5083" Position="286.138611,44.6169014,409.337402" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000066" TintValue="1" EditorName="snd_play_cavern_scn_08_5081" Position="176.512604,44.6064987,411.213013" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000081" TintValue="1" EditorName="snd_play_cavern_scn_08_5096" Position="756.611023,-33.7986984,426.609314" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000079" TintValue="1" EditorName="snd_play_cavern_scn_08_5094" Position="558.684021,-33.6240005,322.139709" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000078" TintValue="1" EditorName="snd_play_cavern_scn_08_5093" Position="534.766174,-33.6240005,396.929504" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000080" TintValue="1" EditorName="snd_play_cavern_scn_08_5095" Position="342.214203,-33.6240005,350.911591" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000075" TintValue="1" EditorName="snd_play_cavern_scn_08_5090" Position="555.51123,-33.6228981,703.03363" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000074" TintValue="1" EditorName="snd_play_cavern_scn_08_5089" Position="386.317505,45.4982986,825.871521" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000077" TintValue="1" EditorName="snd_play_cavern_scn_08_5092" Position="625.935425,-33.6888008,431.401001" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000076" TintValue="1" EditorName="snd_play_cavern_scn_08_5091" Position="624.177673,-41.1417999,617.651611" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000073" TintValue="1" EditorName="snd_play_cavern_scn_08_5088" Position="362.606689,44.3582001,750.123413" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000070" TintValue="1" EditorName="snd_play_cavern_scn_08_5085" Position="317.924896,44.4995995,517.08197" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000069" TintValue="1" EditorName="snd_play_cavern_scn_08_5084" Position="316.338287,44.6169014,457.207092" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000072" TintValue="1" EditorName="snd_play_cavern_scn_08_5087" Position="316.29541,44.5839005,671.789673" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000071" TintValue="1" EditorName="snd_play_cavern_scn_08_5086" Position="318.261993,44.6169014,581.400085" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_cavern_scn_08</Object>
+		<Object IsSquad="false" Player="0" ID="30000083" TintValue="1" EditorName="snd_play_fire_wreck_5170" Position="613.325195,-53.3716011,52.5541992" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">snd_play_fire_wreck</Object>
+		<Object IsSquad="false" Player="0" ID="30000003" TintValue="1" EditorName="snd_play_insect_01_5018" Position="416.43399,-27.2495003,198.765701" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000004" TintValue="1" EditorName="snd_play_insect_01_5019" Position="210.440598,12.6736002,297.045105" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000006" TintValue="1" EditorName="snd_play_insect_01_5021" Position="261.746796,11.8295002,216.470398" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000011" TintValue="1" EditorName="snd_play_insect_01_5026" Position="686.564087,-23.4192009,663.126099" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000013" TintValue="1" EditorName="snd_play_insect_01_5028" Position="253.097305,72.3858032,1014.39398" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000002" TintValue="1" EditorName="snd_play_insect_01_5017" Position="405.917603,-39.1128006,294.977203" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000009" TintValue="1" EditorName="snd_play_insect_01_5024" Position="1003.45502,24.3939991,370.775909" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000010" TintValue="1" EditorName="snd_play_insect_01_5025" Position="952.945374,-26.9354992,619.646973" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000012" TintValue="1" EditorName="snd_play_insect_01_5027" Position="380.177612,88.2618027,972.375977" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000005" TintValue="1" EditorName="snd_play_insect_01_5020" Position="29.7255001,44.8679008,199.049896" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000007" TintValue="1" EditorName="snd_play_insect_01_5022" Position="503.623413,-22.7945004,80.3523026" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000008" TintValue="1" EditorName="snd_play_insect_01_5023" Position="861.215698,-11.9217997,25.9312992" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_01</Object>
+		<Object IsSquad="false" Player="0" ID="30000001" TintValue="1" EditorName="snd_play_insect_04_5016" Position="410.691315,-33.6240005,604.602478" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_04</Object>
+		<Object IsSquad="false" Player="0" ID="30000015" TintValue="1" EditorName="snd_play_insect_06_5030" Position="156.467697,89.2615967,1007.82098" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000037" TintValue="1" EditorName="snd_play_insect_06_5052" Position="704.205872,-24.4792995,86.2260971" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000035" TintValue="1" EditorName="snd_play_insect_06_5050" Position="852.901611,-1.23000002,420.793701" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000034" TintValue="1" EditorName="snd_play_insect_06_5049" Position="1001.547,13.3522997,570.824402" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000033" TintValue="1" EditorName="snd_play_insect_06_5048" Position="991.608398,32.4599991,777.006775" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000016" TintValue="1" EditorName="snd_play_insect_06_5031" Position="34.1231995,72.6722031,820.771912" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000044" TintValue="1" EditorName="snd_play_insect_06_5059" Position="454.326691,45.8091011,915.971924" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000032" TintValue="1" EditorName="snd_play_insect_06_5047" Position="993.592773,33.7029991,989.924072" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000042" TintValue="1" EditorName="snd_play_insect_06_5057" Position="42.5906982,72.0740967,260.013214" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000045" TintValue="1" EditorName="snd_play_insect_06_5060" Position="563.264221,24.4892006,995.791321" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000043" TintValue="1" EditorName="snd_play_insect_06_5058" Position="708.056702,-34.7022018,565.482971" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000047" TintValue="1" EditorName="snd_play_insect_06_5062" Position="70.0449982,77.3463974,499.552185" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000046" TintValue="1" EditorName="snd_play_insect_06_5061" Position="54.4174995,99.1878967,767.292786" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000041" TintValue="1" EditorName="snd_play_insect_06_5056" Position="123.862801,34.6138,221.539993" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000038" TintValue="1" EditorName="snd_play_insect_06_5053" Position="652.353088,-23.0480003,300.369385" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000036" TintValue="1" EditorName="snd_play_insect_06_5051" Position="996.104187,-10.9425001,284.924286" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000040" TintValue="1" EditorName="snd_play_insect_06_5055" Position="304.782898,44.6169014,423.600098" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+		<Object IsSquad="false" Player="0" ID="30000039" TintValue="1" EditorName="snd_play_insect_06_5054" Position="398.280396,44.4375992,30.1088009" Forward="0,0,1" Right="1,0,0" Group="-1" VisualVariationIndex="0">
+			<Flag>NoTieToGround</Flag>snd_play_insect_06</Object>
+	</Objects>
+</Scenario>

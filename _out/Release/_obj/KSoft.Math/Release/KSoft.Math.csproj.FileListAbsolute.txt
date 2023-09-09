@@ -1,0 +1,11 @@
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.csproj.AssemblyReference.cache
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.GeneratedMSBuildEditorConfig.editorconfig
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.csproj.CoreCompileInputs.cache
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.csproj.CopyComplete
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.dll
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\refint\KSoft.Math.dll
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\KSoft.Math.pdb
+R:\foundry\_out\Release\KSoft.Math.deps.json
+R:\foundry\_out\Release\KSoft.Math.dll
+R:\foundry\_out\Release\_obj\KSoft.Math\Release\ref\KSoft.Math.dll
+R:\foundry\_out\Release\KSoft.Math.pdb

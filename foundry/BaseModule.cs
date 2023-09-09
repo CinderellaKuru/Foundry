@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry
+namespace foundry
 {
 	public abstract class BaseModule
 	{
@@ -28,28 +28,48 @@ namespace Foundry
         /// </summary>
         public abstract Type PageType { get; }
 
+
+
         public void Init(FoundryInstance i)
         {
             Instance = i;
             OnInit();
         }
-        public void Import(string importedFile, string destinationPath)
+        public void PostInit()
         {
-            OnImport(importedFile, destinationPath);
+            OnPostInit();
         }
+        public void WorkspaceOpened()
+        {
+            OnWorkspaceOpened();
+        }
+        public void WorkspaceClosed()
+        {
+            OnWorkspaceClosed();
+        }
+        public void UpdateModule()
+        {
+            UpdateModuleArgs args = new UpdateModuleArgs()
+            {
+            };
+            ModuleUpdated?.Invoke(this, args);
+        }
+        public class UpdateModuleArgs
+        {
+        }
+        public event EventHandler<UpdateModuleArgs> ModuleUpdated;
 
         /// <summary>
         /// Occurs when the module is loaded.
         /// Go nuts.
         /// </summary>
-        protected virtual void OnInit()
-        { 
-        
-        }
-
-        protected virtual void OnImport(string importedFile, string destinationPath)
-        {
-
-        }
+        protected virtual void OnInit() { }
+        /// <summary>
+        /// Occurs after all modules have been loaded, only if this module is valid.
+        /// Go nuts.
+        /// </summary>
+        protected virtual void OnPostInit() { }
+        protected virtual void OnWorkspaceOpened() { }
+        protected virtual void OnWorkspaceClosed() { }
 	}
 }
