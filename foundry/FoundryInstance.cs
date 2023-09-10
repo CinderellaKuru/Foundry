@@ -29,6 +29,7 @@ namespace foundry
 			ThreadPool.SetMinThreads(16, 16);
 
 			InitializeComponent();
+			if (!Directory.Exists(AppdataDir)) Directory.CreateDirectory(AppdataDir);
 
 			versionReadout.Text = "v" + System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.ToString();
 			dockpanel.Theme = new VS2015LightTheme();
@@ -259,10 +260,8 @@ namespace foundry
 		{
 			OpenedConfig = new Config();
 
-			if (!File.Exists(ConfigFile))
-			{
-				File.Create(ConfigFile);
-			}
+			if (!File.Exists(ConfigFile)) File.Create(ConfigFile);
+
 			string[] cfg = File.ReadAllLines(ConfigFile);
 
 			foreach (string line in cfg)
