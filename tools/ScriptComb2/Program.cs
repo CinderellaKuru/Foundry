@@ -2,25 +2,11 @@
 using System.Text.RegularExpressions;
 using YAXLib;
 using YAXLib.Attributes;
+using static foundry.triggerscript.TriggerscriptModule;
 using static Program;
 
 class Program
 {
-    public class Item
-    {
-        public string Name { get; set; }
-        
-        public class Param
-        {
-            public string Name { get; set; }
-            public int ID { get; set; }
-            public bool Optional { get; set; }
-            public bool Output { get; set; }
-        }
-        public List<Param> Params { get; set; } = new List<Param>();
-    }
-
-
     public static void Main(string[] args)
     {
         List<Item> effects = new List<Item>();
