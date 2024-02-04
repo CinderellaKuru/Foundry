@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace foundry
+namespace Foundry
 {
     public partial class CreateWorkspaceWizard : Form
     {

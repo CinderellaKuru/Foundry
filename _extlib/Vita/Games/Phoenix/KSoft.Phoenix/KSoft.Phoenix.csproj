@@ -429,31 +429,19 @@
     <Folder Include="Phx\Visual\" />
   </ItemGroup>
   <ItemGroup>
-    <Content
-        Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.dll"
-        Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.dll')"
-        >
+    <Content Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.dll" Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.dll')">
       <Link>DDS\DirectXTexDLL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content
-        Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.pdb"
-        Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.pdb')"
-        >
+    <Content Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.pdb" Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DirectXTexDLL.pdb')">
       <Link>DDS\DirectXTexDLL.pdb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content
-        Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DDSView.exe"
-        Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DDSView.exe')"
-        >
+    <Content Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DDSView.exe" Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\DDSView.exe')">
       <Link>DDS\DDSView.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content
-        Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\texconv.exe"
-        Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\texconv.exe')"
-        >
+    <Content Include="$(VitaRootDir)shared\external_libraries\DirectXTex\x64\texconv.exe" Condition="Exists('$(VitaRootDir)shared\external_libraries\DirectXTex\x64\texconv.exe')">
       <Link>DDS\texconv.exe</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

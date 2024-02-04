@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace foundry.triggerscript
+namespace Foundry.Data.Triggerscript
 {
     public class Input
     {

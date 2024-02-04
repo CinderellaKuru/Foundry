@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static foundry.FoundryInstance;
+using static Foundry.FoundryInstance;
 
-namespace foundry
+namespace Foundry
 {
     public partial class ConfigPrompt : Form
     {

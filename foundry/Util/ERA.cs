@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace foundry.Util
+namespace Foundry.Util
 {
 	public static class ERA
 	{

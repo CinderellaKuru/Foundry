@@ -1,4 +1,4 @@
-﻿namespace foundry
+﻿namespace Foundry
 {
     partial class BlockingProgressBar
     {

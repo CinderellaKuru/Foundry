@@ -11,10 +11,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\foundry\foundry.csproj">
+    <ProjectReference Include="..\foundry\Foundry.csproj">
       <Private>False</Private>
       <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="conditions.tsdef">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="effects.tsdef">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="variables.tstyp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

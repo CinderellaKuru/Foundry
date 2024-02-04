@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace foundry
+namespace Foundry
 {
     public partial class StartPage : DockContent
     {

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace foundry
+namespace Foundry
 {
     public class OperatorRegistrantToolstrip : OperatorRegistrant
     {
@@ -18,6 +19,16 @@ namespace foundry
                         childOp.Activate(); 
                     });
                 item.DropDownItems.Add(childItem);
+
+                ArrayList items = new ArrayList(item.DropDownItems);
+                items.Sort(new ToolStripItemComparer());
+                item.DropDownItems.Clear();
+
+                foreach(ToolStripMenuItem sorted in items)
+                {
+                    item.DropDownItems.Add(sorted);
+                }
+
                 AddMenuItemChildren(childItem, childOp);
             }
         }
@@ -36,6 +47,16 @@ namespace foundry
                 ret.Add(item);
             }
             return ret;
+        }
+    }
+
+    public class ToolStripItemComparer : System.Collections.IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            ToolStripItem ix = (ToolStripItem)x;
+            ToolStripItem iy = (ToolStripItem)y;
+            return string.Compare(ix.Text, iy.Text, true);
         }
     }
 }
