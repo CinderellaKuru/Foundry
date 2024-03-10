@@ -135,11 +135,11 @@ namespace Foundry.Triggerscript
                 {
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Script(*.triggerscript)|*.triggerscript";
-                    sfd.ShowDialog(Instance);
-                    //{
-                    //    var ser = new YAXSerializer<ScriptXml>(new SerializerOptions() { ExceptionHandlingPolicies = YAXExceptionHandlingPolicies.DoNotThrow });
-                    //    ser.SerializeToFile(((ScriptData)NodeData).TriggerscriptData, sfd.FileName);
-                    //}
+                    if (sfd.ShowDialog(Instance) == DialogResult.OK)
+                    {
+                        var ser = new YAXSerializer<ScriptXml>(new SerializerOptions() { ExceptionHandlingPolicies = YAXExceptionHandlingPolicies.DoNotThrow });
+                        ser.SerializeToFile(((ScriptData)NodeData).TriggerscriptData, sfd.FileName);
+                    }
                 }
             };
         }
