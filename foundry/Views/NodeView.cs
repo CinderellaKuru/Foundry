@@ -580,11 +580,6 @@ namespace Foundry
 			{
 				return _Nodes;
 			}
-			set
-			{
-				_Nodes = (List<BaseNode>)value;
-				_SelectedNodes = new List<BaseNode>();
-			}
 		}
 		private List<BaseNode> _Nodes { get; set; }
 		public IReadOnlyList<BaseNode> SelectedNodes
@@ -664,12 +659,14 @@ namespace Foundry
 
 			RenderIntervalMs = 0;
 
-			ViewTick += (sender, e) => { OnTick(); };
+
+            ViewTick += (sender, e) => { OnTick(); };
 			OnPageClickL += (sender, e) => { OnClickL(); };
 			OnPageDragL += (sender, e) => { OnDragL(); };
 			OnPageReleaseL += (sender, e) => { OnReleaseL(); };
-			ViewDraw += (sender, e) => { Redraw(); };
 			ViewTextInput += (sender, e) => { OnTextInput(e); };
+			
+			Form.Paint += OnPaint;
 		}
 
 		public BaseNodeEditorData NodeData { get; set; }
@@ -932,14 +929,14 @@ namespace Foundry
 
 		private Pen gridPen = new Pen(Color.FromArgb(255, 150, 150, 150));
 		private int majorGridSpace = 350;
-		protected void OnPaint(object o, ViewDrawArgs e)
+		protected void OnPaint(object o, PaintEventArgs e)
 		{
 			float fastThreshold = .075f;
 
 			int mx = GetTransformedMousePos().X;
 			int my = GetTransformedMousePos().Y;
 
-			Graphics g = Graphics.FromHwnd(e.HWND);
+			Graphics g = e.Graphics;
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;

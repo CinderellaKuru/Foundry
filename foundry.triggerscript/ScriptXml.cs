@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YAXLib.Attributes;
 
-namespace Foundry.Data.Triggerscript
+namespace Foundry.Triggerscript
 {
     public enum ScriptVarType
         {
@@ -177,9 +177,9 @@ namespace Foundry.Data.Triggerscript
     }
 
     [YAXSerializeAs("TriggerSystem")]
-    public class TriggerscriptXmlData
+    public class ScriptXml
     {
-        public TriggerscriptXmlData()
+        public ScriptXml()
         {
             Metadata = new TriggerscriptMetadatasXml();
             TriggerGroups = new List<TriggerGroupClass>();
@@ -191,16 +191,23 @@ namespace Foundry.Data.Triggerscript
 
         [YAXAttributeForClass()]
         public string Name { get; set; }
+
         [YAXAttributeForClass()]
         public string Type { get; set; }
+
         [YAXAttributeForClass()]
         public int NextTriggerVarID { get; set; }
+
         [YAXAttributeForClass()]
         public int NextTriggerID { get; set; }
+
         [YAXAttributeForClass()]
         public int NextConditionID { get; set; }
+
         [YAXAttributeForClass()]
         public int NextEffectID { get; set; }
+
+        [YAXErrorIfMissed(YAXLib.Enums.YAXExceptionTypes.Ignore, DefaultValue=true)]
         [YAXAttributeForClass()]
         public bool External { get; set; }
 

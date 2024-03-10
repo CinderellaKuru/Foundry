@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using YAXLib;
 using YAXLib.Attributes;
 
-namespace Foundry.Data.Triggerscript
+namespace Foundry.Triggerscript
 {
     public class UserClassEntryField
     {

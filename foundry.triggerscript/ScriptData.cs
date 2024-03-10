@@ -1,38 +1,29 @@
-﻿using System;
+﻿using Foundry.Triggerscript;
+using static Foundry.Triggerscript.ScriptModule;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.IO;
-using Newtonsoft.Json;
-using Foundry;
-using System.Numerics;
-using Foundry.Util;
-using Foundry.util;
-using static Foundry.Data.Triggerscript.TriggerscriptModule;
+using System.Text;
 using System.Text.RegularExpressions;
-using YAXLib;
-using YAXLib.Enums;
-using YAXLib.Options;
+using System.Threading.Tasks;
 
-namespace Foundry.Data.Triggerscript
+namespace Foundry.Triggerscript
 {
-    public class TriggerscriptEditorData : BaseNodeEditorData
+    public class ScriptData : BaseNodeEditorData
     {
         private class TriggerNode : BaseNode
         {
             public static Color TypeColor { get; private set; } = Color.FromArgb(55, 100, 190);
 
-            public TriggerscriptEditorData EditorData { get; private set; }
-            public TriggerscriptXmlData.TriggerClass TriggerData { get; private set; }
-            public TriggerscriptXmlData.TriggerVarClass TriggerVariableData { get; private set; }
-            public TriggerNode(TriggerscriptEditorData data)
+            public ScriptData EditorData { get; private set; }
+            public ScriptXml.TriggerClass TriggerData { get; private set; }
+            public ScriptXml.TriggerVarClass TriggerVariableData { get; private set; }
+            public TriggerNode(ScriptData data)
             {
-                TriggerData = new TriggerscriptXmlData.TriggerClass();
+                TriggerData = new ScriptXml.TriggerClass();
                 TriggerData.ID = data.NextTriggerID++;
 
-                TriggerVariableData = new TriggerscriptXmlData.TriggerVarClass();
+                TriggerVariableData = new ScriptXml.TriggerVarClass();
                 TriggerVariableData.ID = data.NextVariableID++;
                 TriggerVariableData.Name = "TriggerVar" + TriggerData.ID;
                 TriggerVariableData.Type = "Trigger";
@@ -98,7 +89,7 @@ namespace Foundry.Data.Triggerscript
                     bool fast = (e.DrawFlags & DrawFlags.Fast) > 0;
 
                     e.Graphics.FillRectangle(ActiveControl.BackgroundBrush, ActiveControl.Bounds);
-                    
+
                     Font font = new Font("Consolas", BaseNodeControl.Padding * 2, FontStyle.Regular);
 
                     if (!fast)
@@ -164,7 +155,7 @@ namespace Foundry.Data.Triggerscript
                         e.Graphics.DrawRectangle(ConditionalControl.ForegroundPen, Rectangle.Round(ConditionalControl.Bounds));
                     }
                 };
-                
+
                 List<BaseNodeControl> controls = new List<BaseNodeControl>()
                 {
                     ActiveControl,
@@ -175,7 +166,7 @@ namespace Foundry.Data.Triggerscript
 
                 NodeMoved += (sender, e) =>
                 {
-                    if(!EditorData.TriggerscriptData.Metadata.TriggerMetadata.ContainsKey(TriggerData.ID))
+                    if (!EditorData.TriggerscriptData.Metadata.TriggerMetadata.ContainsKey(TriggerData.ID))
                     {
                         EditorData.TriggerscriptData.Metadata.TriggerMetadata.Add(TriggerData.ID, new TriggerscriptNodeMetadataXml());
                     }
@@ -208,7 +199,7 @@ namespace Foundry.Data.Triggerscript
             public override void DrawText(Graphics g, DrawFlags flags)
             {
                 Subtext = "";
-                if (TriggerData.Active)             Subtext += "Active ";
+                if (TriggerData.Active) Subtext += "Active ";
                 if (TriggerData.ConditionalTrigger) Subtext += "Conditional ";
                 Subtext += "Trigger";
 
@@ -222,11 +213,11 @@ namespace Foundry.Data.Triggerscript
             public static Color TypeColorRequired { get; private set; } = Color.FromArgb(55, 150, 55);
             public static Color TypeColorOptional { get; private set; } = Color.FromArgb(115, 150, 65);
 
-            public TriggerscriptEditorData EditorData { get; private set; }
-            public TriggerscriptXmlData.TriggerVarClass VarData { get; private set; }
-            public VariableNode(TriggerscriptEditorData data)
+            public ScriptData EditorData { get; private set; }
+            public ScriptXml.TriggerVarClass VarData { get; private set; }
+            public VariableNode(ScriptData data)
             {
-                VarData = new TriggerscriptXmlData.TriggerVarClass();
+                VarData = new ScriptXml.TriggerVarClass();
                 VarData.ID = data.NextVariableID++;
 
                 EditorData = data;
@@ -262,7 +253,7 @@ namespace Foundry.Data.Triggerscript
                 ValueControl.OnKeyboard += (sender, e) =>
                 {
                     string temp = VarData.Value;
-                    if(e == '\b')
+                    if (e == '\b')
                     {
                         temp = temp.Substring(0, temp.Length - 1);
                     }
@@ -355,9 +346,9 @@ namespace Foundry.Data.Triggerscript
         }
         private abstract class LogicNode : BaseNode
         {
-            public TriggerscriptXmlData.TriggerClass.LogicClass LogicData { get; protected set; }
+            public ScriptXml.TriggerClass.LogicClass LogicData { get; protected set; }
             public BaseNodeSocket ParentTriggerSocket { get; private set; }
-            public TriggerscriptEditorData EditorData { get; private set; }
+            public ScriptData EditorData { get; private set; }
 
             public class ParentTriggerChangedArgs
             {
@@ -366,7 +357,7 @@ namespace Foundry.Data.Triggerscript
             }
             public event EventHandler<ParentTriggerChangedArgs> ParentTriggerChanged;
 
-            public LogicNode(TriggerscriptEditorData data)
+            public LogicNode(ScriptData data)
             {
                 EditorData = data;
                 VariableSockets = new Dictionary<int, BaseNodeSocket>();
@@ -381,7 +372,7 @@ namespace Foundry.Data.Triggerscript
                 };
                 Previous.SocketDisconnected += (sender, e) =>
                 {
-                    ParentTriggerChangedArgs args = new ParentTriggerChangedArgs() 
+                    ParentTriggerChangedArgs args = new ParentTriggerChangedArgs()
                     {
                         PreviousSocket = ParentTriggerSocket,
                         CurrentSocket = null
@@ -422,7 +413,7 @@ namespace Foundry.Data.Triggerscript
                         cur = node.Next.Connections.FirstOrDefault((BaseNodeSocket)null);
                     }
                 };
-                
+
                 Next = new BaseNodeSocket(this)
                 {
                     Text = "Next",
@@ -511,7 +502,7 @@ namespace Foundry.Data.Triggerscript
                         VariableSockets.Add(slot.ID, socket);
                     }
 
-                    TriggerscriptXmlData.TriggerClass.ParameterClass parameter = new TriggerscriptXmlData.TriggerClass.ParameterClass()
+                    ScriptXml.TriggerClass.ParameterClass parameter = new ScriptXml.TriggerClass.ParameterClass()
                     {
                         Name = slot.Name,
                         Optional = slot.Optional,
@@ -552,10 +543,10 @@ namespace Foundry.Data.Triggerscript
         {
             public static Color TypeColor { get; private set; } = Color.FromArgb(130, 50, 135);
 
-            public TriggerscriptXmlData.TriggerClass.EffectClass EffectData { get { return (TriggerscriptXmlData.TriggerClass.EffectClass)LogicData; } }
-            public EffectNode(TriggerscriptEditorData data) : base(data)
+            public ScriptXml.TriggerClass.EffectClass EffectData { get { return (ScriptXml.TriggerClass.EffectClass)LogicData; } }
+            public EffectNode(ScriptData data) : base(data)
             {
-                LogicData = new TriggerscriptXmlData.TriggerClass.EffectClass();
+                LogicData = new ScriptXml.TriggerClass.EffectClass();
                 LogicData.ID = EditorData.NextLogicID++;
 
                 HeaderColor = TypeColor;
@@ -637,10 +628,10 @@ namespace Foundry.Data.Triggerscript
         {
             public static Color TypeColor { get; private set; } = Color.FromArgb(155, 65, 65);
 
-            public TriggerscriptXmlData.TriggerClass.ConditionClass ConditionData { get { return (TriggerscriptXmlData.TriggerClass.ConditionClass)LogicData; } }
-            public ConditionNode(TriggerscriptEditorData data) : base(data)
+            public ScriptXml.TriggerClass.ConditionClass ConditionData { get { return (ScriptXml.TriggerClass.ConditionClass)LogicData; } }
+            public ConditionNode(ScriptData data) : base(data)
             {
-                LogicData = new TriggerscriptXmlData.TriggerClass.ConditionClass();
+                LogicData = new ScriptXml.TriggerClass.ConditionClass();
                 LogicData.ID = EditorData.NextLogicID++;
 
                 HeaderColor = TypeColor;
@@ -709,10 +700,10 @@ namespace Foundry.Data.Triggerscript
         }
 
 
-        public TriggerscriptXmlData TriggerscriptData { get; private set; }
-        public TriggerscriptEditorData(FoundryInstance i) : base(i)
+        public ScriptXml TriggerscriptData { get; private set; }
+        public ScriptData(FoundryInstance i) : base(i)
         {
-            TriggerscriptData = new TriggerscriptXmlData();
+            TriggerscriptData = new ScriptXml();
 
             NodeAdded += (sender, e) =>
             {
@@ -763,20 +754,27 @@ namespace Foundry.Data.Triggerscript
             //    }
             //};
         }
+        public ScriptData(FoundryInstance i, ScriptXml xml) : this(i)
+        {
+            foreach (var node in CreateFromData(xml))
+            {
+                AddNode(node);
+            }
+        }
 
-
+        //TODO: Clean this shit up!!! This should all be static. Nodes should not need references to their owner.
         #region Importing
-        public List<BaseNode> CreateFromData(TriggerscriptXmlData tsdata)
+        private List<BaseNode> CreateFromData(ScriptXml tsdata)
         {
             List<BaseNode> Nodes = new List<BaseNode>();
             Dictionary<int, TriggerNode> triggerNodes = new Dictionary<int, TriggerNode>();
-            Dictionary<int, TriggerscriptXmlData.TriggerClass> triggerDatas = new Dictionary<int, TriggerscriptXmlData.TriggerClass>();
+            Dictionary<int, ScriptXml.TriggerClass> triggerDatas = new Dictionary<int, ScriptXml.TriggerClass>();
             Dictionary<int, VariableNode> varNodes = new Dictionary<int, VariableNode>();
             Dictionary<int, EffectNode> effectNodes = new Dictionary<int, EffectNode>();
             Dictionary<int, ConditionNode> conditionNodes = new Dictionary<int, ConditionNode>();
 
             //spawn var nodes.
-            foreach (TriggerscriptXmlData.TriggerVarClass var in tsdata.TriggerVars)
+            foreach (ScriptXml.TriggerVarClass var in tsdata.TriggerVars)
             {
                 if (var.IsNull)
                 {
@@ -793,7 +791,7 @@ namespace Foundry.Data.Triggerscript
                 node.VarData.Value = var.Value;
                 node.VarData.Name = var.Name;
 
-                if(node.Type != ScriptVarType.Trigger) Nodes.Add(node); //dont actually return the trigger node type.
+                if (node.Type != ScriptVarType.Trigger) Nodes.Add(node); //dont actually return the trigger node type.
 
                 if (!varNodes.ContainsKey(var.ID))
                 {
@@ -802,7 +800,7 @@ namespace Foundry.Data.Triggerscript
             }
 
             //spawn trigger nodes first.
-            foreach (TriggerscriptXmlData.TriggerClass trigger in tsdata.Triggers)
+            foreach (ScriptXml.TriggerClass trigger in tsdata.Triggers)
             {
                 PointF triggerLocation = new PointF(
                         trigger.X * 100,
@@ -825,10 +823,10 @@ namespace Foundry.Data.Triggerscript
             }
 
             //then spawn all trigger logic. this is so that we can connect TriggerActivate/TriggerDeactivate to the correct node.
-            foreach(int id in triggerNodes.Keys)
+            foreach (int id in triggerNodes.Keys)
             {
                 TriggerNode triggerNode = triggerNodes[id];
-                TriggerscriptXmlData.TriggerClass trigger = triggerDatas[id];
+                ScriptXml.TriggerClass trigger = triggerDatas[id];
 
                 //effects
                 BaseNodeSocket callerSocket;
@@ -840,7 +838,10 @@ namespace Foundry.Data.Triggerscript
                     callerSocket = effectNode.Next;
 
                     Nodes.Add(effectNode);
-                    effectNodes.Add(effect.ID, effectNode);
+                    if (!effectNodes.ContainsKey(effect.ID))
+                    {
+                        effectNodes.Add(effect.ID, effectNode);
+                    }
 
                     ConnectVars(effectNode, effect, varNodes, triggerNodes);
                 }
@@ -852,20 +853,23 @@ namespace Foundry.Data.Triggerscript
                     callerSocket = effectNode.Next;
 
                     Nodes.Add(effectNode);
-                    effectNodes.Add(effect.ID, effectNode);
+                    if (!effectNodes.ContainsKey(effect.ID))
+                    {
+                        effectNodes.Add(effect.ID, effectNode);
+                    }
 
                     ConnectVars(effectNode, effect, varNodes, triggerNodes);
                 }
 
 
                 //conditions
-                List<TriggerscriptXmlData.TriggerClass.ConditionClass> conditions;
+                List<ScriptXml.TriggerClass.ConditionClass> conditions;
                 if
                     (trigger.ConditionsAnd != null) conditions = trigger.ConditionsAnd;
                 else if
                     (trigger.ConditionsOr != null) conditions = trigger.ConditionsOr;
                 else
-                    conditions = new List<TriggerscriptXmlData.TriggerClass.ConditionClass>();
+                    conditions = new List<ScriptXml.TriggerClass.ConditionClass>();
 
                 callerSocket = triggerNode.Conditions;
                 foreach (var condition in conditions)
@@ -874,7 +878,10 @@ namespace Foundry.Data.Triggerscript
                     callerSocket = conditionNode.Next;
 
                     Nodes.Add(conditionNode);
-                    conditionNodes.Add(condition.ID, conditionNode);
+                    if (!conditionNodes.ContainsKey(condition.ID))
+                    {
+                        conditionNodes.Add(condition.ID, conditionNode);
+                    }
 
                     ConnectVars(conditionNode, condition, varNodes, triggerNodes);
                 }
@@ -934,8 +941,8 @@ namespace Foundry.Data.Triggerscript
             }
             return Nodes;
         }
-                
-        private EffectNode ImportEffect(TriggerscriptXmlData.TriggerClass.EffectClass effect, BaseNodeSocket caller)
+
+        private EffectNode ImportEffect(ScriptXml.TriggerClass.EffectClass effect, BaseNodeSocket caller)
         {
             PointF effectLocation = new PointF(0, 0);
 
@@ -949,7 +956,7 @@ namespace Foundry.Data.Triggerscript
 
             return effectNode;
         }
-        private ConditionNode ImportCondition(TriggerscriptXmlData.TriggerClass.ConditionClass condition, BaseNodeSocket caller)
+        private ConditionNode ImportCondition(ScriptXml.TriggerClass.ConditionClass condition, BaseNodeSocket caller)
         {
             PointF conditionLocation = new PointF(0, 0);
 
@@ -963,10 +970,10 @@ namespace Foundry.Data.Triggerscript
 
             return conditionNode;
         }
-        private void ConnectVars(LogicNode node, TriggerscriptXmlData.TriggerClass.LogicClass logic, Dictionary<int, VariableNode> varNodes, Dictionary<int, TriggerNode> triggerNodes)
+        private void ConnectVars(LogicNode node, ScriptXml.TriggerClass.LogicClass logic, Dictionary<int, VariableNode> varNodes, Dictionary<int, TriggerNode> triggerNodes)
         {
             float varTracker = node.Location.Y + node.SocketBodyHeight + 350;
-            List<TriggerscriptXmlData.TriggerClass.ParameterClass> parameters = new List<TriggerscriptXmlData.TriggerClass.ParameterClass>();
+            List<ScriptXml.TriggerClass.ParameterClass> parameters = new List<ScriptXml.TriggerClass.ParameterClass>();
             if (logic.Inputs != null) parameters.AddRange(logic.Inputs);
             if (logic.Outputs != null) parameters.AddRange(logic.Outputs);
 
@@ -1127,7 +1134,7 @@ namespace Foundry.Data.Triggerscript
                 inn.Location = new PointF(
                     node.Location.X - inn.Bounds.Width - 100,
                     node.Location.Y + node.Bounds.Height + varHeightIn
-                    );                
+                    );
 
                 varHeightIn += inn.Bounds.Height + 100;
             }
@@ -1226,11 +1233,11 @@ namespace Foundry.Data.Triggerscript
             {ScriptVarType.BuildingCommandState, new List<object>() {"ResultWaiting", "ResultDone"} },
             //{ScriptVarType. }
         };
-        public TriggerscriptXmlData.TriggerVarClass GetNullVariableData(ScriptVarType type)
+        public ScriptXml.TriggerVarClass GetNullVariableData(ScriptVarType type)
         {
-            if(!NullVarDatas.ContainsKey(type))
+            if (!NullVarDatas.ContainsKey(type))
             {
-                TriggerscriptXmlData.TriggerVarClass data = new TriggerscriptXmlData.TriggerVarClass()
+                ScriptXml.TriggerVarClass data = new ScriptXml.TriggerVarClass()
                 {
                     ID = NextVariableID++,
                     Name = "Null" + type.ToString() + "Var",
@@ -1240,143 +1247,10 @@ namespace Foundry.Data.Triggerscript
                 TriggerscriptData.TriggerVars.Add(data);
                 NullVarDatas.Add(type, data);
             }
-               
+
             return NullVarDatas[type];
         }
-        private Dictionary<ScriptVarType, TriggerscriptXmlData.TriggerVarClass> NullVarDatas = new Dictionary<ScriptVarType, TriggerscriptXmlData.TriggerVarClass>();
+        private Dictionary<ScriptVarType, ScriptXml.TriggerVarClass> NullVarDatas = new Dictionary<ScriptVarType, ScriptXml.TriggerVarClass>();
     }
 
-    public class TriggerscriptEditorPage : NodeView
-    {
-        public TriggerscriptEditorData Data { get; set; }
-
-        private OperatorRegistrantToolstrip OperatorRegistrant { get; set; }
-        private PointF CapturedLocation { get; set; }
-
-        public TriggerscriptEditorPage(FoundryInstance i) : base(i)
-        {
-            Form.ContextMenuStrip = new ContextMenuStrip();
-            Form.ContextMenuStrip.Opened += (sender, e) =>
-            {
-                CapturedLocation = GetTransformedMousePos();
-            };
-            OperatorRegistrant = new OperatorRegistrantToolstrip();
-            CapturedLocation = new PointF(0, 0);
-
-            Operator opAddTrigger = new Operator("Add Trigger");
-            opAddTrigger.OperatorActivated += (sender, e) =>
-            {
-                ((TriggerscriptEditorData)Data).AddTrigger(string.Format("NewTrigger{0}", Random.Shared.Next()), CapturedLocation);
-            };
-            OperatorRegistrant.Operators.Add(opAddTrigger);
-
-
-
-            Dictionary<string, Operator> opConditionCategories = new Dictionary<string, Operator>();
-            Operator opAddCondition = new Operator("Add Condition");
-            foreach (var pair in ConditionItems.Values)
-            {
-                foreach (var versions in pair.Values)
-                {
-                    foreach (var version in pair.Values)
-                    {
-                        string category = "";//ConditionCategories[version.Name];
-                        string running = "";
-                        Operator last = opAddCondition;
-                        foreach (string entry in category.Split("|"))
-                        {
-                            running += "|" + entry;
-                            if (!opConditionCategories.ContainsKey(running))
-                            {
-                                Operator entryOp = new Operator(entry);
-                                entryOp.Parent = last;
-                                last = entryOp;
-                                opConditionCategories.Add(running, entryOp);
-                            }
-                            else
-                            {
-                                last = opConditionCategories[running];
-                            }
-                        }
-
-                        string ver = version.Version == -1 ? "" : " v" + version.Version.ToString();
-                        Operator opEffect = new Operator(string.Format("{0}{1}", version.Name, ver));
-                        opEffect.OperatorActivated += (sender, e) =>
-                        {
-                            ((TriggerscriptEditorData)Data).AddCondition(version.DBID, version.Version, CapturedLocation);
-                        };
-                        opEffect.Parent = opConditionCategories["|" + category];
-                    }
-                }
-            }
-            OperatorRegistrant.AddOperator(opAddCondition);
-
-
-
-            Dictionary<string, Operator> opEffectCategories = new Dictionary<string, Operator>();
-            Operator opAddEffect = new Operator("Add Effect");
-            foreach (var pair in EffectItems.Values)
-            {
-                foreach (var version in pair.Values)
-                {
-                    string category = EffectCategories[version.Name];
-                    string running = "";
-                    Operator last = opAddEffect;
-                    foreach (string entry in category.Split("|"))
-                    {
-                        running += "|" + entry;
-                        if (!opEffectCategories.ContainsKey(running))
-                        {
-                            Operator entryOp = new Operator(entry);
-                            entryOp.Parent = last;
-                            last = entryOp;
-                            opEffectCategories.Add(running, entryOp);
-                        }
-                        else
-                        {
-                            last = opEffectCategories[running];
-                        }
-                    }
-
-                    string ver = version.Version == -1 ? "" : " v" + version.Version.ToString();
-                    Operator opEffect = new Operator(string.Format("{0}{1}", version.Name, ver));
-                    opEffect.OperatorActivated += (sender, e) =>
-                    {
-                        ((TriggerscriptEditorData)Data).AddEffect(version.DBID, version.Version, CapturedLocation);
-                    };
-                    opEffect.Parent = opEffectCategories["|" + category];
-                }
-            }
-            OperatorRegistrant.AddOperator(opAddEffect);
-
-
-
-            Operator opAddVar = new Operator("Add Variable");
-            foreach (string type in Enum.GetNames<ScriptVarType>())
-            {
-                Operator opVar = new Operator(type);
-                opVar.OperatorActivated += (sender, e) =>
-                {
-                    ((TriggerscriptEditorData)Data).AddVariable(Enum.Parse<ScriptVarType>(type), CapturedLocation);
-                };
-                opVar.Parent = opAddVar;
-            }
-            OperatorRegistrant.AddOperator(opAddVar);
-
-            Form.ContextMenuStrip.Items.AddRange(OperatorRegistrant.GetRootMenuItems().ToArray());
-
-
-            ViewTick += (sender, e) =>
-            {
-#if DEBUG
-                if (GetKeyIsDown(Keys.F5) && !GetKeyWasDown(Keys.F5))
-                {
-                    YAXLib.YAXSerializer ser = new YAXLib.YAXSerializer(typeof(TriggerscriptXmlData));
-                    ser.SerializeToFile(((TriggerscriptEditorData)Data).TriggerscriptData, "D:\\StumpyHWDEMod\\FoundryTests\\data\\triggerscripts\\out.triggerscript");
-                    Console.WriteLine("DEBUG: Saved triggerscript file.");
-                }
-#endif
-            };
-        }
-    }
 }

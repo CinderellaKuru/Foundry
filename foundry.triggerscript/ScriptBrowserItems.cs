@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundry.Data.Triggerscript
+namespace Foundry.Triggerscript
 {
     public class RootBrowserItem : IBrowserViewable
     {
@@ -33,7 +33,7 @@ namespace Foundry.Data.Triggerscript
     public class ScriptBrowserItem : IBrowserViewable
     {
         public string Name { get { return Dir.NameNoExt; } }
-        public Image Icon { get { return Properties.Resources.script; } }
+        public Image Icon { get { return Foundry.Properties.Resources.script; } }
 
         private WorkspaceItem Dir { get; set; }
 

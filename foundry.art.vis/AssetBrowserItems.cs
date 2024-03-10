@@ -57,7 +57,6 @@ namespace Foundry.Asset
             }
         }
     }
-
     public class RootGroupBrowserItem : GroupBrowserItem
     {
         public new string Name { get { return "Art"; } }

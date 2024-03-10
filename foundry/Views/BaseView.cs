@@ -13,10 +13,24 @@ using static Foundry.FoundryInstance;
 
 namespace Foundry
 {
+    public class DoubleBufferedDockContent : DockContent
+    {
+        public DoubleBufferedDockContent() : base()
+        {
+            DoubleBuffered = true;
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.UserPaint |
+                ControlStyles.DoubleBuffer,
+                true);
+        }
+    }
+
     public class ViewDrawArgs
     {
         public IntPtr HWND { get; set; }
         public Rectangle ClipRectangle { get; set; }
+        public Graphics Graphics { get; set; }
     }
 
     public class MouseState
@@ -40,7 +54,7 @@ namespace Foundry
         public BaseView(FoundryInstance i)
         {
             Instance = i;
-            Form = new DockContent();
+            Form = new DoubleBufferedDockContent();
 
             CurMouseState = new MouseState();
             CurDownKeys = new List<Keys>();
@@ -48,6 +62,7 @@ namespace Foundry
 
             Form.ControlAdded += Internal_ControlAdded;
             Form.Resize       += Internal_Resize;
+            Form.Paint        += Internal_Draw;
 
             Form.MouseMove    += Internal_MouseMoved;
             Form.MouseWheel   += Internal_MouseWheelMoved;
@@ -186,12 +201,12 @@ namespace Foundry
         private void Internal_Tick()
         {
             //Main Tick
-            try { ViewTick?.Invoke(this, null); }
-            catch (Exception e)
-            {
-                Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnTick() encountered an error. See console for details.", true,
-                    string.Format("--Error info:\n--Editor type: {0}\n--Exception information: {1}'\n'--Stacktrace:{2}", GetType().Name, e.Message, e.StackTrace));
-            }
+             ViewTick?.Invoke(this, null);
+            //catch (Exception e)
+            //{
+            //    Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnTick() encountered an error. See console for details.", true,
+            //        string.Format("--Error info:\n--Editor type: {0}\n--Exception information: {1}'\n'--Stacktrace:{2}", GetType().Name, e.Message, e.StackTrace));
+            //}
 
             //Dragging
             if (CurMouseState.leftDown && !CurMouseState.leftDownLast)
@@ -225,7 +240,7 @@ namespace Foundry
             //Draw
             if (RenderTimer.ElapsedMilliseconds > RenderIntervalMs)
             {
-                try { ViewDraw?.Invoke(this, null); }
+                try { Redraw(); }
                 catch (Exception e)
                 {
                     Instance.AppendLog(LogEntryType.Error, "Internal_Tick(): OnDraw() encountered an error. See console for details.", true,
@@ -239,7 +254,8 @@ namespace Foundry
             ViewDraw?.Invoke(this, new ViewDrawArgs()
             {
                 HWND = Form.Handle,
-                ClipRectangle = e.ClipRectangle
+                ClipRectangle = e.ClipRectangle,
+                Graphics = e.Graphics
             });
         }
 

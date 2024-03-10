@@ -1,10 +1,10 @@
 ﻿
-using Foundry.Data.Triggerscript;
+using Foundry.Triggerscript;
 using System.Text.RegularExpressions;
 using YAXLib;
 using YAXLib.Attributes;
-using static Foundry.Data.Triggerscript.TriggerscriptModule;
 using static Program;
+using static Foundry.Triggerscript.ScriptModule;
 
 class Program
 {
@@ -155,7 +155,7 @@ class Program
                             ID = pid,
                             Optional = poptional,
                             Output = poutput,
-                            Type = TriggerscriptModule.GetTypeFromString(ptypestr),
+                            Type = ScriptModule.GetTypeFromString(ptypestr),
                         });
                     }
                     catch (Exception ex) { Console.WriteLine(ex.Message); }

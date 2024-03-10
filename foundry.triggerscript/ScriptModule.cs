@@ -1,12 +1,13 @@
 ﻿using Foundry;
+using Foundry.Triggerscript;
 using SharpDX;
 using YAXLib;
 using YAXLib.Attributes;
 using YAXLib.Enums;
 
-namespace Foundry.Data.Triggerscript
+namespace Foundry.Triggerscript
 {
-    public class TriggerscriptModule : BaseModule
+    public class ScriptModule : BaseModule
     {
         public static ScriptLogicPrototype GetEffectLogicPrototype(int dbid, int version)
         {
@@ -32,13 +33,17 @@ namespace Foundry.Data.Triggerscript
             }
             return null;
         }
-        public static Dictionary<int, Dictionary<int, ScriptLogicPrototype>> EffectItems { get; private set; } = (Dictionary<int, Dictionary<int, ScriptLogicPrototype>>)new YAXSerializer(typeof(Dictionary<int, Dictionary<int, ScriptLogicPrototype>>)).Deserialize(File.ReadAllText("modules/effects.tsdef"));
-        public static Dictionary<int, Dictionary<int, ScriptLogicPrototype>> ConditionItems { get; private set; } = (Dictionary<int, Dictionary<int, ScriptLogicPrototype>>)new YAXSerializer(typeof(Dictionary<int, Dictionary<int, ScriptLogicPrototype>>)).Deserialize(File.ReadAllText("modules/conditions.tsdef"));
+        public static Dictionary<int, Dictionary<int, ScriptLogicPrototype>> EffectItems { get; private set; } 
+            = new YAXSerializer<Dictionary<int, Dictionary<int, ScriptLogicPrototype>>>().Deserialize(Foundry.Triggerscript.Properties.Resources.effects);
+        public static Dictionary<int, Dictionary<int, ScriptLogicPrototype>> ConditionItems { get; private set; }
+            = new YAXSerializer<Dictionary<int, Dictionary<int, ScriptLogicPrototype>>>().Deserialize(Foundry.Triggerscript.Properties.Resources.conditions);
         public static ScriptVarType GetTypeFromString(string varTypeName)
         {
             ScriptVarType varTypeEnum = ScriptVarType.Invalid;
 
             //this is taken straight from the source if anyones wondering why it isnt a dict.
+            //some strings map to the same ScriptVarType as other strings.
+
             if (varTypeName == "Tech")
                 varTypeEnum = ScriptVarType.Tech;
             else if (varTypeName == "TechStatus")
@@ -280,6 +285,7 @@ namespace Foundry.Data.Triggerscript
 
             return varTypeEnum;
         }
+        //TODO: load these from config
         public static Dictionary<string, string> EffectCategories { get; private set; } = new Dictionary<string, string>()
         {
             { "AIAddTeleporterZone", "AI" },
@@ -934,8 +940,8 @@ namespace Foundry.Data.Triggerscript
 
         protected override void OnInit()
         {
-            TriggerscriptEditorPages = new List<TriggerscriptEditorPage>();
-            Triggerscripts = new Dictionary<string, TriggerscriptEditorData>();
+            TriggerscriptEditorPages = new List<ScriptDataView>();
+            Triggerscripts = new Dictionary<string, ScriptData>();
             UserClasses = new UserClassesXml();
             UserTables = new Dictionary<string, UserTablesXml>();
 
@@ -946,13 +952,16 @@ namespace Foundry.Data.Triggerscript
                 OpenFileDialog ofd = new OpenFileDialog();
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    TriggerscriptEditorData data = new TriggerscriptEditorData(Instance);
-                    //if(data.TryLoad(ofd.FileName))
-                    {
-                        TriggerscriptEditorPage page = new TriggerscriptEditorPage(Instance);
-                        //page.Data = data;
-                        page.Show(Instance, WeifenLuo.WinFormsUI.Docking.DockState.Document);
-                    }
+                    var xmldata = new YAXSerializer<ScriptXml>(
+                        new YAXLib.Options.SerializerOptions() { ExceptionHandlingPolicies = YAXExceptionHandlingPolicies.DoNotThrow}
+                        ).DeserializeFromFile(ofd.FileName);
+                    ScriptData data = new ScriptData(Instance, xmldata);
+
+                    ScriptDataView page = new ScriptDataView(Instance);
+
+                    page.NodeData = data;
+                    page.Show(Instance, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+
                 }
             };
             opOpenTriggerscript.Parent = Instance.Operator_File;
@@ -980,12 +989,12 @@ namespace Foundry.Data.Triggerscript
             UserTables.Clear();
         }
 
-        private List<TriggerscriptEditorPage> TriggerscriptEditorPages;
-        private Dictionary<string, TriggerscriptEditorData> Triggerscripts;
+        private List<ScriptDataView> TriggerscriptEditorPages;
+        private Dictionary<string, ScriptData> Triggerscripts;
         private void IndexAllTriggerscripts()
         {
             var scriptsdir = Instance.GetNamedWorkspaceDir(FoundryInstance.NamedWorkspaceDirNames.Triggerscripts);
-            YAXSerializer<TriggerscriptXmlData> ser = new YAXSerializer<TriggerscriptXmlData>();
+            YAXSerializer<ScriptXml> ser = new YAXSerializer<ScriptXml>();
             foreach (var file in Directory.EnumerateFiles(
                 scriptsdir.FullPath,
                 "*.triggerscript",
@@ -993,7 +1002,7 @@ namespace Foundry.Data.Triggerscript
             {
                 if(!Triggerscripts.ContainsKey(file))
                 {
-                    var tsdata = new TriggerscriptEditorData(Instance);
+                    var tsdata = new ScriptData(Instance);
                     //if (!tsdata.TryLoad(file)) continue;
 
                     Triggerscripts.Add(Path.GetRelativePath(scriptsdir.FullPath, file), tsdata);
@@ -1004,7 +1013,7 @@ namespace Foundry.Data.Triggerscript
         {
             if (!Triggerscripts.ContainsKey(script)) return false;
 
-            TriggerscriptEditorPage page = new TriggerscriptEditorPage(Instance);
+            ScriptDataView page = new ScriptDataView(Instance);
             //page.Data = Triggerscripts[script];
             page.Show(Instance, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             
@@ -1028,7 +1037,6 @@ namespace Foundry.Data.Triggerscript
                 UserClasses = ser.Deserialize(userclassesContent);
             }
         }
-        
         
         private Dictionary<string, UserTablesXml> UserTables;
         private void IndexAllUserTables()

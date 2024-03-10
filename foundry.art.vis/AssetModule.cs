@@ -7,16 +7,9 @@ using YAXLib.Enums;
 
 namespace Foundry.Asset
 {
-    public class VisAsset
-    {
-        public VisXmlData VisXmlData { get; set; }
-        public Dictionary<VisXmlData.Model, RefWrapper<UgxBinData>> Geometries { get; set; }
-    }
-
     public class AssetModule : BaseModule
     {
         public WorkspaceItem ArtRoot { get; private set; }
-
         public List<WorkspaceItem> VisFiles { get; private set; }
         public List<WorkspaceItem> UgxFiles { get; private set; }
         public List<WorkspaceItem> UaxFiles { get; private set; }
@@ -41,10 +34,6 @@ namespace Foundry.Asset
             ArtRoot = new WorkspaceItem(Instance.GetNamedWorkspaceDir(FoundryInstance.NamedWorkspaceDirNames.WorkspaceFolder).FullPath + "art/");
             UpdateIndex();
             UpdateView();
-
-            VisEditorView a = new VisEditorView(this);
-            a.SetData(GetVisData(new WorkspaceItem(@"D:/repos/Foundry/_resources/workspace/art/unsc/air/albatross_01/albatross_01.vis")));
-            a.Show(Instance, DockState.Document);
         }
         protected override void OnWorkspaceClosed()
         {
