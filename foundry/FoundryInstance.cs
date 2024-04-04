@@ -276,7 +276,7 @@ namespace Foundry
 		{
 			OpenedConfig = new Config();
 
-			if (!File.Exists(ConfigFile)) File.Create(ConfigFile);
+			if (!File.Exists(ConfigFile)) File.Create(ConfigFile).Close();
 
 			string[] cfg = File.ReadAllLines(ConfigFile);
 
