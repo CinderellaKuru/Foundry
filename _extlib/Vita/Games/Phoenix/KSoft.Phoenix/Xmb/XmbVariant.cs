@@ -121,7 +121,7 @@ namespace KSoft.Phoenix.Xmb
 					float f = Single;
 					if (IsIndirect)
 						f = pool.GetSingle(Offset);
-					result = f.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier);
+					result = f.ToString();
 				} break;
 
 				case XmbVariantType.Int: {
@@ -135,7 +135,7 @@ namespace KSoft.Phoenix.Xmb
 
 				case XmbVariantType.Double: {
 					double d = pool.GetDouble(Offset);
-					result = d.ToStringInvariant(Numbers.kDoubleRoundTripFormatSpecifier);
+					result = d.ToString();
 				} break;
 
 				case XmbVariantType.Bool: {
