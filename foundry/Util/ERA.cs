@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KSoft.Phoenix.Resource;
 
 namespace Foundry.Util
 {
-	public static class ERA
-	{
-		public static void ExpandERA(string eraPath, string outputDir)
-		{
-            using (KSoft.Phoenix.Resource.EraFileExpander expander = new KSoft.Phoenix.Resource.EraFileExpander(eraPath))
+    public static class ERA
+    {
+        public static void ExpandERA(string eraPath, string outputDir)
+        {
+            using (EraFileExpander expander = new(eraPath))
             {
                 expander.Options = new KSoft.Collections.BitVector32();
-                expander.Options.Set(KSoft.Phoenix.Resource.EraFileUtilOptions.x64);
+                expander.Options.Set(EraFileUtilOptions.x64);
 
                 expander.ExpanderOptions = new KSoft.Collections.BitVector32();
-                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.Decrypt);
-                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontOverwriteExistingFiles);
-                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.ExpandAsDds);
-                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.RemoveXmb);
-                //expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontLoadEntireEraIntoMemory);
+                expander.ExpanderOptions.Set(EraFileExpanderOptions.Decrypt);
+                expander.ExpanderOptions.Set(EraFileExpanderOptions.DontOverwriteExistingFiles);
+                expander.ExpanderOptions.Set(EraFileExpanderOptions.ExpandAsDds);
+                expander.ExpanderOptions.Set(EraFileExpanderOptions.RemoveXmb);
+                // expander.ExpanderOptions.Set(EraFileExpanderOptions.DontLoadEntireEraIntoMemory);
                 expander.ProgressOutput = null;
                 expander.VerboseOutput = null;
                 expander.DebugOutput = null;
@@ -36,5 +31,5 @@ namespace Foundry.Util
 
             GC.Collect();
         }
-	}
+    }
 }

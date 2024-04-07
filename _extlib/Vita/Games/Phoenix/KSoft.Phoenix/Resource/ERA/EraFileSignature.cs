@@ -1,86 +1,90 @@
-﻿using System;
+﻿using KSoft.IO;
+using System;
+using System.IO;
+
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
 using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 #endif
 using SHA1CryptoServiceProvider = System.Security.Cryptography.SHA1CryptoServiceProvider;
+using PhxHash = KSoft.Security.Cryptography.PhxHash;
 
 namespace KSoft.Phoenix.Resource
 {
-	using PhxHash = Security.Cryptography.PhxHash;
+    /*public*/
+    internal sealed class EraFileSignature
+        : IEndianStreamSerializable
+    {
+        private const uint kSignature = 0x05ABDBD8;
+        private const uint kSignatureMarker = 0xAAC94350;
+        private const byte kDefaultSizeBit = 0x13;
+        private const int kNonSignatureBytesSize = sizeof(uint) + sizeof(byte) + sizeof(uint);
+        private const uint kSha1Salt = 0xA7F95F9C;
 
-	/*public*/ sealed class EraFileSignature
-		: IO.IEndianStreamSerializable
-	{
-		const uint kSignature = 0x05ABDBD8;
-		const uint kSignatureMarker = 0xAAC94350;
-		const byte kDefaultSizeBit = 0x13;
+        public byte SizeBit = kDefaultSizeBit;
+        public byte[] SignatureData;
 
-		const int kNonSignatureBytesSize = sizeof(uint) + sizeof(byte) + sizeof(uint);
+        #region IEndianStreamSerializable Members
+        public void Serialize(EndianStream s)
+        {
+            bool reading = s.IsReading;
 
-		const uint kSha1Salt = 0xA7F95F9C;
+            int sig_data_length = reading || SignatureData == null
+                ? 0
+                : SignatureData.Length;
+            int size = reading
+                ? 0
+                : kNonSignatureBytesSize + sig_data_length;
 
-		public byte SizeBit = kDefaultSizeBit;
-		public byte[] SignatureData;
+            _ = s.StreamSignature(kSignature);
+            _ = s.Stream(ref size);
+            if (size < kNonSignatureBytesSize)
+            {
+                throw new InvalidDataException(size.ToString("X8"));
+            }
 
-		#region IEndianStreamSerializable Members
-		public void Serialize(IO.EndianStream s)
-		{
-			bool reading = s.IsReading;
+            _ = s.Pad64();
 
-			int sig_data_length = reading || SignatureData == null
-				? 0
-				: SignatureData.Length;
-			int size = reading
-				? 0
-				: kNonSignatureBytesSize + sig_data_length;
+            _ = s.StreamSignature(kSignatureMarker);
+            _ = s.Stream(ref SizeBit);
+            if (reading)
+            {
+                Array.Resize(ref SignatureData, size - kNonSignatureBytesSize);
+                sig_data_length = SignatureData.Length;
+            }
+            if (sig_data_length > 0)
+            {
+                _ = s.Stream(SignatureData);
+            }
+            _ = s.StreamSignature(kSignatureMarker);
+        }
+        #endregion
 
-			s.StreamSignature(kSignature);
-			s.Stream(ref size);
-			if (size < kNonSignatureBytesSize)
-				throw new System.IO.InvalidDataException(size.ToString("X8"));
-			s.Pad64();
+        internal static byte[] ComputeSignatureDigest(Stream chunksStream
+            , long chunksOffset
+            , long chunksLength
+            , ECF.EcfHeader header)
+        {
+            Contract.Requires(chunksStream != null);
+            Contract.Requires(chunksStream.CanSeek && chunksStream.CanRead);
+            Contract.Requires(chunksOffset >= 0);
+            Contract.Requires(chunksLength > 0);
 
-			s.StreamSignature(kSignatureMarker);
-			s.Stream(ref SizeBit);
-			if (reading)
-			{
-				Array.Resize(ref SignatureData, size - kNonSignatureBytesSize);
-				sig_data_length = SignatureData.Length;
-			}
-			if (sig_data_length > 0)
-			{
-				s.Stream(SignatureData);
-			}
-			s.StreamSignature(kSignatureMarker);
-		}
-		#endregion
+            using (SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider())
+            {
+                PhxHash.UInt32(sha, kSha1Salt);
+                PhxHash.UInt32(sha, (uint)header.HeaderSize);
+                PhxHash.UInt32(sha, (uint)header.ChunkCount);
+                PhxHash.UInt32(sha, header.ExtraDataSize);
+                PhxHash.UInt32(sha, (uint)header.TotalSize);
 
-		internal static byte[] ComputeSignatureDigest(System.IO.Stream chunksStream
-			, long chunksOffset
-			, long chunksLength
-			, ECF.EcfHeader header)
-		{
-			Contract.Requires(chunksStream != null);
-			Contract.Requires(chunksStream.CanSeek && chunksStream.CanRead);
-			Contract.Requires(chunksOffset >= 0);
-			Contract.Requires(chunksLength > 0);
+                PhxHash.Stream(sha,
+                    chunksStream, chunksOffset, chunksLength,
+                    isFinal: true);
 
-			using (var sha = new SHA1CryptoServiceProvider())
-			{
-				PhxHash.UInt32(sha, kSha1Salt);
-				PhxHash.UInt32(sha, (uint)header.HeaderSize);
-				PhxHash.UInt32(sha, (uint)header.ChunkCount);
-				PhxHash.UInt32(sha, (uint)header.ExtraDataSize);
-				PhxHash.UInt32(sha, (uint)header.TotalSize);
-
-				PhxHash.Stream(sha,
-					chunksStream, chunksOffset, chunksLength,
-					isFinal: true);
-
-				return sha.Hash;
-			}
-		}
-	};
+                return sha.Hash;
+            }
+        }
+    };
 }
