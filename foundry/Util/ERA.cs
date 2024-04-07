@@ -19,6 +19,8 @@ namespace Foundry.Util
                 expander.ExpanderOptions = new KSoft.Collections.BitVector32();
                 expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.Decrypt);
                 expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontOverwriteExistingFiles);
+                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.ExpandAsDds);
+                expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.RemoveXmb);
                 //expander.ExpanderOptions.Set(KSoft.Phoenix.Resource.EraFileExpanderOptions.DontLoadEntireEraIntoMemory);
                 expander.ProgressOutput = null;
                 expander.VerboseOutput = null;

@@ -34,20 +34,32 @@ namespace KSoft.Phoenix.Resource
 
 		public Security.Cryptography.TigerHashBase TigerHasher { get; private set; }
 
-		private int FileChunksFirstIndex { get {
-			// First comes the filenames table in mFiles, then all the files defined in the listing
-			return 1;
-		} }
+		private int FileChunksFirstIndex
+		{
+			get
+			{
+				// First comes the filenames table in mFiles, then all the files defined in the listing
+				return 1;
+			}
+		}
 		/// <summary>All files destined for the ERA, excluding the internal filenames table</summary>
-		private IEnumerable<EraFileEntryChunk> FileChunks { get {
-			// Skip the first chunk, as it is the filenames table
-			return Enumerable.Skip(mFiles, FileChunksFirstIndex);
-		} }
+		private IEnumerable<EraFileEntryChunk> FileChunks
+		{
+			get
+			{
+				// Skip the first chunk, as it is the filenames table
+				return Enumerable.Skip(mFiles, FileChunksFirstIndex);
+			}
+		}
 		/// <summary>Number of files destined for the ERA, excluding the internal filenames table</summary>
-		private int FileChunksCount { get {
-			// Exclude the first chunk from the count, as it is the filenames table
-			return mFiles.Count - FileChunksFirstIndex;
-		} }
+		private int FileChunksCount
+		{
+			get
+			{
+				// Exclude the first chunk from the count, as it is the filenames table
+				return mFiles.Count - FileChunksFirstIndex;
+			}
+		}
 
 		public EraFile()
 		{
@@ -82,7 +94,7 @@ namespace KSoft.Phoenix.Resource
 					? fileEntry.FileName
 					: "FileNames";//fileEntry.EntryId.ToString("X16");
 
-				throw new System.IO.InvalidDataException(string.Format(
+				throw new InvalidDataException(string.Format(
 					"Invalid chunk adler32 for '{0}' offset={1} size={2} " +
 					"expected {3} but got {4}",
 					chunk_name, fileEntry.DataOffset, fileEntry.DataSize.ToString("X8"),
@@ -140,7 +152,7 @@ namespace KSoft.Phoenix.Resource
 
 		private void BuildFileNameMaps(System.IO.TextWriter verboseOutput)
 		{
-			for (int x = FileChunksFirstIndex; x < mFiles.Count; )
+			for (int x = FileChunksFirstIndex; x < mFiles.Count;)
 			{
 				var file = mFiles[x];
 
@@ -161,7 +173,7 @@ namespace KSoft.Phoenix.Resource
 			}
 		}
 
-		private void RemoveXmbFilesWhereXmlExists(System.IO.TextWriter verboseOutput)
+		private void RemoveXmbFilesWhereXmlExists(TextWriter verboseOutput)
 		{
 			for (int x = FileChunksFirstIndex; x < mFiles.Count; x++)
 			{
@@ -316,7 +328,7 @@ namespace KSoft.Phoenix.Resource
 				ReadChunks(s);
 
 			using (var bm = s.EnterCursorBookmarkOpt("LocalFiles")) if (bm.IsNotNull)
-				ReadLocalFiles(s);
+					ReadLocalFiles(s);
 
 			AddVersionFile();
 
@@ -329,7 +341,7 @@ namespace KSoft.Phoenix.Resource
 				WriteChunks(s);
 
 			using (var bm = s.EnterCursorBookmarkOpt("LocalFiles", mLocalFiles, Predicates.HasItems)) if (bm.IsNotNull)
-				WriteLocalFiles(s);
+					WriteLocalFiles(s);
 		}
 		#endregion
 
@@ -370,7 +382,7 @@ namespace KSoft.Phoenix.Resource
 			if (IsIgnoredLocalFile(file.FileName))
 				return false;
 
-			string full_path = System.IO.Path.Combine(workPath, file.FileName);
+			string full_path = Path.Combine(workPath, file.FileName);
 
 			if (ResourceUtils.IsLocalScenarioFile(file.FileName))
 			{
@@ -390,6 +402,11 @@ namespace KSoft.Phoenix.Resource
 		private void UnpackToDisk(IO.EndianStream blockStream, string fullPath, EraFileExpander expander, EraFileEntryChunk file)
 		{
 			byte[] buffer = file.GetBuffer(blockStream);
+
+			if (expander.ExpanderOptions.Test(EraFileExpanderOptions.ExpandAsDds) && Path.GetExtension(fullPath).ToLowerInvariant() == ".ddx")
+			{
+				fullPath = Path.ChangeExtension(fullPath, ".dds");
+			}
 
 			using (var fs = System.IO.File.Create(fullPath))
 			{
@@ -465,6 +482,17 @@ namespace KSoft.Phoenix.Resource
 								EraFileExpanderOptions.TranslateGfxFiles, fullPath);
 						}
 					}
+				}
+			}
+
+			/// <summary>
+			/// With how the era is processed we can't ignore out xmb files, but we can delete them directly after they're processed.
+			/// </summary>
+			if (expander.ExpanderOptions.Test(EraFileExpanderOptions.RemoveXmb))
+			{
+				if (Path.GetExtension(fullPath) == ".xmb")
+				{
+					File.Delete(fullPath);
 				}
 			}
 		}
@@ -758,7 +786,8 @@ namespace KSoft.Phoenix.Resource
 				{
 					PackFileData(blockStream, ms, file);
 				}
-			} catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				Debug.Trace.Resource.TraceData(System.Diagnostics.TraceEventType.Error, TypeExtensions.kNone,
 					string.Format("Couldn't pack file into {0}, encountered exception dealing with {1}", FileName, file.FileName),
@@ -966,7 +995,7 @@ namespace KSoft.Phoenix.Resource
 		#region Local file utils
 		private static bool IsIgnoredLocalFile(string fileName)
 		{
-			if (0==string.Compare(fileName, "version.txt", System.StringComparison.OrdinalIgnoreCase))
+			if (0 == string.Compare(fileName, "version.txt", System.StringComparison.OrdinalIgnoreCase))
 			{
 				return true;
 			}

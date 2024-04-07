@@ -20,6 +20,8 @@ namespace KSoft.Phoenix.Resource
 		DontLoadEntireEraIntoMemory,
 		DontRemoveXmlOrXmbFiles,
 		IgnoreNonDataFiles,
+		RemoveXmb,
+		ExpandAsDds,
 
 		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
 	};
